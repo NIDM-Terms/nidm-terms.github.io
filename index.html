@@ -338,7 +338,7 @@
 
         }
         
-        #footer{
+        #bottomLine{
             height: 3px;
             background-image: linear-gradient(
                 to right, 
@@ -349,6 +349,16 @@
                 );
             width: 100%;
         }
+
+        #footer{
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            background-color: white;
+        }
+
         
     
     </style>
@@ -539,8 +549,10 @@
     </script> 
 
 <footer>
-    <hr id = "footer">
-    <p><center>This project was supported by the National Institutes of Mental Health (NIMH) grant 1RF1MH120021</center></p>
+    <div id="footer">
+        <hr id= "bottomLine">
+        <p><center>This project was supported by the National Institutes of Mental Health (NIMH) grant 1RF1MH120021</center></p>
+    <div>
 </footer>
 
 </html>
