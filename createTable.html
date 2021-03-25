@@ -114,12 +114,11 @@
                             
                         <div class="col-md-6">
                             <div id="format" class="form-group"> <label><h4>Select File Format</h4></label> 
-                                <select class="form-control select2 select2-hidden-accessible" multiple="" data-placeholder="  select one or more formats" style="width: 100%;" tabindex="-1" aria-hidden="true">     
+                                <select class="form-control select2 select2-hidden-accessible" multiple="" data-placeholder="  select or search formats" style="width: 100%;" tabindex="-1" aria-hidden="true">     
                                     <option value="md">Markdown Table</option>
                                     <option value="json">JSON</option>
                                     <option value="jsonld">JSON-LD</option>
                                     <option value="csv">CSV</option>
-                                    <option value="rdf">Turtle</option>
                                 </select></div> <!-- /.form-group -->
                         </div> <!-- /.col -->
 
@@ -127,7 +126,7 @@
                         
                         <div class="col-md-6">
                             <div id="properties" class="form-group"> <label><h4>Select Term Properties</h4></label>
-                                <select class="form-control select2 select2-hidden-accessible" multiple="" data-placeholder=" select term properties" style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                <select class="form-control select2 select2-hidden-accessible" multiple="" data-placeholder=" select or search term properties" style="width: 100%;" tabindex="-1" aria-hidden="true">
                                     <option>Associated With</option>
                                     <option>Candidate Terms</option>
                                     <option>Comment</option>
@@ -145,7 +144,7 @@
 
                         <div class="col-md-6">
                             <div class="form-group"> <label><h4>Select BIDS Term </h4></label>
-                                <select id = "bidsTerms" class="form-control select2 select2-hidden-accessible" multiple="" data-placeholder="  search BIDS terms" style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                <select id = "bidsTerms" class="form-control select2 select2-hidden-accessible" multiple="" data-placeholder="  select or search BIDS terms" style="width: 100%;" tabindex="-1" aria-hidden="true">
                                     
                                 </select> </div> <!-- /.form-group -->
                         </div> <!-- /.col -->
@@ -163,8 +162,10 @@
     </body>
 
     <footer>
-        <hr id = "footer">
-        <p><center>This project was supported by the National Institutes of Mental Health (NIMH) grant 1RF1MH120021</center></p>
+        <div id="footer">
+            <hr id= "bottomLine">
+            <p><center>This project was supported by the National Institutes of Mental Health (NIMH) grant 1RF1MH120021</center></p>
+        <div>
     </footer>
 
 
@@ -437,10 +438,12 @@
         }
 
         h4{
-            color: #52575e;
+            color: #646464;
             font-weight:bold;
-            font-size: 20px;
+            font-size: 28px;
             text-indent: 10px;
+            line-height: 20px;
+            margin-bottom: 15px;
         }
 
         .statement{
@@ -459,7 +462,7 @@
             background-color: #fefcfb;
             border: 2px solid #EE5A24;
             border-radius: 5px;
-            font-size: 18px;
+            font-size: 20px;
             color: #EE5A24;
             float:right;
             margin-bottom: 50px;
@@ -489,18 +492,26 @@
             padding-bottom: 90px;
         }
 
+        #bottomLine{
+            height: 3px;
+            background-image: linear-gradient(
+                to right, 
+                #EA2027, 
+                #EE5A24, 
+                #F79F1F, 
+                #FFC312
+                );
+            width: 100%;
+        }
+
         #footer{
-        height: 3px;
-        background-image: linear-gradient(
-            to right, 
-            #EA2027, 
-            #EE5A24, 
-            #F79F1F, 
-            #FFC312
-            );
-        width: 100%; 
-        margin-top: 130px
-        }   
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            background-color: white;
+        }
 
         .multi_select_box{
             width: 400px;
