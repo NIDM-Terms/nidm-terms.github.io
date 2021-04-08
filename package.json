@@ -1,0 +1,51 @@
+{
+  "name": "nidmterms-ui",
+  "version": "0.1.0",
+  "author": "Sanu Ann Abraham <sanuann@mit.edu>",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "bootstrap-vue": "^2.17.3",
+    "core-js": "^3.6.5",
+    "file-saver": "^2.0.2",
+    "jszip": "^3.5.0",
+    "papaparse": "^5.3.0",
+    "vfg-field-array": "0.0.4",
+    "vue": "^2.6.12",
+    "vue-form-generator": "^2.3.4",
+    "vue-router": "^3.4.6",
+    "vue-scrollto": "^2.20.0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^4.5.7",
+    "@vue/cli-plugin-eslint": "^4.5.7",
+    "@vue/cli-service": "^4.5.7",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "vue-template-compiler": "^2.6.12"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "rules": {},
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ]
+}
