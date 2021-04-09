@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIDM-Terms: NDA Terms</title>
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+
+</head>
+
+
+
+
+<body>
+
+    <div class="about">
+        <form action = "https://github.com/NIDM-Terms/terms" target="_blank">
+            <button class= "github">Github <i class="fa fa-github" style="font-size:17px"></i>
+            </button>
+        </form>
+        <form action = "https://scicrunch.org/nidm-terms/about/project" target="_blank">
+           <button  class= "website">NIDM Website</button>
+        </form>
+        <form action = "http://nidm.nidash.org/" target="_blank">
+            <button class = "nidmSpecs"> NIDM Specs</button>
+        </form>
+        <form action ="https://github.com/incf-nidash/PyNIDM" target= "_blank" >
+            <button class= "pyNidm"> PyNIDM</a>
+        </form>
+    </div>
+
+
+    <header>
+        <div class= "logo">
+            <img src="img/nidm-terms_576163.png" width= "85" height="85">
+        </div>
+        <div class="inner">
+            <h>NIDM-Terms</h>
+        </div>
+        <div class="ndaTitle">
+            <h> NDA Terms</h>
+        </div>
+    </header>
+
+
+
+    <div>
+        <nav>
+            <ul class= "menuUl"><center>
+
+                <li class= "menuLi">
+                    <form action= "NDATerms.html">
+                        <button class = "available_terms" type="submit">Available Terms</button>
+                    </form>
+                </li>
+            
+                <li class= "menuLi">
+                    <form action= "addNewTerm.html">
+                        <button class = "add_terms" type="submit">Suggest Terms</button>
+                    </form>
+                </li>
+
+                <li class= "menuLi">
+                    <form action="createTable.html">
+                        <button class = "createTable">Export Terms</button>
+                    </form>
+                </li>
+
+                <li class= "menuLi">
+                    <form action="info.html">
+                        <button class = "resources">About</button>
+                    </form> 
+                </li>
+
+                <center><hr id="menuLine"></center>
+
+            </center></ul>
+
+        </nav>
+    </div>
+
+
+
+    <center><div class="container">
+
+        <div id= TOC>
+            <ul>
+                <li><a href="#overview">Overview</a></li>
+                <ul>
+                    <li><a href="#about">About NIDM-Terms</a></li>
+                    <li><a href="#useUi">How to use our UI</a></li>
+                    <ul>
+                        <li><a href="#avTerms">Available Terms</a></li>
+                        <li><a href="#addTerms">Add New Terms</a></li>
+                        <li><a href="#exTerms">Export Terms</a></li>
+                    </ul>
+                </ul>
+                <li><a href="#res">Resources</a></li>
+            </ul>    
+        </div>
+        
+        <br><br><br><br><br><br>
+
+        <div id = "overview">
+            Overview
+        </div>
+
+        <br><br>
+
+        <div id = "Text">
+            
+        </div>
+
+        <br><br><br>
+        
+        <div id = "about">
+            About NIDM-Terms
+        </div>
+
+        <br><br><br>
+
+        <div id = "useUi">
+            How to use our UI
+
+            <br><br>
+
+            <div id = "avTerms">
+                Available Terms
+            </div>
+
+            <br>
+
+            <div id = "addTerms">
+                Add New Terms
+            </div>
+
+            <br>
+
+            <div id = "exTerms">
+                Export Terms
+            </div>
+
+        </div>
+
+        <br><br><br><br>
+
+        <div id = "res">
+            Resources
+        </div>
+
+        <br><br>
+
+        <div id = "Text">
+            NIDM-Terms website: <a href = "https://scicrunch.org/nidm-terms" target = "_blank">https://scicrunch.org/nidm-terms</a><br>
+            NIDM-Terms github repository: <a href = "https://github.com/NIDM-Terms/terms" target = "_blank">https://github.com/NIDM-Terms/terms</a><br>
+            NIDM website: <a href = "http://nidm.nidash.org/" target = "_blank">http://nidm.nidash.org/</a><br>
+            Interlex: <a href = "https://scicrunch.org/nidm-terms" target = "_blank">https://scicrunch.org/nidm-terms</a><br>
+        </div>
+
+    </div></center>
+
+
+    <style>
+        .about{
+            color: #52575e;
+            font-size: 14px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .github{
+            float: right;
+            padding: 20px;
+            margin-right: 10px;
+            margin-top: 56px;
+            color: #52575e;
+            font-size: 14px;
+            width: 130px;
+            height:50px;
+        }
+
+        .github:hover{
+            color: #32e17c;
+            transition: 0.1s;
+        }
+        
+        .website{
+            float: right;
+            margin-top: 61px;
+            color: #52575e;
+            font-size: 14px;
+            width: 130px;
+            height:50px;
+        }
+
+        .website:hover{
+            color: #32e17c;
+            transition: 0.1s;
+        }
+
+        .nidmSpecs{
+            float: right;
+            margin-top: 61px;
+            color: #52575e;
+            font-size: 14px;
+            width: 130px;
+            height:50px;
+        }
+
+        .nidmSpecs:hover{
+            color: #32e17c;
+            transition: 0.1s;
+        }
+
+        .pyNidm{
+            float: right;
+            margin-top: 61px;
+            color: #52575e;
+            font-size: 14px;
+            width: 130px;
+            height:50px;
+        }
+
+        .pyNidm:hover{
+            color: #32e17c;
+            transition: 0.1s;
+        }
+
+        .inner{
+            margin: 40px;
+            padding-top: 20px;
+            padding-left: 124px;
+            font-weight:lighter;
+            font-size: 30px;
+            font-family: serif;
+            text-transform: uppercase;
+            color: #a6a6a6;
+        }
+        .logo{
+            position: absolute;
+            top: 30px;
+            left: 60px;
+        }
+
+        header{
+            width: 100%;
+
+        }
+
+        .ndaTitle{
+            color: white;
+            background-size: 100px;
+            background-color: #52575e;
+            font-size: 40px;
+            text-indent: 100px;
+            padding-top: 20px;
+            padding-left: 60px;
+            padding-bottom: 20px;
+        }
+
+        .search_bar{
+            float: right;
+            margin-top: -47px;
+            margin-right: 50px;
+            border: 2px solid #32e17c;
+            height: 45px;
+            width: 325px;
+            border-radius: 5px;
+            background-color: #fefcfb;
+            font-size: 18px;
+            text-indent: 44px;
+            outline: none;
+        } 
+
+        #searchIcon{
+        color: #828486;
+        float: right;
+        margin-top: -35px;
+        margin-right: -38px;
+        }
+
+        body {
+            background-color: #ffffff;
+        }
+
+        .menuUl{
+            width: auto;
+            margin-top: 70px;
+        }
+
+        .menuLi{
+            display: inline-block;
+            padding: 20px 10px;
+        }
+
+        button{
+            width: 250px;
+            height: 60px;
+            background-color: transparent;
+            border: transparent;
+            border-radius: 0px;
+            font-size: 18px;
+            font-weight:bold;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .available_terms{
+            color: #EA2027;
+            
+        }
+        .available_terms:hover{
+            border: 2px solid #EA2027;
+            border-radius: 5px;
+        }
+
+        .add_terms{
+            color: #EE5A24;
+        }
+        .add_terms:hover{
+            border: 2px solid #EE5A24;
+            border-radius: 5px;
+        }
+        
+        .createTable{
+            color: #F79F1F;
+        }
+        .createTable:hover{
+            border: 2px solid #F79F1F;
+            border-radius: 5px;
+
+        }
+
+        .resources{
+            color: #FFC312;
+            border: 2px solid #FFC312;
+            border-radius: 5px;
+        }
+        
+        #menuLine{
+            height: 10px;
+            background-image: linear-gradient(
+                to right, 
+                #EA2027, 
+                #EE5A24, 
+                #F79F1F, 
+                #FFC312
+                );
+            margin-top: -23px;
+            width: 1200px;
+        }
+
+        .container{
+            width: 875px;
+            height: 170%;
+            text-align: left;
+            text-indent: 50px;
+            font-family:Arial, Helvetica, sans-serif;
+            border: 1px solid #b3b3b3 ;
+            border-radius: 0px;
+            padding: 80px;
+            padding-top: 80px;
+            padding-right: -10px;
+            padding-bottom: 20px;
+            margin-top: 50px;
+            background-color: #F7F7F7 ;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            margin-bottom: 160px;
+            padding-bottom: 120px;
+
+        }
+
+        .headerBrdr{
+            font-size: 92px;
+            text-indent: 34px;
+            color: #7e7e7e;
+            font-weight: bold;
+        }
+    
+        .TermInput{
+            height: 40px;
+            width: 35%;
+            border-radius: 50px;
+            border-color: #7e7e7e;
+            padding: 0px 20px;
+            background-color: #fdfdfd;
+            font-size: 18px;
+            outline: none;
+            font-size: 18px;
+            margin-top: -25px;
+            margin-bottom: 10px;
+            text-indent: 25px
+        }
+
+        .inputs{
+            padding-top: 20px;
+        }
+
+        h4{
+            color: #52575e;
+            font-weight:bold;
+            font-size: 20px;
+        }
+
+        .statement{
+            color:#7e7e7e;
+            font-size: 14px;
+            padding-top: 90px;
+        }
+
+        #TOC{
+            background: #f3f3f3 none repeat scroll 0 0;
+            border: 1px solid rgb(206, 206, 206);
+            display:inline-block;
+            font-size: 95%;
+            margin-bottom: 1em;
+            padding: 20px;
+            width: auto;
+            line-height: 40px;
+            font-size: 19px;
+            color:#52575e;
+            text-indent: 5px;
+            padding-left: 70px;
+            width: 710px;
+        }
+
+        a:link {color: rgb(73, 175, 209);}  
+        a:visited {color: rgb(73, 175, 209);}  
+        a:hover {color: rgb(3, 114, 151);}  
+
+        #overview{
+            font-size: 52px;
+            font-weight: bolder;
+            color: rgb(90, 90, 90);
+        }
+
+        #about{
+            font-size: 38px;
+            font-weight: bold;
+            color: rgb(90, 90, 90);
+            
+        }
+
+        #useUi{
+            font-size: 38px;
+            font-weight:bold;
+            color: rgb(90, 90, 90);
+        }
+
+        #avTerms{
+            font-size: 32px;
+            font-weight:bold;
+            color: rgb(121, 120, 120);
+        }
+
+        #addTerms{
+            font-size: 32px;
+            font-weight:bold;
+            color: rgb(121, 120, 120);
+
+        }
+
+        #exTerms{
+            font-size: 32px;
+            font-weight:bold;
+            color: rgb(121, 120, 120);
+
+        }
+
+        #res{
+            font-size: 52px;
+            font-weight: bolder;
+            color: rgb(90, 90, 90);
+        }
+
+        #Text{
+            text-align: justify;
+            text-justify: inter-word;
+            text-indent: 0px;
+            margin-left: 55px;
+            margin-right: 50px;
+            line-height: 30px;
+            font-size: 18px;
+            color: rgb(119, 118, 118);
+        }
+
+        .btn{
+            cursor: pointer;
+            width: 220px;
+            height: 50px;
+            border-radius: 50px;
+            font-size: 18px;
+            background-color: #fefcfb;
+            border: 2px solid #EE5A24;
+            border-radius: 50px;
+            font-size: 18px;
+            color: #EE5A24;
+            margin-top: 40px;
+        }
+
+        .btn:hover{
+            color:#fefcfb;
+            background-image: linear-gradient(
+            to right, 
+            #EE5A24, 
+            #F79F1F
+            );
+            border: none;
+        }
+
+        .btn:active {
+            -webkit-box-shadow: inset 0px 0px 5px #791316;
+                -moz-box-shadow: inset 0px 0px 5px #791316;
+                    box-shadow: inset 0px 0px 5px #791316;
+            outline: none;
+        }
+
+        .process{
+            color:#7e7e7e;
+            font-size: 18px;
+            padding-bottom: 90px;
+        }
+
+        #bottomLine{
+            height: 3px;
+            background-image: linear-gradient(
+                to right, 
+                #EA2027, 
+                #EE5A24, 
+                #F79F1F, 
+                #FFC312
+                );
+            width: 100%;
+        }
+
+        #footer{
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            background-color: white;
+        }
+        
+    
+    </style>
+     
+
+    </body>
+
+
+    <footer>
+        <div id="footer">
+            <hr id= "bottomLine">
+            <p><center>This project was supported by the National Institutes of Mental Health (NIMH) grant 1RF1MH120021</center></p>
+        <div>
+    </footer>
+
+    
+
+</html>

@@ -5,7 +5,7 @@
 
     <head>
 
-        <title>NIDM-Terms: Add Terms</title>
+        <title>NIDM-Terms: Suggest Terms</title>
 
         <script src= "https://code.jquery.com/jquery-3.5.1.js"></script> 
         <script src="./js_lib/jquery.treeView.js"></script>
@@ -46,8 +46,8 @@
             <div class="inner">
                 <h>NIDM-Terms</h>
             </div>
-            <div class="bidsTitle">
-                <h> BIDS Specification Terms</h>
+            <div class="nidmTitle">
+                <h> NIDM Concepts </h>
             </div>
         </header>
     
@@ -56,14 +56,14 @@
                 <ul class= "menuUl"><center>
     
                     <li class= "menuLi">
-                        <form action= "index.html">
+                        <form action= "NIDMConcepts.html">
                             <button class = "available_terms" type="submit">Available Terms</button>
                         </form>
                     </li>
                 
                     <li class= "menuLi">
                         <form action= "addNewTerm.html">
-                            <button class = "add_terms" type="submit">Add New Terms</button>
+                            <button class = "add_terms" type="submit">Suggest Terms</button>
                         </form>
                     </li>
     
@@ -229,8 +229,8 @@
                     function nextStep(){
                         var state = '';
                     
-                        // fetch the BIDS_Terms.jsonld file and read as a dictionary
-                        fetch("https://raw.githubusercontent.com/nqueder/terms/master/terms/BIDS_Terms.jsonld")
+                        // fetch the NIDM_Concepts.jsonld file and read as a dictionary
+                        fetch("https://raw.githubusercontent.com/nqueder/terms/master/terms/NIDM_Concepts.jsonld")
                         .then(function(resp){
                             return resp.json(); 
                         })
@@ -367,7 +367,7 @@
                         var responseOption = {};
 
                         // varable to assoctae with every term
-                        var associatedWith = ["BIDS","NIDM"];
+                        var associatedWith = "NIDM";
 
 
                         $(document).ready(function(event) { 
@@ -437,7 +437,7 @@
                                 if(Object.keys(responseOption).length != 0){
                                     dict[context["@context"]["responseOptions"]["@id"]] = responseOption
                                 }
-                                //always associate the term with BIDS and NIDM
+                                //always associate the term with NIDM
                                 dict[context["@context"]["associatedWith"]] = associatedWith;
 
 
@@ -530,7 +530,7 @@
                                             console.log(77, "post fork: ", response);
                                         }).catch((e) => {
                                             console.log(79, e.message);
-                                            reportAnIssue('BIDS Terms UI: an issue with forking NIDM-Terms repo');
+                                            reportAnIssue('NIDM Concepts UI: an issue with forking NIDM-Terms repo');
                                         });
                                     }
                                 });
@@ -548,7 +548,7 @@
                                     })
                                     .catch((e) => {
                                         console.log(55, e.message);
-                                        reportAnIssue('BIDS Terms UI: an issue with getting master branch hash');
+                                        reportAnIssue('NIDM Concepts UI: an issue with getting master branch hash');
                                     })
                                 };
                             }
@@ -558,15 +558,15 @@
                                 octokit.request(`POST /repos/{owner}/{repo}/git/refs`, {
                                     owner: user,
                                     repo: repo,
-                                    ref: 'refs/heads/'+'BIDS_Term_'+fileName,
+                                    ref: 'refs/heads/'+'NIDM_Concept_'+fileName,
                                     sha: sha
                                 }).then((response) => {
                                     console.log(72, 'successfully created a new branch: ', response.status);
                                     //call function to comit file to the new branch
-                                    createFileInRepo(newTermJsonld, 'terms/BIDS_Terms/'+fileName+'.jsonld', user);
+                                    createFileInRepo(newTermJsonld, 'terms/NIDM_Concepts/'+fileName+'.jsonld', user);
                                 }).catch((e) => {
                                     console.log(67, e.message);
-                                    reportAnIssue('BIDS Terms UI: an issue with creating a new branch');
+                                    reportAnIssue('NIDM Concepts UI: an issue with creating a new branch');
                                 });
                             }
 
@@ -584,9 +584,9 @@
                                         owner: user,
                                         repo: repo,
                                         path: pathToFile,
-                                        message: 'New BIDS Term Added: '+fileName,
+                                        message: 'New NIDM Concepts Added: '+fileName,
                                         content: content,
-                                        branch: 'BIDS_Term_'+fileName
+                                        branch: 'NIDM_Concepts_'+fileName
                                     }).then((response) => {
                                     console.log(91, "statusCode for createFile: ", response.status);
                                     if (response.status === 200 || response.status=== 201) {
@@ -595,7 +595,7 @@
                                     }
                                 }).catch((e) => {
                                     console.log(93, e.message);
-                                    reportAnIssue('BIDS Terms UI: an issue with commiting a new term');
+                                    reportAnIssue('NIDM Concepts UI: an issue with commiting a new term');
                                 });
                             }
 
@@ -610,9 +610,9 @@
                                         },
                                         owner: 'NIDM-Terms',
                                         repo: repo,
-                                        title: 'New BIDS Term Added: ' + fileName,
+                                        title: 'New NIDM Concept Added: ' + fileName,
                                         body: 'Edited or Added Terms:' + pathToFile,
-                                        head: user + ':BIDS_Term_' + fileName,
+                                        head: user + ':NIDM_Concept_' + fileName,
                                         base: 'master'
                                     }).then(resp => {
                                     console.log(108, "StatusCode for Pull Request: ", resp.status);
@@ -621,7 +621,7 @@
                                     submission(st)
                                 }).catch(e => {
                                     console.log(110, 'error in raising PR: ', e);
-                                    reportAnIssue('BIDS Terms UI: an issue with sending a pull request');
+                                    reportAnIssue('NIDM Concepts UI: an issue with sending a pull request');
                                 })
 
                             } 
@@ -828,7 +828,7 @@
 
         }
 
-        .bidsTitle{
+        .nidmTitle{
             color: white;
             background-size: 100px;
             background-color: #52575e;
