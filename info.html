@@ -7,7 +7,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NIDM-Terms: NDA Terms</title>
+    <title>NIDM-Terms: BIDS Specification Terms</title>
     
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -36,32 +36,24 @@
         <form action ="https://github.com/incf-nidash/PyNIDM" target= "_blank" >
             <button class= "pyNidm"> PyNIDM</a>
         </form>
-        <form action ="../index.html">
-            <button class= "pyNidm"> Home</a>
-        </form>
     </div>
 
 
     <header>
         <div class= "logo">
-            <img src="img/nidm-terms_576163.png" width= "85" height="85">
+            <img src="img/nidm-terms_576163.png" width= "70" height="70">
         </div>
         <div class="inner">
             <h>NIDM-Terms</h>
         </div>
-        <div class="ndaTitle">
-            <h> NDA Terms</h>
-        </div>
     </header>
-
-
 
     <div>
         <nav>
             <ul class= "menuUl"><center>
 
                 <li class= "menuLi">
-                    <form action= "NDATerms.html">
+                    <form action= "index.html">
                         <button class = "available_terms" type="submit">Available Terms</button>
                     </form>
                 </li>
@@ -92,7 +84,6 @@
     </div>
 
 
-
     <center><div class="container">
 
         <div id= TOC>
@@ -100,7 +91,7 @@
                 <li><a href="#overview">Overview</a></li>
                 <ul>
                     <li><a href="#about">About NIDM-Terms</a></li>
-                    <li><a href="#useUi">How to use our UI</a></li>
+                    <li><a href="#useUi">How to use our BIDS Specification Terms UI</a></li>
                     <ul>
                         <li><a href="#avTerms">Available Terms</a></li>
                         <li><a href="#addTerms">Add New Terms</a></li>
@@ -120,7 +111,10 @@
         <br><br>
 
         <div id = "Text">
-            
+            Welcome to the Neuroimaging Data Modeling (NIDM) BIDS Specification Terms website. We aim to provide a user 
+            friendly tool that facilitates community engagement in BIDS Specification Terms through providing a simple tree-view 
+            display of the specification terms, allowing new terms submission, as well as allowing terms to be exported in various 
+            formats (e.g. as a Markdown Table). 
         </div>
 
         <br><br><br>
@@ -132,7 +126,7 @@
         <br><br><br>
 
         <div id = "useUi">
-            How to use our UI
+            How to use our BIDS Specification terms UI
 
             <br><br>
 
@@ -173,22 +167,29 @@
 
 
     <style>
+       header{
+            background-color: #52575e;
+            height: 100px;
+        }
+    
         .about{
             color: #52575e;
-            font-size: 14px;
+            font-size: 12px;
             cursor: pointer;
             outline: none;
+            font-weight: lighter;
         }
 
         .github{
             float: right;
             padding: 20px;
-            margin-right: 10px;
-            margin-top: 56px;
-            color: #52575e;
-            font-size: 14px;
+            margin-right: -10px;
+            margin-top: -48px;
+            color: #646464;
+            font-size: 13px;
             width: 130px;
             height:50px;
+            font-weight: lighter;
         }
 
         .github:hover{
@@ -198,11 +199,13 @@
         
         .website{
             float: right;
-            margin-top: 61px;
-            color: #52575e;
-            font-size: 14px;
+            margin-right: -30px;
+            margin-top: -43px;
+            color:#646464;
+            font-size: 13px;
             width: 130px;
             height:50px;
+            font-weight: lighter;
         }
 
         .website:hover{
@@ -212,11 +215,13 @@
 
         .nidmSpecs{
             float: right;
-            margin-top: 61px;
-            color: #52575e;
-            font-size: 14px;
+            margin-right: -20px;
+            margin-top: -43px;
+            color: #646464;
+            font-size: 13px;
             width: 130px;
             height:50px;
+            font-weight: lighter;
         }
 
         .nidmSpecs:hover{
@@ -226,11 +231,13 @@
 
         .pyNidm{
             float: right;
-            margin-top: 61px;
-            color: #52575e;
-            font-size: 14px;
+            margin-right: -30px;
+            margin-top: -43px;
+            color: #646464;
+            font-size: 13px;
             width: 130px;
             height:50px;
+            font-weight: lighter;
         }
 
         .pyNidm:hover{
@@ -240,55 +247,23 @@
 
         .inner{
             margin: 40px;
-            padding-top: 20px;
+            padding-top: 25px;
+            padding-bottom: -10px;
             padding-left: 124px;
             font-weight:lighter;
-            font-size: 30px;
+            font-size: 40px;
             font-family: serif;
             text-transform: uppercase;
-            color: #a6a6a6;
+            color: white;
         }
         .logo{
             position: absolute;
-            top: 30px;
+            top: 55px;
             left: 60px;
         }
 
         header{
             width: 100%;
-
-        }
-
-        .ndaTitle{
-            color: white;
-            background-size: 100px;
-            background-color: #52575e;
-            font-size: 40px;
-            text-indent: 100px;
-            padding-top: 20px;
-            padding-left: 60px;
-            padding-bottom: 20px;
-        }
-
-        .search_bar{
-            float: right;
-            margin-top: -47px;
-            margin-right: 50px;
-            border: 2px solid #32e17c;
-            height: 45px;
-            width: 325px;
-            border-radius: 5px;
-            background-color: #fefcfb;
-            font-size: 18px;
-            text-indent: 44px;
-            outline: none;
-        } 
-
-        #searchIcon{
-        color: #828486;
-        float: right;
-        margin-top: -35px;
-        margin-right: -38px;
         }
 
         body {
@@ -297,7 +272,7 @@
 
         .menuUl{
             width: auto;
-            margin-top: 70px;
+            margin-top: 40px;
         }
 
         .menuLi{
