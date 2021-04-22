@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NIDM: BIDS Specification Terms</title>
+    <title>NIDM-Terms: BIDS Specification Terms</title>
     
     <!-- INCLUDING JQUERY-->
 
@@ -20,89 +20,166 @@
 </head>
 
 
+
 <body>
 
-    <div class= "container">
-
-        <center>
-
-        <div class="pic">
-            <img src="img/nidm-terms_576163.png" width= "170" height="170">
-        </div>
-
-        <div class = "title">
-            <h1>NIDM Terms</h1>
-        </div>
     
-        </center>
+    <div id="headerFixed">
+        <div class="about">
+            <form action = "https://github.com/NIDM-Terms/terms" target="_blank">
+                <button class= "github">Github <i class="fa fa-github" style="font-size:17px"></i>
+                </button>
+            </form>
+            <form action = "https://scicrunch.org/nidm-terms/about/project" target="_blank">
+            <button class= "website">NIDM Website</button>
+            </form>
+            <form action = "http://nidm.nidash.org/" target="_blank">
+                <button class = "nidmSpecs"> NIDM Specs</button>
+            </form>
+            <form action ="https://github.com/incf-nidash/PyNIDM" target= "_blank" >
+                <button class= "pyNidm"> PyNIDM</a>
+            </form>
+        </div>
 
+
+        <header>
+            <div class= "logo">
+                <img src="img/nidm-terms_576163.png" width= "70" height="70">
+            </div>
+            <div class="inner">
+                <h>NIDM-Terms</h>
+            </div>
+            <div class="bidsTitle">
+                <div class= "search-box">
+                    <input id= "searchBar" class="search_bar" type="text" name="box" placeholder = "Search Terms"><i id= "searchIcon" class="fa fa-search" style="font-size:24px"></i>
+                </div>
+            </div>
+        </header>
+
+
+        <div>
+            <nav>
+                <ul class= "menuUl"><center>
+
+                    <li class= "menuLi">
+                        <form action= "index.html">
+                            <button class = "available_terms" type="submit">Available Terms</button>
+                        </form>
+                    </li>
+                
+                    <li class= "menuLi">
+                        <form action= "addNewTerm.html">
+                            <button class = "add_terms" type="submit">Suggest Terms</button>
+                        </form>
+                    </li>
+
+                    <li class= "menuLi">
+                        <form action="createTable.html">
+                            <button class = "createTable">Export Terms</button>
+                        </form>
+                    </li>
+
+                    <li class= "menuLi">
+                        <form action="info.html">
+                            <button class = "resources">About</button>
+                        </form> 
+                    </li>
+
+                    <center><hr id="menuLine"></center>
+
+                </center></ul>
+
+            </nav>
+        </div>
     </div>
+    
+    
 
-    <hr id = "topLine">
-
+    
     <center>
-        <div class= "dirButtons">
-            <li class= "menuLi">
-                <form action= "NIDM_Terms/NIDMTerms.html">
-                    <button class = "btn1" type="submit">NIDM Terms</button>
-                </form>
-            </li>
-
-            <li class= "menuLi">
-                <form action= "NIDM_Concepts/NIDMConcepts.html">
-                    <button class = "btn1" type="submit">NIDM Concepts</button>
-                </form>
-            </li>
-
-            <li class= "menuLi">
-                <form action= "BIDS_Terms/BIDSTerms.html">
-                    <button class = "btn1" type="submit">BIDS Specification Terms</button>
-                </form>
-            </li>
-
-            <li class= "menuLi">
-                <form action= "NDA_Terms/NDATerms.html">
-                    <button class = "btn1" type="submit">NDA Terms</button>
-                </form>
-            </li>
-
-
+        <div class= "container">
+            <div id="selectComunity">
+                <h2 id="selectTitle">.</h2>
+                    <div id="options">
+                        <label id="nidmTerms" class="con">NIDM Terms
+                            <input type="checkbox" name="checkbox" value="https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/NIDM_Terms.jsonld" checked="checked">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label id="nidmConcepts" class="con">NIDM Concepts
+                            <input type="checkbox" name="checkbox" value="https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/NIDM_Concepts.jsonld" checked="checked">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label id="bidsTerms" class="con">BIDS Specification Terms
+                            <input type="checkbox" name="checkbox" value="https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/BIDS_Terms.jsonld" checked="checked">
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+            </div>
+            <br>
+            <br>
+            <div id="termsView"></div>
         </div>
     </center>
+    
 
 
-    <style id = "style">
-
-        .pic{
-            margin-top: 0px;
-            margin-right: 1050px;
+    <style id = "style">.treeview,
+        .treeview ul {list-style-type:none;
+        overflow:hidden;
+        }
+        .treeview li {
+            text-indent:1%;
+            margin-top:0.4em;
+            padding:0.15em 0 0.5em 1.5em;
+            line-height:22px;
+            background-repeat:no-repeat;
+            background-size:24px 24px;
+            margin-right: 30px;
         }
 
-        .title{
-            color: #fdfdfd;
-            font-size: 54px;
-            margin-top: -210px;
-            margin-left: 210px;
-            height: 120px;
+        .treeview li.contains-items {background-image:url(
+            'js_lib/icons/arrow-left.png'); }
+    
+        .treeview li.items-expanded {background-image:url(
+            'js_lib/icons/arrow-down.png'); }
+    
+        .treeview>li:hover {cursor:pointer; }
+    
+        .treeview span:hover {background-color: rgba(246,246,246,0.7
+        
+        ); } 
+
+        #headerFixed{
+            position: fixed; 
+            top: 0px; 
+            width:100%; 
+            height: 269px; 
+            background-color: white;
+        }
+
+        header{
+            background-color: #52575e;
+            height: 100px;
         }
     
         .about{
             color: #52575e;
-            font-size: 14px;
+            font-size: 12px;
             cursor: pointer;
             outline: none;
-            margin-top: -10px;
+            font-weight: lighter;
         }
 
         .github{
             float: right;
             padding: 20px;
-            margin-right: 10px;
-            margin-top: -2px;
-            color: #52575e;
-            font-size: 14px;
+            margin-right: -10px;
+            margin-top: -48px;
+            color: #646464;
+            font-size: 13px;
             width: 130px;
-            height:0px;
+            height:50px;
+            font-weight: lighter;
         }
 
         .github:hover{
@@ -112,11 +189,13 @@
         
         .website{
             float: right;
-            margin-top: 2px;
-            color: #52575e;
-            font-size: 14px;
+            margin-right: -30px;
+            margin-top: -43px;
+            color:#646464;
+            font-size: 13px;
             width: 130px;
             height:50px;
+            font-weight: lighter;
         }
 
         .website:hover{
@@ -126,11 +205,13 @@
 
         .nidmSpecs{
             float: right;
-            margin-top: 2px;
-            color: #52575e;
-            font-size: 14px;
+            margin-right: -20px;
+            margin-top: -43px;
+            color: #646464;
+            font-size: 13px;
             width: 130px;
             height:50px;
+            font-weight: lighter;
         }
 
         .nidmSpecs:hover{
@@ -140,11 +221,13 @@
 
         .pyNidm{
             float: right;
-            margin-top: 2px;
-            color: #52575e;
-            font-size: 14px;
+            margin-right: -30px;
+            margin-top: -43px;
+            color: #646464;
+            font-size: 13px;
             width: 130px;
             height:50px;
+            font-weight: lighter;
         }
 
         .pyNidm:hover{
@@ -154,90 +237,70 @@
 
         .inner{
             margin: 40px;
-            padding-top: 20px;
+            padding-top: 25px;
+            padding-bottom: -10px;
             padding-left: 124px;
             font-weight:lighter;
-            font-size: 30px;
+            font-size: 40px;
             font-family: serif;
             text-transform: uppercase;
-            color: #a6a6a6;
+            color: white;
         }
         .logo{
             position: absolute;
-            top: 30px;
+            top: 55px;
             left: 60px;
         }
 
         header{
             width: 100%;
-
         }
 
         .bidsTitle{
             color: white;
             background-size: 100px;
-            background-color: #52575e;
-            font-size: 40px;
+            background-color: white;
+            font-size: 30px;
+            font-weight: normal;
             text-indent: 100px;
-            padding-top: 20px;
+            margin-top: -38px;
             padding-left: 60px;
-            padding-bottom: 20px;
         }
+
+        .search_bar{
+            float: right;
+            margin-top: -47px;
+            margin-right: 50px;
+            border: 2px solid #32e17c;
+            height: 45px;
+            width: 325px;
+            border-radius: 3px;
+            background-color: #fefcfb;
+            font-size: 18px;
+            text-indent: 65px;
+            outline: none;
+            color: #52575e;
+        } 
 
         #searchIcon{
             color: #828486;
             float: right;
             margin-top: -35px;
-            margin-right: -38px;
+            margin-right: -48px;
         }
         
         body {
             background-color: #ffffff;
         }
 
-        .btn1{
-            float: right;
-            cursor: pointer;
-            width: 300px;
-            height: 50px;
-            background-color: #fefcfb;
-            border: 2px solid #EE5A24;
-            border-radius: 5px;
-            font-size: 18px;
-            font-weight:normal;
-            color: #EE5A24;
-        }
-
-        .btn1:active {
-            background: #e5e5e5;
-            -webkit-box-shadow: inset 0px 0px 5px #96161a;
-                -moz-box-shadow: inset 0px 0px 5px #96161a;
-                    box-shadow: inset 0px 0px 5px #96161a;
-            outline: none;
-
-        }
-        .btn1:hover{
-            color:#fefcfb;
-            background-image: linear-gradient(
-            to right, 
-            #EE5A24, 
-            #F79F1F
-            );
-            border: none;
-        }
-
-        .dirButtons{
-            margin-top: 100px;
-        }
-
         .menuUl{
             width: auto;
-            margin-top: 70px;
+            margin-top: 40px;
         }
 
         .menuLi{
             display: inline-block;
-            padding: 20px 30px;
+            padding: 20px 10px;
         }
 
         button{
@@ -252,18 +315,40 @@
             outline: none;
         }
 
-        .container{
-            text-align: left;
-            font-family:Arial, Helvetica, sans-serif;
-            border-radius: 0px;
-            padding: 80px;
-            padding-top: 80px;
-            margin-top: -50px;
-            background-color: #52575e;
+        .available_terms{
+            color: #EA2027;
+            border: 2px solid #EA2027;
+            border-radius: 5px;
+        }
+
+        .add_terms{
+            color: #EE5A24;
+        }
+        .add_terms:hover{
+            border: 2px solid #EE5A24;
+            border-radius: 5px;
 
         }
 
-        #topLine{
+        .createTable{
+            color: #F79F1F;
+        }
+        .createTable:hover{
+            border: 2px solid #F79F1F;
+            border-radius: 5px;
+
+        }
+
+        .resources{
+            color: #FFC312;
+        }
+        .resources:hover{
+            border: 2px solid #FFC312;
+            border-radius: 5px;
+
+        }
+
+        #menuLine{
             height: 10px;
             background-image: linear-gradient(
                 to right, 
@@ -272,10 +357,117 @@
                 #F79F1F, 
                 #FFC312
                 );
-            width: 100%;
-            margin-top: -9px;
+            margin-top: -23px;
+            width: 1200px;
         }
 
+        .container{
+            width: 875px;
+            height: 170%;
+            text-align: left;
+            font-family:Arial, Helvetica, sans-serif;
+            border: 1px solid #b3b3b3 ;
+            border-radius: 0px;
+            padding: 80px;
+            padding-top: 60px;
+            padding-right: -10px;
+            margin-top: 320px;
+            margin-bottom: 100px;
+            background-color: #F7F7F7 ;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+
+        }
+
+        /* The container */
+        .con {
+            display: inline-block;
+            position: relative;
+            padding-left: 35px;
+            margin-bottom: 12px;
+            margin-left: 75px;
+            cursor: pointer;
+            font-size: 16px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* Hide the browser's default checkbox */
+        .con input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        /* Create a custom checkbox */
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 22px;
+            width: 22px;
+            background-color: rgb(219, 217, 217);
+        }
+
+        /* On mouse-over, add a grey background color */
+        .con:hover input ~ .checkmark {
+            background-color: #ccc;
+        }
+
+        /* When the checkbox is checked, add a blue background #2196F3 */
+        .con input:checked ~ .checkmark {
+            background-color: #2196F3;
+        }
+
+        /* Create the checkmark/indicator (hidden when not checked) */
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        /* Show the checkmark when checked */
+        .con input:checked ~ .checkmark:after {
+            display: block;
+        }
+
+        /* Style the checkmark/indicator */
+        .con .checkmark:after {
+            left: 8px;
+            top: 3px;
+            width: 4px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+
+        #options{
+            margin-left: 40px;
+            margin-top: -38px;
+            color: rgb(85, 85, 85);
+        }
+
+        #selectTitle{
+            text-indent: 10px;
+            font-weight: normal;
+            color:   rgb(240, 240, 240);
+            font-size: 20px;
+        }
+
+        #selectComunity{
+            background-color: rgb(240, 240, 240);
+            padding-top: 15px;
+            padding-bottom: 20px;
+            padding-left: 20px;
+            width: 100%;
+        }
+        
         #bottomLine{
             height: 3px;
             background-image: linear-gradient(
@@ -296,12 +488,264 @@
             text-align: center;
             background-color: white;
         }
-        
-    
+
     </style>
      
 
     </body>
+
+
+    <script>
+
+        //This script fetches raw github jsonld files of NIDM-Terms and displays then in a treeview
+        //allowing the user to view and search terms as well as filtering terms based on the terms catagories
+
+        //TO ADD OR CHANGE THE TERM CATEGORIES YOU MUST MAKE THE CHANGE IN TWO PLACES:
+        // 1. Inside the HTML code to add a checkbox and a label to it.
+        // 2. Below in "urlList" array.
+
+        // a list that contain all of the url we need to parse
+        var urlList = ['https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/BIDS_Terms.jsonld','https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/NIDM_Terms.jsonld','https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/NIDM_Concepts.jsonld']
+
+
+        /// This function fetches data from the BIDS_Terms jsonld file
+        $(document).ready(function(event) {
+
+            
+            //Call fetch all and give it a list of urls to the raw github files to display
+            fetchAll(urlList)
+
+            //Get the values selected in the checkboxes
+            var checkboxElems = document.querySelectorAll("input[type='checkbox']");
+            //create anempty list to add the check box values to it
+            let list = [];
+            //loop through the checked elements and call displayCheck
+            for (var i = 0; i < checkboxElems.length; i++) {
+                checkboxElems[i].addEventListener("click", displayCheck);
+            }
+
+            //This function checks which checkboxes were unchecked and passes a list of urls to the function fetchAll to display
+            function displayCheck(e) {
+                //create a list of the term catagories that were unchecked to filter out
+                if (!e.target.checked) {
+                    for(i = 0; i < urlList.length; i++){
+                        if (urlList[i] == e.target.value){
+                            delete urlList[i]
+                        }
+                    }
+                    urlList = removeNull(urlList)
+                    //if the user unchecks all of the checkboxes then display a message
+                    if(urlList.length == 0){
+                        document.getElementById('termsView').innerHTML = ''
+                        doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;"> Setect one or more term category </div>'
+                        $('#termsView').append(doc);
+                        return;
+                    }
+                    else{
+                        fetchAll(urlList)
+                    }
+                    console.log(urlList.length)
+                    
+                    //list.push(e.target.value)
+                } else if (e.target.checked) {
+                    //recheck after uncheck
+                    urlList.push(e.target.value)
+                    urlList = removeNull(urlList)
+                    fetchAll(urlList)
+                    console.log(13, urlList)
+                }
+                //filters out t
+                function removeNull(array) {
+                    return array.filter(x => typeof x === 'string')
+                };
+                
+
+            }
+            
+            //function that takes a list of urls of raw github jsonld file fetch them, and add the data to the mainDict
+            function fetchAll(urlList){
+
+                //Main dictionary that contains either all Terms available or filtered terms
+                var mainList = []
+                
+                //loop through each jsonld github raw file, fetch, and add terms to a list
+                for(var i = 0; i < urlList.length; i++){
+                    fetch(urlList[i])
+                    .then(function(resp){
+                        return resp.json(); 
+                    })
+                    .then(function(data){
+                        var temp = mainList.concat(data['terms'])
+                        mainList = temp
+                        //Call sortOnKeys first to sort the terms
+                        sortOnKeys(mainList)
+                    })
+                }  
+                
+            }
+
+            //This function sorts the terms in an alphabetical order
+            function sortOnKeys(dict_data) {
+                var sorted = [];
+                //sort terms based on the label of the dictionary
+                dict_data.sort((a, b) => (a.label > b.label) ? 1 : (a.label === b.label) ? ((a.description > b.size) ? 1 : -1) : -1 );
+                //Add sorted terms to a list
+                for (var p in dict_data) {
+                    sorted[sorted.length] = dict_data[p].label;
+                }
+                //sorted.sort();
+                //call Display function and pass the sorted list
+                display(dict_data)
+            }
+
+            function display(data){
+
+                //Get search input and pass the search
+                const searchBar = document.getElementById("searchBar");
+
+                searchBar.addEventListener("keyup", (e) => {
+                    console.log(e.target.value)
+                    const searchString = e.target.value;
+
+                    const searchedTerms = filterTerms(data, searchString);
+
+                    if(isEmpty(searchedTerms)){
+                        document.getElementById('termsView').innerHTML = ''
+                        doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;"> NO MATCHING TERMS HAVE BEEN FOUND... </div>'
+                        $('#termsView').append(doc);
+                        return;
+                    }
+
+                    displayTerms(searchedTerms)
+
+                });
+
+
+                displayTerms(data) 
+
+                //Function to display the terms in a treeview
+                function displayTerms(data) {
+
+                    //Clear previous term display
+                    document.getElementById('termsView').innerHTML = "";
+
+                    var html = '<ul class= "treeview">';
+
+                    //loop through the terms objects and display terms
+                    for (var d = 0; d < data.length; d++) { // Each sub-entry
+                        
+                        html += '<li>' + data[d].label + '<ul>';
+
+                        for (const [key,value] of Object.entries(data[d])){
+                            if (key != 'label'){
+                                if(typeof(value) === 'object'){
+                                    html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
+                                    for(const [k,v] of Object.entries(value)){
+                                        if(typeof(v) === 'object'){
+                                            html += '<li>'  +  '<b>'+ k +'</b>  ' + '<ul>'
+                                            for(const [kk,vv] of Object.entries(v)){
+                                                html += '<li>'  +  '<b>' + kk +'</b>  ' + ':  '+ vv + '</li>';
+                                            }
+                                            html += '</li></ul>'
+                                        }
+                                        else if (typeof(v) === 'array'){
+                                            html += '<li>'  +  '<b>'+ k +'</b>  ' + '<ul>'
+                                            for(var s = 0; v.length; s++){
+                                                if(typeof(v[s]) === 'string'){
+                                                    html += '<li>'  +  v[s] + '</li>';
+                                                }
+                                                else if (typeof(v[s]) === 'object'){
+                                                    html += '<ul>'
+                                                    for(const [ke,val] of Object.entries(v[s])){
+                                                        html += '<li>'  +  '<b>' + ke +'</b>  ' + ':  '+ val + '</li>';
+                                                    }
+                                                    html += '</ul>'
+                                                }
+                                            }
+                                            html += '</ul></li>';
+                                        }
+                                        else {
+                                            html += '<li>'  +  '<b>' + k +'</b>  ' + ':  '+ v + '</li>';
+                                        }
+                                        
+                                    }
+                                    html += '</li></ul>'
+                                }
+                                else if (typeof(value) === 'array'){
+                                    html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
+                                    for(const a = 0; a< value.length; a++){
+                                        html += '<li>' + value[a] + '</li>';
+                                    }
+                                    html += '</ul></li>';
+                                }
+                                else{
+                                    html += '<li>'  +  '<b>' + key +'</b>  ' + ':  '+ value + '</li>';
+                                }
+                            }
+                        }
+ 
+                        html += '</ul></li>';
+                    
+                    }   
+
+                    html += '</ul>';
+
+                    $('#termsView').append(html);
+
+                    $('.treeview').treeView();
+
+                    var style = ".treeview,";
+                    style += ".treeview ul {list-style-type:none;overflow:hidden;}";
+                    style += ".treeview li {text-indent:1%;margin-top:0.2em;padding:0.15em 0 0.5em 1.5em;line-height:22px;background-repeat:no-repeat;background-size:24px 24px;}";
+                    style += ".treeview li.contains-items {background-image:url('js_lib/icons/arrow-left.png');}";
+                    style += ".treeview li.contains-items {background-image:url('js_lib/icons/arrow-right.png');}";
+                    style += ".treeview>li:hover {cursor:pointer; .add_terms:hover;background-color: #dbe9ee}";
+                    style += ".treeview span:hover {background-color: rgba(246,246,246,0.7); }";
+
+
+                    //$('#style').append(style);
+
+                    // Expands all the nodes of treeviews
+                    //$('.treeview').treeView('expandAll');
+                    // Collapses all the nodes of treeviews
+                    $('.treeview').treeView('collapseAll');
+
+
+
+                }   
+
+                // this function filters the data dictionary based on the input of the search bar
+                function filterTerms(data, searchedTerms){
+                    
+                    var termsDict = {};
+                    var termsList = [];
+
+                    for (var l = 0; l < data.length; l++){
+                        $.each(data[l], function (key, value) {
+                            //search on label and convert both the search and the label to lower case
+                            if(key == 'label' & data[l].label.toLowerCase().includes(searchedTerms.toLowerCase())){
+                                termsDict = data[l] 
+                                termsList.push(termsDict)  
+                            };                          
+                        }); 
+                    };
+                    return termsList
+                };
+
+
+                // This function checks if the dictionary is empty
+                function isEmpty(obj) {                
+                    for(var key in obj) {
+                        if(obj.hasOwnProperty(key))
+                            return false;
+                    }
+                    return true;
+                }
+            }
+
+        });
+
+    </script> 
 
 <footer>
     <div id="footer">
