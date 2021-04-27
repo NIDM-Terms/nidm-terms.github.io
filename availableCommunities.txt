@@ -1,0 +1,14 @@
+{
+	"NIDM Terms": {
+		"URL" : "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/NIDM_Terms.jsonld",
+		"Description" : ""
+	},
+	"NIDM Concepts": {
+		"URL" : "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/NIDM_Concepts.jsonld",
+		"Description" : ""
+	},
+	"BIDS Specification Terms": {
+		"URL" : "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/BIDS_Terms.jsonld",
+		"Description" : ""
+	}
+}
