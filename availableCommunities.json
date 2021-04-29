@@ -13,5 +13,11 @@
 		"label" : "BIDS_Terms",
 		"URL" : "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/BIDS_Terms.jsonld",
 		"Description" : ""
+	},
+	"TEST New Terms" : {
+		"label" : "New_Terms",
+		"URL" : "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/NEW_Terms.jsonld",
+		"Description" : ""
 	}
+		
 }
