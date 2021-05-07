@@ -70,6 +70,12 @@
                             <button class = "createTable">Export Terms</button>
                         </form>
                     </li>
+
+                    <li class= "menuLi">
+                        <form action= "addCommunity.html">
+                            <button class = "add_community" type="submit">Add New Community</button>
+                        </form>
+                    </li>
     
                     <li class= "menuLi">
                         <form action="info.html">
@@ -88,14 +94,56 @@
 
             <divid id = "rmv">
 
+                <h2 id="stepTitles">GitHub Access Token<hr style="margin-top: 5px;"></h2>
+
+
                 <div class="headerBrdr"><center>
-                    STEP 1: fill out the following information
+                    The NIDM-Terms effort is focused on developing and adopting a set of community driven controlled vocabulary 
+                    for neuroimaging. NIDM-Terms infrastructure consists of a GitHub repository containing JSON-LD formatted 
+                    files for each term. Newly added terms will be sent as a pull request to our GitHub repository.
+                    Therefore, in order to suggest a new term, a GitHub API Token must be provided. 
                 </center></div>
+
+                <br>
+
+                <div class="keyInfo"><center>
+                    For more information on GitHub personal access tokens click <a href= "https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token" target="_blank"> here</a>.
+                </center></div>
+
+                <br><br><br>
+
+                <form><input id = "token" type="password"  placeholder="Enter GitHub Personal Access Token" required></form>
+
+                <form action="https://github.com/settings/tokens" target= "_blank">
+                    <input class= "btn4" type = "submit" value="Generate GitHub Token">
+                </form>
+
+
+                <br><br><br><br><br>
+                
+                <h2 id="stepTitles">Neuroimaging Communities <hr style="margin-top: 5px;"></h2>
+
+
+                <div class="headerBrdr"><center>
+                    
+                </center></div>
+
+                <center><div id = "selection">
+                    <div id="selectComunity">
+                        <h2 id="selectTitle">.</h2>
+                        <div id = "options"></div>
+                    </div>
+                    
+                </div></center>
+
+                <br><br><br>
+
+                <h2 id="stepTitles">New Term Information <hr style="margin-top: 5px;"></h2>
 
 
                 <form class="inputs">
                     
-                    <h4>Label
+                    <h4 style="margin-bottom: 10px; margin-left: -5px;">Label
                         <div class="tool-tip">
                             <i class="tool-tip__icon">i</i>
                             <p class="tool-tip__info">
@@ -103,9 +151,9 @@
                             </p>
                         </div>
                     </h4> 
-                    <input id= "label" class="TermInput" type="text" name="label" placeholder = "REQUIRED: Term in cammelCase (e.g. durationTime, author)" required>
+                    <input id= "label" class="newComInput" type="text" name="label" placeholder = "REQUIRED: Term in cammelCase (e.g. durationTime, author)" required>
                     
-                    <h4>Description
+                    <h4 style="margin-bottom: 10px; margin-left: -5px;">Description
                         <div class="tool-tip">
                             <i class="tool-tip__icon">i</i>
                             <p class="tool-tip__info">
@@ -113,9 +161,9 @@
                             </p>
                         </div>
                     </h4>
-                    <input id= "des" class="TermInput" type="text" name="description" placeholder = "REQUIRED: Term description" required>
+                    <input id= "des" class="newComInput" type="text" name="description" placeholder = "REQUIRED: Term description" required>
                 
-                    <h4>Comment
+                    <h4 style="margin-bottom: 10px; margin-left: -5px;">Comment
                         <div class="tool-tip">
                             <i class="tool-tip__icon">i</i>
                             <p class="tool-tip__info">
@@ -123,9 +171,9 @@
                             </p>
                         </div>
                     </h4>
-                    <input id= "comment" class="TermInput" type="text" name="comment" placeholder = "OPTIONAL: Additional comments">
+                    <input id= "comment" class="newComInput" type="text" name="comment" placeholder = "OPTIONAL: Additional comments">
                 
-                    <h4>URL
+                    <h4 style="margin-bottom: 10px; margin-left: -5px;">URL
                         <div class="tool-tip">
                             <i class="tool-tip__icon">i</i>
                             <p class="tool-tip__info">
@@ -133,9 +181,9 @@
                             </p>
                         </div>
                     </h4>
-                    <input id="url" class="TermInput" type="text" name="url" placeholder = "OPTIONAL: Term URL">
+                    <input id="url" class="newComInput" type="text" name="url" placeholder = "OPTIONAL: Term URL">
 
-                    <h4>Unit
+                    <h4 style="margin-bottom: 10px; margin-left: -5px;">Unit
                         <div class="tool-tip">
                             <i class="tool-tip__icon">i</i>
                             <p class="tool-tip__info">
@@ -143,7 +191,7 @@
                             </p>
                         </div>
                     </h4>
-                    <input id="unit" class="TermInput" type="text" name="unit" placeholder = "OPTIONAL: Term unit">
+                    <input id="unit" class="newComInput" type="text" name="unit" placeholder = "OPTIONAL: Term unit">
 
                     
                     <label><h4>Value Type
@@ -188,26 +236,25 @@
                         </div>
                     </h4>
 
-                    <div id="wrapper">
+                    
 
-                        <br>
+                        
 
-                            <form>
-                                <h5>Please enter the number of choices: <input id="numOfValues" class="numOfValues" type="text"> </h5>
-                                <button type = "button" class= "btn3" id = "catValue"> Add Choice </button>
-                            </form>
+                    <form>
+                        <input id="numOfValues" class="numOfValues" type="text" placeholder="Enter the number of choices">
+                        <button type = "button" class= "btn3" id = "catValue"> Add Choices </button>
+                    </form>
 
-                            <div id= "addParent">
-                                <div id= "add"></div>
-                            </div>
-
-                        <br>
-
+                    <div id= "addParent">
+                        <div id= "add"></div>
                     </div>
 
-                    <br><br><br>
 
-                    <div id='remove'><button id = "Next" class= "btn1" type = "button"> Next </button></div>
+                    
+
+                    <br><br><br><br>
+
+                    <div><button id = "pullRequest" class= "btn1" type = "button"> Send Pull Request </button></div>
 
                     <br>
 
@@ -221,90 +268,100 @@
 
                 <script type = "module">
 
-                    ///////////////////////////////////////////////////////////////////////////
-                    //validat that label and description have values
-                    ///////////////////////////////////////////////////////////////////////////
-                    function nextStep(){
-                        var state = '';
-                    
-                        // fetch the BIDS_Terms.jsonld file and read as a dictionary
-                        fetch("https://raw.githubusercontent.com/nqueder/terms/master/terms/BIDS_Terms.jsonld")
-                        .then(function(resp){
-                            return resp.json(); 
+                    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    //add checkmarks with available community names by fetching (https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json)
+                    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    $(document).ready(function(event){
+                        //Fetch 'https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json' to get a list of the available communities in NIDM-Terms/terms
+                        fetch('https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json')
+                        .then(function(res){
+                            return res.json(); 
                         })
 
-                        .then(function(termsDict){
-                            //lets to contain the available labels
-                            var avLabelList = [];
+                        //Create chackboxes with the available communities and create a list of their URLS and pass it
+                        .then(function(avCom){
 
-                            for (var t in termsDict['terms']) {
+                            var html = '';
 
-                                var label = termsDict.terms[t].label;
-
-                                avLabelList.push(label.toLowerCase())
-
-                            }
-                            return avLabelList
-
-                        })
-                        
-                        .then(function(avLabelList){
-                            //if label and description don't have values call the validation fonction
-                            if (document.getElementById('label').value.length == 0 & document.getElementById('des').value.length == 0){
-                                alert('An input is required for Label and Description')
-                            }
-                            else if (document.getElementById('label').value.length == 0 & document.getElementById('des').value.length != 0){
-                                alert('An input for Label is required')
-                            }
-                            else if (document.getElementById('label').value.length != 0 & document.getElementById('des').value.length == 0 ){
-                                alert('An input for Description is required')
-                            }
-                            else if (document.getElementById('label').value.length != 0 & document.getElementById('des').value.length != 0 & avLabelList.includes(document.getElementById('label').value.toLowerCase()) == true){
-                                window.alert('This term already exists in NIDM-Terms')
-                                location.reload()
-                            }
-                            //else next step, which is an iput for the github API and a button 
-                            else {
-
-                                $("#remove").html("")
-
-                                var html = '<br><br><hr><br><br><br><br>';
-
-                                html += '<div class="headerBrdr"><center> STEP 2: enter your Github API Key</center></div><br><br>';
-                                html += "<div class='step2_tool-tip'><center><i class='step2_tool-tip__icon'>How to obtain a GitHub API key</i></center><p class='step2_tool-tip__info'><span class='info'>";
-                                html += "To obtain a GitHub API key:<br><br>";
-                                html += "1. Login to GitHub<br>";
-                                html += "2. Go to your profile settings<br>";
-                                html += "3. Developer settings<br>";
-                                html += "4. Personal access tokens<br>";
-                                html += "5. Fill out the appropriate information<br>";
-                                html += "6. Generate a token";
-                                html += "</span></p></div>";
-                                html += '<center><form class="inputs"><input class="TermInput" id = "token" type="password"  placeholder="GitHub API Token" required></form>';
-                                html += '<br><br><br>';
-                                html += '<button id= "pullRequest" class= "btn1" type = "button" > Send Pull Request </button>';
-                                html += '<br></p></div></center>';  
+                            for (const [key,value] of Object.entries(avCom)){
                                 
-                                $('#PR').append(html);
-
-                                state = '1'
+                                //add checkboxes
+                                html += '<label class="con">'+ key;
+                                html += '<input type="radio" name="radio" value = "'+value['label']+'">';
+                                html += '<span class="checkmark"></span>';
+                                html += '</label>';
 
                             }
-                        })
 
-                        .then(function(){
-                            if(state == '1'){
-                                submitTerm()
-                            } else {
-                                console.log('submitTerms() wanst called')
-                            }
+                            $("#options").append(html);
 
                         })
+                    })
 
+                    ////////////////////////////////////////////////////////////////////////////////////
+                    //validat that label and description have values and that terms do not already exist
+                    ////////////////////////////////////////////////////////////////////////////////////
+                    function nextStep(){
+                        //var state = '';
+                    
+                        // // fetch the BIDS_Terms.jsonld file and read as a dictionary
+                        // fetch("https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/BIDS_Terms.jsonld")
+                        // .then(function(resp){
+                        //     return resp.json(); 
+                        // })
+
+                        // .then(function(termsDict){
+                        //     //list to contain available labels
+                        //     var avLabelList = [];
+
+                        //     for (var t in termsDict['terms']) {
+
+                        //         var label = termsDict.terms[t].label;
+
+                        //         avLabelList.push(label.toLowerCase())
+
+                        //     }
+                        //     return avLabelList
+
+                        // })
+                        
+                        // .then(function(avLabelList){
+                        //     //if label and description don't have values call the validation fonction
+                        //     if (document.getElementById('label').value.length == 0 & document.getElementById('des').value.length == 0){
+                        //         alert('An input is required for Label and Description')
+                        //     }
+                        //     else if (document.getElementById('label').value.length == 0 & document.getElementById('des').value.length != 0){
+                        //         alert('An input for Label is required')
+                        //     }
+                        //     else if (document.getElementById('label').value.length != 0 & document.getElementById('des').value.length == 0 ){
+                        //         alert('An input for Description is required')
+                        //     }
+                        //     else if (document.getElementById('label').value.length != 0 & document.getElementById('des').value.length != 0 & avLabelList.includes(document.getElementById('label').value.toLowerCase()) == true){
+                        //         window.alert('This term already exists in the NIDM-Terms GitHub repository')
+                        //         location.reload()
+                        //     }
+                        //     //else next step, which is an iput for the github API and a button 
+                        //     else {
+
+                        //         submitTerm()
+
+                        //     }
+                        // })
+
+                        // // .then(function(){
+                        // //     if(state == '1'){
+                        // //         submitTerm()
+                        // //     } else {
+                        // //         console.log('submitTerms() wanst called')
+                        // //     }
+
+                        // // })
+
+                        submitTerm()
                         
                     }
 
-                    document.getElementById("Next").addEventListener("click", nextStep)
+                    document.getElementById("pullRequest").addEventListener("click", nextStep)
 
 
                     ///////////////////////////////////////////////////////////////////////////
@@ -313,7 +370,9 @@
                     var list = [];
                     function addOptions(){
 
-                        var html = '<br><br><br><br>';
+                        var html = '';
+
+                        html += '<div id="wrapper">';
 
                         var numOfOptions = document.getElementById('numOfValues').value;
 
@@ -324,12 +383,13 @@
                             for (var i = 1; i <= numOfOptions; i++){
 
                                 html += '<h5>Choice '+i+':</h5>';
-                                html += '<input id="n'+i+'" id="name" class="subTermInput" type="text" name="name" placeholder = "Name">';
-                                html += '<input id="v'+i+'" id="value" class="subTermInput" type="text" name="value" placeholder = "Value">';
-                                html += '<br>'
+                                html += '<input id="n'+i+'" id="name" class="newInput" type="text" name="name" placeholder = "Name">';
+                                html += '<input id="v'+i+'" id="value" class="newInput" type="text" name="value" placeholder = "Value">';
+                                html += '<br>';
                                     
                             }
 
+                            html += '</div>';
                             $('#add').append(html);
                         } 
                         
@@ -340,119 +400,134 @@
                             for (var i = 1; i <= numOfOptions; i++){
 
                                 html += '<h5>Choice '+i+':</h5>';
-                                html += '<input id="n'+i+'" id="name" class="subTermInput" type="text" name="name" placeholder = "Name">';
-                                html += '<input id="v'+i+'" id="value" class="subTermInput" type="text" name="value" placeholder = "Value">';
-                                html += '<br>'
-                                    
+                                html += '<input id="n'+i+'" id="name" class="newInput" type="text" name="name" placeholder = "Name">';
+                                html += '<input id="v'+i+'" id="value" class="newInput" type="text" name="value" placeholder = "Value">';
+                                html += '<br>';
+
                             }
 
+                            html += '</div>';
                             $('#add').append(html);
 
                         }
-
                         if (document.getElementById('numOfValues').value == 0){
+                            html += '</div>';
                             $("#add").html("");
                         }
-
                     };
 
                     document.getElementById("catValue").addEventListener("click", addOptions)
 
                     function submitTerm(){
 
-                        //empty dicttionary 
-                        var dict = {};
-                        var responseOption = {};
+                        if(document.querySelector('input[name="radio"]:checked').value === 0){
+                            alert('Please select a neuroimaging community in which you would like the the term to be added')
+                        }
+                        else{
+                        
+                            var community = document.querySelector('input[name="radio"]:checked').value;
 
-                        // varable to assoctae with every term
-                        var associatedWith = ["BIDS","NIDM"];
+                            //empty dicttionary 
+                            var dict = {};
+                            var responseOption = {};
 
+                            // varable to assoctae with every term based on the user's selection
+                            if(community.startsWith("NIDM")){
+                                var associatedWith = "NIDM";
+                            }
+                            else{
+                                //Slice the last 6 characters "_Terms" to get the name of the community
+                                var com = community.substring(0, community.length - 6)
+                                var associatedWith = [com, "NIDM"];
+                                console.log(associatedWith)
+                            }
 
-                        $(document).ready(function(event) { 
-                            // fetch the context file and create a jsonld
-                            fetch("https://raw.githubusercontent.com/nqueder/terms/master/context/cde_context.jsonld")
-                            .then(function(resp){
-                                return resp.json(); 
-                            })
+                            $(document).ready(function(event) { 
+                                // fetch the context file and create a jsonld
+                                fetch("https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld")
+                                .then(function(resp){
+                                    return resp.json(); 
+                                })
 
-                            .then(async function(context){
+                                .then(async function(context){
 
-                                dict['@context'] = 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld'
+                                    dict['@context'] = 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld'
 
-                                //call checkTerm to checkif the lable of the term already exists to avoid duplication
-                                //returns 1 if the terms exists and 0 if the term doesn't exist
-                                //var check = checkLabel(document.getElementById("label").value)
-                                //console.log(checkLabel(document.getElementById("label").value))
+                                    //call checkTerm to checkif the lable of the term already exists to avoid duplication
+                                    //returns 1 if the terms exists and 0 if the term doesn't exist
+                                    //var check = checkLabel(document.getElementById("label").value)
+                                    //console.log(checkLabel(document.getElementById("label").value))
 
-                                
-                                
-                                //assign inputted values to term properties
-                                dict[context["@context"]["label"]] = document.getElementById("label").value;
-                                dict['@type'] = context["@context"]["DataElement"]
-                                if(document.getElementById("des").value.length != 0){
-                                    dict[context["@context"]["description"]] = document.getElementById("des").value;
-                                }
-                                if(document.getElementById("comment").value.length != 0){
-                                    dict[context["@context"]["comment"]] = document.getElementById("comment").value;
-                                }
-                                if(document.getElementById("url").value.length != 0){
-                                    dict[context["@context"]["url"]["@id"]] = document.getElementById("url").value;
-                                }
-                                if(document.getElementById("unit").value.length != 0){
-                                    responseOption[context["@context"]["unitCode"]] = document.getElementById("unit").value;
-                                }
-                                if(document.getElementById("VT").value.length != 0 & document.getElementById("VT").value != 'select'){
-                                    responseOption[context["@context"]["valueType"]] = document.getElementById("VT").value;
-                                }
-                                if(document.getElementById('numOfValues').value.length != 0){
-                                    //empty list for choices dictionaries
-                                    var choices_list = [];
-                                
-                                    //get the number of choices available
-                                    var valNum = document.getElementById('numOfValues').value;
-                                    //loop through the choices and add them to add to the jsonld
-                                    for (var l = 1; l <= valNum; l++){
-                                        console.log(l)
-
-                                        // empty dictionary for each choice's name and value
-                                        var choices = {};
-
-                                        if(document.getElementById("n"+l).value.length != 0 & document.getElementById("v"+l).value.length != 0){
-                                            choices[context['@context']['name']] = document.getElementById("n"+l).value;
-                                            choices[context['@context']['value']] = document.getElementById("v"+l).value;
-                                            choices_list.push(choices)
-                                        }
-                                    }
-
-                                    //assign choices to responseOptions dictionary
-                                    if(choices_list.length != 0){
-                                        responseOption[context['@context']['choices']] = choices_list;
-                                    }
-
-                                }    
-
-                                //add response options values
-                                if(Object.keys(responseOption).length != 0){
-                                    dict[context["@context"]["responseOptions"]["@id"]] = responseOption
-                                }
-                                //always associate the term with BIDS and NIDM
-                                dict[context["@context"]["associatedWith"]] = associatedWith;
-
-
-                                //compact term dictionary
-                                const compacted = await jsonld.compact(dict, 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld');
-                                console.log(compacted)
-
-                                return compacted
                                     
-                            })
+                                    //assign inputted values to term properties
+                                    dict[context["@context"]["label"]] = document.getElementById("label").value;
+                                    dict['@type'] = context["@context"]["PersonalDataElement"]
+                                    if(document.getElementById("des").value.length != 0){
+                                        dict[context["@context"]["description"]] = document.getElementById("des").value;
+                                    }
+                                    if(document.getElementById("comment").value.length != 0){
+                                        dict[context["@context"]["comment"]] = document.getElementById("comment").value;
+                                    }
+                                    if(document.getElementById("url").value.length != 0){
+                                        dict[context["@context"]["url"]["@id"]] = document.getElementById("url").value;
+                                    }
+                                    if(document.getElementById("unit").value.length != 0){
+                                        responseOption[context["@context"]["unitCode"]] = document.getElementById("unit").value;
+                                    }
+                                    if(document.getElementById("VT").value.length != 0 & document.getElementById("VT").value != 'select'){
+                                        responseOption[context["@context"]["valueType"]] = document.getElementById("VT").value;
+                                    }
+                                    if(document.getElementById('numOfValues').value.length != 0){
+                                        //empty list for choices dictionaries
+                                        var choices_list = [];
+                                    
+                                        //get the number of choices available
+                                        var valNum = document.getElementById('numOfValues').value;
+                                        //loop through the choices and add them to add to the jsonld
+                                        for (var l = 1; l <= valNum; l++){
+                                            console.log(l)
 
-                            .then(function(newTermJsonld){
-                                document.getElementById("pullRequest").addEventListener("click", function(){ sendPR(newTermJsonld); })
-                            })
-                            
+                                            // empty dictionary for each choice's name and value
+                                            var choices = {};
 
-                        });
+                                            if(document.getElementById("n"+l).value.length != 0 & document.getElementById("v"+l).value.length != 0){
+                                                choices[context['@context']['name']] = document.getElementById("n"+l).value;
+                                                choices[context['@context']['value']] = document.getElementById("v"+l).value;
+                                                choices_list.push(choices)
+                                            }
+                                        }
+
+                                        //assign choices to responseOptions dictionary
+                                        if(choices_list.length != 0){
+                                            responseOption[context['@context']['choices']] = choices_list;
+                                        }
+
+                                    }    
+
+                                    //add response options values
+                                    if(Object.keys(responseOption).length != 0){
+                                        dict[context["@context"]["responseOptions"]["@id"]] = responseOption
+                                    }
+                                    //always associate the term with the appropriate community
+                                    dict[context["@context"]["associatedWith"]] = associatedWith;
+
+
+                                    //compact term dictionary
+                                    const compacted = await jsonld.compact(dict, 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld');
+                                    console.log(compacted)
+
+                                    return compacted
+                                        
+                                })
+
+                                .then(function(newTermJsonld){
+                                    //document.getElementById("pullRequest").addEventListener("click", function(){ sendPR(newTermJsonld, community); })
+                                    sendPR(newTermJsonld, community)
+                                })
+                                
+
+                            });
+                        };
 
                     };
 
@@ -464,10 +539,11 @@
                     /// function created to create jsonld files and submit a pull request to github
                     //////////////////////////////////////////////////////////////////////////////////
 
-                    function sendPR (newTermJsonld){
-
+                    function sendPR (newTermJsonld, community){
+                        //Get GitHub API key
                         if(document.getElementById("token").value.length == 0){
-                                    alert('GitHub Token is required')
+                            alert('GitHub Token is required')
+                            console.log("no token")
                         } 
                         else {
                         
@@ -490,6 +566,7 @@
                                 forkRepo(response.data.login)
                             }).catch((e) => {
                                 console.log(23, e.message);
+                                alert('Bad Credentials... Please Enter A Valid Personal Access Token.')
                             })
 
                             //fork repo function
@@ -528,7 +605,7 @@
                                             console.log(77, "post fork: ", response);
                                         }).catch((e) => {
                                             console.log(79, e.message);
-                                            reportAnIssue('BIDS Terms UI: an issue with forking NIDM-Terms repo');
+                                            reportAnIssue('NIDM Terms UI: an issue with forking NIDM-Terms repo', e);
                                         });
                                     }
                                 });
@@ -546,7 +623,7 @@
                                     })
                                     .catch((e) => {
                                         console.log(55, e.message);
-                                        reportAnIssue('BIDS Terms UI: an issue with getting master branch hash');
+                                        reportAnIssue('NIDM Terms UI: an issue with getting master branch hash', e);
                                     })
                                 };
                             }
@@ -556,15 +633,15 @@
                                 octokit.request(`POST /repos/{owner}/{repo}/git/refs`, {
                                     owner: user,
                                     repo: repo,
-                                    ref: 'refs/heads/'+'BIDS_Term_'+fileName,
+                                    ref: 'refs/heads/'+community+'_'+fileName,
                                     sha: sha
                                 }).then((response) => {
                                     console.log(72, 'successfully created a new branch: ', response.status);
                                     //call function to comit file to the new branch
-                                    createFileInRepo(newTermJsonld, 'terms/BIDS_Terms/'+fileName+'.jsonld', user);
+                                    createFileInRepo(newTermJsonld, 'terms/'+community+'/'+fileName+'.jsonld', user);
                                 }).catch((e) => {
                                     console.log(67, e.message);
-                                    reportAnIssue('BIDS Terms UI: an issue with creating a new branch');
+                                    reportAnIssue('NIDM Terms UI: an issue with creating a new branch', e);
                                 });
                             }
 
@@ -582,9 +659,9 @@
                                         owner: user,
                                         repo: repo,
                                         path: pathToFile,
-                                        message: 'New BIDS Term Added: '+fileName,
+                                        message: 'New '+community+' Term Added: '+fileName,
                                         content: content,
-                                        branch: 'BIDS_Term_'+fileName
+                                        branch: community+'_'+fileName
                                     }).then((response) => {
                                     console.log(91, "statusCode for createFile: ", response.status);
                                     if (response.status === 200 || response.status=== 201) {
@@ -593,7 +670,7 @@
                                     }
                                 }).catch((e) => {
                                     console.log(93, e.message);
-                                    reportAnIssue('BIDS Terms UI: an issue with commiting a new term');
+                                    reportAnIssue('NIDM Terms UI: an issue with commiting a new term', e);
                                 });
                             }
 
@@ -608,9 +685,9 @@
                                         },
                                         owner: 'NIDM-Terms',
                                         repo: repo,
-                                        title: 'New BIDS Term Added: ' + fileName,
+                                        title: 'New '+community+' Term Added: ' + fileName,
                                         body: 'Edited or Added Terms:' + pathToFile,
-                                        head: user + ':BIDS_Term_' + fileName,
+                                        head: user + ':'+community+'_' + fileName,
                                         base: 'master'
                                     }).then(resp => {
                                     console.log(108, "StatusCode for Pull Request: ", resp.status);
@@ -619,7 +696,7 @@
                                     submission(st)
                                 }).catch(e => {
                                     console.log(110, 'error in raising PR: ', e);
-                                    reportAnIssue('BIDS Terms UI: an issue with sending a pull request');
+                                    reportAnIssue('NIDM Terms UI: an issue with sending a pull request',e);
                                 })
 
                             } 
@@ -657,7 +734,7 @@
                             }
 
                             //function to display an issue with the code and how to report it
-                            async function reportAnIssue(issue){
+                            async function reportAnIssue(issue, e){
 
                                 $('#rmv').html("")
 
@@ -679,16 +756,16 @@
 
                                 $('#rmv').append(html);
 
-                                document.getElementById("report").addEventListener("click", function(){ createGithubIssue(issue); })
+                                document.getElementById("report").addEventListener("click", function(){ createGithubIssue(issue, e); })
    
                             }
 
-                            async function createGithubIssue(issue){
+                            async function createGithubIssue(issue, e){
                                 octokit.request(`POST /repos/{owner}/{repo}/issues`, {
                                 owner: 'NIDM-Terms',
                                 repo: 'terms',
                                 title: issue,
-                                body: 'An issue occurred while submitting a new term: '+JSON.stringify(newTermJsonld)   
+                                body: 'An issue occurred while submitting a new term: '+JSON.stringify(newTermJsonld) +  '\n' + e 
                                 }).then(l => {
                                     console.log('issue was posted')
                                     issueConfirm()
@@ -850,11 +927,11 @@
 
         .menuLi{
             display: inline-block;
-            padding: 20px 10px;
+            padding: 20px 5px;
         }
 
         button{
-            width: 250px;
+            width: 235px;
             height: 60px;
             background-color: transparent;
             border: transparent;
@@ -866,8 +943,7 @@
         }
 
         .available_terms{
-            color: #EA2027;
-            
+            color: #EA2027;    
         }
         .available_terms:hover{
             border: 2px solid #EA2027;
@@ -879,14 +955,21 @@
             border: 2px solid #EE5A24;
             border-radius: 5px;
         }
-        
+
         .createTable{
-            color: #F79F1F;
+            color: #f1842b;
         }
         .createTable:hover{
+            border: 2px solid #f1842b;
+            border-radius: 5px;
+        }
+
+        .add_community{
+            color: #F79F1F;
+        }
+        .add_community:hover{
             border: 2px solid #F79F1F;
             border-radius: 5px;
-
         }
 
         .resources{
@@ -908,11 +991,11 @@
                 #FFC312
                 );
             margin-top: -23px;
-            width: 1200px;
+            width: 1410px;
         }
 
         .container{
-            width: 875px;
+            width: 1050px;
             height: 170%;
             text-align: left;
             font-family:Arial, Helvetica, sans-serif;
@@ -929,10 +1012,26 @@
         }
 
         .headerBrdr{
-            font-size: 30px;
-            text-indent: 34px;
-            color: #7e7e7e;
-            font-weight: bold;
+            font-size: 15px;
+            color: #686666;
+            text-align: justify;
+            text-justify: inter-word;
+            padding-left: 20px;
+            line-height: 26px;
+            margin-left: 80px;
+            margin-right: 55px; 
+
+        }
+
+        .keyInfo{
+            font-size: 12px;
+            text-indent: 4px;
+            color: #686666;
+            text-align: justify;
+            text-justify: inter-word;
+            padding-left: 10px;
+            line-height: 16px; 
+            font-style: italic;
         }
 
         .git{
@@ -949,6 +1048,14 @@
             margin-top: -25px;
             margin-bottom: 30px;
         }
+
+        #stepTitles{
+            font-size: 32px;
+            color: #6e6d6d;
+            font-weight: 200;
+            margin-left: 80px;
+            margin-right: 55px;
+        }
     
         .TermInput{
             height: 45px;
@@ -963,11 +1070,10 @@
             font-size: 16px;
             margin-top: -25px;
             margin-bottom: 30px;
-
         }
 
         .inputs{
-            padding-top: 50px;
+            padding-top: 3px;
             padding-left: 75px;
         }
 
@@ -984,15 +1090,88 @@
             font-size: 16px;
             margin-left: 35px;
             margin-top: 5px;
+            margin-bottom: 30px;            
+        }
+
+        #token{
+            height: 45px;
+            width: 40%;
+            border-radius: 3px;
+            border: 1px solid #919191;
+            padding: 0px 30px;
+            background-color: #fdfdfd;
+            font-size: 18px;
+            text-indent: 10px;
+            outline: none;
+            font-size: 16px;
+            margin-left: 197px;
+            margin-top: 5px;
             margin-bottom: 30px;
+
+            border-top-color: #9e9e9e;
+            border-right-color: #9e9e9e;
+            border-left-color: #9e9e9e;
+            border-bottom-color: #9e9e9e;
+        }
+        .newComInput{
+            width: 90%;
+            height: 45px;
+            border-radius: 3px;
+            border: 1px solid #919191;
+            padding: 0px 20px;
+            background-color: #fdfdfd;
+            font-size: 18px;
+            text-indent: 10px;
+            outline: none;
+            font-size: 16px;
+            margin-top: 5px;
+            margin-bottom: 30px;
+
+            border-top-color: #9e9e9e;
+            border-right-color: #9e9e9e;
+            border-left-color: #9e9e9e;
+            border-bottom-color: #9e9e9e;
+        }
+
+        .newInput{
+            width: 35%;
+            height: 45px;
+            border-radius: 3px;
+            border: 1px solid #919191;
+            padding: 0px 20px;
+            background-color: #fdfdfd;
+            font-size: 18px;
+            text-indent: 10px;
+            outline: none;
+            font-size: 16px;
+            margin-top: 5px;
+            margin-bottom: 30px;
+            margin-left: 20px;
+
+            border-top-color: #9e9e9e;
+            border-right-color: #9e9e9e;
+            border-left-color: #9e9e9e;
+            border-bottom-color: #9e9e9e;
+        }
+
+        #CommunityDes{
+            height: 150px;
+            text-indent: 5px;
+            padding-top: 10px;
+            font-family:sans-serif;
+            font-size: 16px;
+        }
+
+        #newC{
+            margin-left: 80px;
         }
 
         .VT{
             height: 53px;
-            width: 95.5%;
-            border-radius: 5px;
-            border-color: #7e7e7e;
-            border: 2px solid #696969;
+            width: 94.5%;
+            border-radius: 3px;
+            border-color: #9e9e9e;
+            border: 1px solid #9e9e9e;
             background-color: #fdfdfd;
             font-size: 18px;
             text-indent: 20px;
@@ -1000,32 +1179,49 @@
             font-size: 16px;
             margin-top: -25px;
             margin-bottom: 30px;
+            color: #777676;
+            font-size: 17px;
             
-            background-color: #f9f9f9;
+            background-color: #fdfdfd;
             min-width: 160px;
             padding: 12px 16px;
+        }
+
+        #numOfValues{
+            margin-top: -20px;
+            border: 1px solid #9e9e9e;
+            border-radius: 3px;
+            width: 72%;
+            height: 50px;
+            text-indent: 25px;
+            font-size: 16px;
+            outline: none;
         }
 
         #name{
             float: left;
             margin-left: 30px;
+            border: 1px solid #9e9e9e;
         }
 
         #value{
             float:right;
             margin-left: 40px;
+            border: 1px solid #9e9e9e;
         }
         
 
         #wrapper{
             text-indent: 0px;
-            border: 2px solid #7e7e7e;
-            border-radius: 5px;
-            background-color: #fdfdfd;
+            border: 1px solid #9e9e9e;
+            border-radius: 3px;
+            background-color: #f8f8f8;
             width: 92%;
-            padding-top: 20px;
-            padding-left: 30px;
-            padding-bottom: 8%;
+            padding-top: 50px;
+            padding-left: 50px;
+            padding-bottom: 2%;
+            margin-left: 74px;
+            width: 82.75%;
         }
 
         .btn{
@@ -1037,11 +1233,14 @@
             cursor: pointer;
             width: 200px;
             height: 50px;
-            background-color: #fefcfb;
-            border: 2px solid #EE5A24;
+            background-image: linear-gradient(
+            to right, 
+            #EE5A24, 
+            #F79F1F
+            );
             border-radius: 5px;
             font-size: 18px;
-            color: #EE5A24;
+            color: #fefcfb;
         }
 
         .btn1:active {
@@ -1096,21 +1295,53 @@
         .btn3{
             float: right;
             cursor: pointer;
-            width: 120px;
-            height: 30px;
-            background-color: #e7e7e7;
+            width: 200px;
+            height: 54px;
+            background-color: #f0f0f0;
             border: 1px solid #52575e;
-            border-radius: 5px;
-            font-size: 14px;
-            color: #45494e;
-            margin-top: 25px;
-            margin-right: 60px;
+            border-radius: 3px;
+            font-size: 16px;
+            color: #727272;
+            margin-top: -18px;
+            margin-right: 55px;
         }
         .btn3:hover{
-            border: 2px solid #52575e;
+            border: 1px solid #47494d;
+            background-color: #e2e2e2;
         }
         .btn3:active {
             background: #e5e5e5;
+        }
+
+        .btn4{
+            float: right;
+            cursor: pointer;
+            width: 200px;
+            height: 47px;
+            background-image: linear-gradient(
+            to right, 
+            #EE5A24, 
+            #F79F1F
+            );
+            border-radius: 3px;
+            font-size: 18px;
+            color: #fefcfb;
+            margin-top: -77px;
+            margin-right: 160px;
+            outline: none;
+
+            border-top-style: hidden;
+            border-right-style: hidden;
+            border-left-style: hidden;
+            border-bottom-style: hidden;
+        }
+
+        .btn4:active {
+            -webkit-box-shadow: inset 0px 0px 5px #96161a;
+                -moz-box-shadow: inset 0px 0px 5px #96161a;
+                    box-shadow: inset 0px 0px 5px #96161a;
+            outline: none;
+
         }
 
         .subBtn{
@@ -1145,7 +1376,7 @@
 
 
         h4{
-            color: #52575e;
+            color: #757575;
             font-weight:bold;
             font-size: 20px;
             text-indent: 20px;
@@ -1304,7 +1535,103 @@
         a:focus + .step2_tool-tip .step2_tool-tip__info {
             display: inline-block;
         }
-    
+
+        /* The container */
+        .con {
+        display: inline-block;
+        position: relative;
+        padding-left: 30px;
+        margin-left: 30px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 16px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        }
+
+        /* Hide the browser's default radio button */
+        .con input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        }
+
+        /* Create a custom radio button */
+        .checkmark {
+        position: absolute; 
+        top: 0;
+        left: 0;
+        height: 20px;
+        width: 20px;
+        background-color: rgb(219, 219, 219);
+        border-radius: 50%;
+        }
+
+        /* On mouse-over, add a grey background color */
+        .con:hover input ~ .checkmark {
+        background-color: #ccc;
+        }
+
+        /* When the radio button is checked, add a blue background */
+        .con input:checked ~ .checkmark {
+        background-color: #2196F3;
+        }
+
+        /* Create the indicator (the dot/circle - hidden when not checked) */
+        .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+        }
+
+        /* Show the indicator (dot/circle) when checked */
+        .con input:checked ~ .checkmark:after {
+        display: block;
+        }
+
+        /* Style the indicator (dot/circle) */
+        .con .checkmark:after {
+            top: 6px;
+            left: 6px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: white;
+        }  
+
+        #options{
+            margin-top: -38px;
+            color: rgb(85, 85, 85);
+        }
+
+        #selectTitle{
+            text-indent: 10px;
+            font-weight: normal;
+            color:   rgb(240, 240, 240);
+            font-size: 20px;
+        }
+
+        #selectComunity{
+            border: 1px solid rgb(175, 175, 175);
+            border-radius: 3px;
+            background-color: rgb(250, 250, 250);
+            padding-top: 15px;
+            padding-bottom: 20px;
+            margin-left: 60px;
+            margin-right: 75px;
+        }
+        
+
+        #selection{
+            padding-top: 15px;
+            padding-bottom: 20px;
+            padding-left: 20px;
+            width: 100%;
+            margin-top: 50px;
+        }
+
     </style>
 
     

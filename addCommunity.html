@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+    <head>
+
+        <title>NIDM-Terms: Add Community</title>
+
+        <script src= "https://code.jquery.com/jquery-3.5.1.js"></script> 
+        <script src="./js_lib/jquery.treeView.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jsonld@1.0.0/dist/jsonld.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    </head>
+
+
+    <body>
+
+        <div class="about">
+            <form action = "https://github.com/NIDM-Terms/terms" target="_blank">
+                <button class= "github">Github <i class="fa fa-github" style="font-size:17px"></i>
+                </button>
+            </form>
+            <form action = "https://scicrunch.org/nidm-terms/about/project" target="_blank">
+               <button  class= "website">NIDM Website</button>
+            </form>
+            <form action = "http://nidm.nidash.org/" target="_blank">
+                <button class = "nidmSpecs"> NIDM Specs</button>
+            </form>
+            <form action ="https://github.com/incf-nidash/PyNIDM" target= "_blank" >
+                <button class= "pyNidm"> PyNIDM</a>
+            </form>
+        </div>
+    
+    
+        <header>
+            <div class= "logo">
+                <img src="img/nidm-terms_576163.png" width= "70" height="70">
+            </div>
+            <div class="inner">
+                <h>NIDM-Terms</h>
+            </div>
+            
+        </header>
+    
+        <div>
+            <nav>
+                <ul class= "menuUl"><center>
+    
+                    <li class= "menuLi">
+                        <form action= "index.html">
+                            <button class = "available_terms" type="submit">Available Terms</button>
+                        </form>
+                    </li>
+                
+                    <li class= "menuLi">
+                        <form action= "addNewTerm.html">
+                            <button class = "add_terms" type="submit">Suggest Terms</button>
+                        </form>
+                    </li>
+    
+                    <li class= "menuLi">
+                        <form action="createTable.html">
+                            <button class = "createTable">Export Terms</button>
+                        </form>
+                    </li>
+
+                    <li class= "menuLi">
+                        <form action= "addCommunity.html">
+                            <button class = "add_community" type="submit">Add New Community</button>
+                        </form>
+                    </li>
+    
+                    <li class= "menuLi">
+                        <form action="info.html">
+                            <button class = "resources">About</button>
+                        </form> 
+                    </li>
+    
+                    <center><hr id="menuLine"></center>
+    
+                </center></ul>
+    
+            </nav>
+        </div>
+
+        <center><div class="container">
+
+            <divid id = "rmv">
+
+                <h2 id="stepTitles">GitHub Access Token <hr style="margin-top: 5px;"></h2>
+
+                <div class="headerBrdr"><center>
+                    The NIDM-Terms effort is focused on developing and adopting a set of community driven controlled vocabulary 
+                    for neuroimaging. NIDM-Terms infrastructure consists of a GitHub repository containing JSON-LD formatted 
+                    files for each term. Newly added terms will be sent as a pull request to our GitHub repository.
+                    Therefore, in order to suggest a new term, a GitHub API Token must be provided.
+                </center></div>
+                <br>
+                <div class="keyInfo"><center>
+                    For more information on GitHub personal access tokens click <a href= "https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token" target="_blank"> here</a>.
+                    </center></div>
+
+                <br><br><br>
+
+
+                <form><input id = "token" type="password"  placeholder="Enter GitHub Personal Access Token" required></form>
+
+                <form action="https://github.com/settings/tokens" target= "_blank">
+                    <input class= "btn4" type = "submit" value="Generate GitHub Token">
+                </form>
+    
+                <br><br><br><br>
+
+                <h2 id="stepTitles">New Neuroimaging Community<hr style="margin-top: 5px; margin-bottom: 50px;"></h2>
+
+
+                <div class="headerBrdr">
+                    <center>
+
+                    </center>
+                </div>
+
+                <div id="newC">
+                    <h4 style="margin-bottom: 5px; margin-left: -5px;">Name</h4>
+                    <input class = "newComInput" id= "CommunityName" class="TermInput" type="text" name="CommunityName" placeholder = "Enter the name of the new community in camelCase" required>
+                    
+                    <h4 style="margin-bottom: 10px; margin-left: -5px;">Description</h4>
+                    <textarea class = "newComInput" id= "CommunityDes" class="TermInput" type="text" name="CommunityDes" placeholder = "Enter a brief description about the new community" ></textarea>
+                </div>
+
+                <br><br><br><br>
+
+                <h2 id="stepTitles">New Term Information<hr style="margin-top: 5px;"></h2>
+
+
+                <form class="inputs">
+                    
+                    <h4 style="margin-bottom: 10px; margin-left: -5px;">Label
+                        <div class="tool-tip">
+                            <i class="tool-tip__icon">i</i>
+                            <p class="tool-tip__info">
+                              <span class="info"> Lebel for the term in cammelCase.</span>
+                            </p>
+                        </div>
+                    </h4> 
+                    <input id= "label" class="newComInput" type="text" name="label" placeholder = "REQUIRED: Term in cammelCase (e.g. durationTime, author)" required>
+                    
+                    <h4 style="margin-bottom: 10px; margin-left: -5px;">Description
+                        <div class="tool-tip">
+                            <i class="tool-tip__icon">i</i>
+                            <p class="tool-tip__info">
+                              <span class="info"> An explanation of the nature, scope, or meaning of the new term.</span>
+                            </p>
+                        </div>
+                    </h4>
+                    <input id= "des" class="newComInput" type="text" name="description" placeholder = "REQUIRED: Term description" required>
+                
+                    <h4 style="margin-bottom: 10px; margin-left: -5px;">Comment
+                        <div class="tool-tip">
+                            <i class="tool-tip__icon">i</i>
+                            <p class="tool-tip__info">
+                              <span class="info"> Additional information about the term.</span>
+                            </p>
+                        </div>
+                    </h4>
+                    <input id= "comment" class="newComInput" type="text" name="comment" placeholder = "OPTIONAL: Additional comments">
+                
+                    <h4 style="margin-bottom: 10px; margin-left: -5px;">URL
+                        <div class="tool-tip">
+                            <i class="tool-tip__icon">i</i>
+                            <p class="tool-tip__info">
+                              <span class="info"> If exists, URL associated with the term.</span>
+                            </p>
+                        </div>
+                    </h4>
+                    <input id="url" class="newComInput" type="text" name="url" placeholder = "OPTIONAL: Term URL">
+
+                    <h4 style="margin-bottom: 10px; margin-left: -5px;">Unit
+                        <div class="tool-tip">
+                            <i class="tool-tip__icon">i</i>
+                            <p class="tool-tip__info">
+                              <span class="info"> The term's value of measurement (e.g. years, months, grams, kilograms).</span>
+                            </p>
+                        </div>
+                    </h4>
+                    <input id="unit" class="newComInput" type="text" name="unit" placeholder = "OPTIONAL: Term unit">
+
+                    
+                    <label><h4>Value Type
+                        <div class="tool-tip">
+                            <i class="tool-tip__icon">i</i>
+                            <p class="tool-tip__info">
+                              <span class="info"> A value representation such as integer, float, string, date/time.</span>
+                            </p>
+                        </div>
+                    </h4></label>
+
+                        <select name="valueType" id="VT" class="VT">
+                            <option value="select">--select--</option>
+                            <option value="string">string</option>
+                            <option value="boolean">boolean</option>
+                            <option value="integer">integer</option>
+                            <option value="float">float</option>
+                            <option value="double">double</option>
+                            <option value="duration">duration</option>
+                            <option value="dateTime">dateTime</option>
+                            <option value="time">time</option>
+                            <option value="date">date</option>
+                            <option value="anyURI">anyURI</option>
+                            <option value="complexType">complexType</option>
+                        </select>
+
+                    
+                    <h4>OPTIONAL: categorical variables
+                        <div class="tool-tip">
+                            <i class="tool-tip__icon">i</i>
+                            <p class="tool-tip__info">
+                              <span class="info"> 
+                                This field corresponds to the BIDS "levels" standard for categorical variables where you're mapping the value (often an integer) to some text string.
+                                <br><br>
+                                For example the choices of the term handedness would be: 
+                                <br>
+                                name => right, value => 1<br>
+                                name => Left, value => 2<br>
+                                name => Ambidextrious, value => 10<br>
+                              </span>
+                            </p>
+                        </div>
+                    </h4>
+
+                    
+
+                        
+
+                    <form>
+                        <input id="numOfValues" class="numOfValues" type="text" placeholder="Enter the number of choices">
+                        <button type = "button" class= "btn3" id = "catValue"> Add Choices </button>
+                    </form>
+
+                    <div id= "addParent">
+                        <div id= "add"></div>
+                    </div>
+
+
+                    
+
+                    <br><br><br><br>
+
+                    <div><button id = "pullRequest" class= "btn1" type = "button"> Send Pull Request </button></div>
+
+                    <br>
+
+
+                </form>
+
+
+                <div id="PR"></div>
+
+            </div>
+
+                <script type = "module">
+
+                    ///////////////////////////////////////////////////////////////////////////
+                    //validat that label and description have values
+                    ///////////////////////////////////////////////////////////////////////////
+                    function nextStep(){
+                    
+                        //if label and description don't have values call the validation fonction
+                        if (document.getElementById('label').value.length == 0 & document.getElementById('des').value.length == 0){
+                            alert('An input is required for Label and Description')
+                        }
+                        else if (document.getElementById('label').value.length == 0 & document.getElementById('des').value.length != 0){
+                            alert('An input for Label is required')
+                        }
+                        else if (document.getElementById('label').value.length != 0 & document.getElementById('des').value.length == 0 ){
+                            alert('An input for Description is required')
+                        }
+                        //else next step, which is an iput for the github API and a button 
+                        else {
+                            submitTerm()
+                        }
+                    }
+
+                    document.getElementById("pullRequest").addEventListener("click", nextStep)
+
+
+                    ///////////////////////////////////////////////////////////////////////////
+                    /// function created to add choices if the term is a catagorical variable
+                    ///////////////////////////////////////////////////////////////////////////
+                    var list = [];
+                    function addOptions(){
+
+                        var html = '';
+
+                        html += '<div id="wrapper">';
+
+                        var numOfOptions = document.getElementById('numOfValues').value;
+
+                        list.push(numOfOptions)
+
+                        if(document.getElementById('numOfValues').value != 0 & list.length == 1){
+
+                            for (var i = 1; i <= numOfOptions; i++){
+
+                                html += '<h5>Choice '+i+':</h5>';
+                                html += '<input id="n'+i+'" id="name" class="newInput" type="text" name="name" placeholder = "Name">';
+                                html += '<input id="v'+i+'" id="value" class="newInput" type="text" name="value" placeholder = "Value">';
+                                html += '<br>';
+                                    
+                            }
+
+                            html += '</div>';
+
+                            $('#add').append(html);
+                        } 
+                        
+                        if (document.getElementById('numOfValues').value != 0 & list.length > 1){
+
+                            $("#add").html("");
+
+                            for (var i = 1; i <= numOfOptions; i++){
+
+
+                                html += '<h5>Choice '+i+':</h5>';
+                                html += '<input id="n'+i+'" id="name" class="newInput" type="text" name="name" placeholder = "Name">';
+                                html += '<input id="v'+i+'" id="value" class="newInput" type="text" name="value" placeholder = "Value">';
+                                html += '<br>';
+
+                                    
+                            }
+
+                            html += '</div>';
+
+                            $('#add').append(html);
+
+                        }
+
+                        if (document.getElementById('numOfValues').value == 0){
+                            html += '</div>';
+                            $("#add").html("");
+                        }
+
+                    };
+
+                    document.getElementById("catValue").addEventListener("click", addOptions)
+
+                    function submitTerm(){
+
+                        //empty dicttionary 
+                        var dict = {};
+                        var responseOption = {};
+
+                        // varable to assoctae with every term
+                        var associatedWith = ["BIDS","NIDM"];
+
+
+                        $(document).ready(function(event) { 
+                            // fetch the context file and create a jsonld
+                            fetch("https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld")
+                            .then(function(resp){
+                                return resp.json(); 
+                            })
+
+                            .then(async function(context){
+
+                                dict['@context'] = 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld'
+
+                                //call checkTerm to checkif the lable of the term already exists to avoid duplication
+                                //returns 1 if the terms exists and 0 if the term doesn't exist
+                                //var check = checkLabel(document.getElementById("label").value)
+                                //console.log(checkLabel(document.getElementById("label").value))
+
+                                
+                                //assign inputted values to term properties
+                                dict[context["@context"]["label"]] = document.getElementById("label").value;
+                                dict['@type'] = context["@context"]["DataElement"]
+                                if(document.getElementById("des").value.length != 0){
+                                    dict[context["@context"]["description"]] = document.getElementById("des").value;
+                                }
+                                if(document.getElementById("comment").value.length != 0){
+                                    dict[context["@context"]["comment"]] = document.getElementById("comment").value;
+                                }
+                                if(document.getElementById("url").value.length != 0){
+                                    dict[context["@context"]["url"]["@id"]] = document.getElementById("url").value;
+                                }
+                                if(document.getElementById("unit").value.length != 0){
+                                    responseOption[context["@context"]["unitCode"]] = document.getElementById("unit").value;
+                                }
+                                if(document.getElementById("VT").value.length != 0 & document.getElementById("VT").value != 'select'){
+                                    responseOption[context["@context"]["valueType"]] = document.getElementById("VT").value;
+                                }
+                                if(document.getElementById('numOfValues').value.length != 0){
+                                    //empty list for choices dictionaries
+                                    var choices_list = [];
+                                
+                                    //get the number of choices available
+                                    var valNum = document.getElementById('numOfValues').value;
+                                    //loop through the choices and add them to add to the jsonld
+                                    for (var l = 1; l <= valNum; l++){
+                                        console.log(l)
+
+                                        // empty dictionary for each choice's name and value
+                                        var choices = {};
+
+                                        if(document.getElementById("n"+l).value.length != 0 & document.getElementById("v"+l).value.length != 0){
+                                            choices[context['@context']['name']] = document.getElementById("n"+l).value;
+                                            choices[context['@context']['value']] = document.getElementById("v"+l).value;
+                                            choices_list.push(choices)
+                                        }
+                                    }
+
+                                    //assign choices to responseOptions dictionary
+                                    if(choices_list.length != 0){
+                                        responseOption[context['@context']['choices']] = choices_list;
+                                    }
+
+                                }    
+
+                                //add response options values
+                                if(Object.keys(responseOption).length != 0){
+                                    dict[context["@context"]["responseOptions"]["@id"]] = responseOption
+                                }
+                                //always associate the term with BIDS and NIDM
+                                dict[context["@context"]["associatedWith"]] = associatedWith;
+
+
+                                //compact term dictionary
+                                const compacted = await jsonld.compact(dict, 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld');
+                                console.log(compacted)
+
+                                return compacted
+                                    
+                            })
+                            .then(function(newTermJsonld){
+                                sendPR(newTermJsonld);
+                            })
+                        });
+                    };
+
+
+                    import { Octokit } from "https://cdn.pika.dev/@octokit/core";
+
+
+                    //////////////////////////////////////////////////////////////////////////////////
+                    /// function created to create jsonld files and submit a pull request to github
+                    //////////////////////////////////////////////////////////////////////////////////
+
+                    function sendPR (newTermJsonld){
+
+                        var state = '';
+
+                        if(document.getElementById("token").value.length == 0){
+                                    alert('GitHub Token is required')
+                        } 
+                        else {
+
+                            const newComName = document.getElementById("CommunityName").value;
+                            const newComDir  = newComName + '_Terms'
+                        
+                            const gitToken = document.getElementById("token").value;
+
+                            const octokit = new Octokit({ auth: gitToken });
+                            // const info = octokit.request(`GET /user`);
+                            // console.log(info)
+
+                            const repo = 'terms';
+                            const repo2 = 'nidm-terms.github.io';
+                            const fileName = document.getElementById("label").value;
+
+                            addCommunity()
+
+                            //fetch the availableCommunities.json file located in nidm-terms.github.io 
+                            // load the dictionary and edit it by adding the new community
+                            function addCommunity(){
+
+                                var comName = document.getElementById('CommunityName').value;
+                                var comDes = document.getElementById('CommunityDes').value;
+
+                                fetch('https://raw.githubusercontent.com/nqueder/nidm-terms.github.io/master/availableCommunities.json')
+                                .then(function(res){
+                                    return res.json(); 
+                                })
+                                .then(function(dict){
+
+                                    var termInfo = {}
+
+                                    termInfo['label'] = comName + "_Terms";
+                                    termInfo['URL'] = "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/"+comName+"_Terms.jsonld";
+                                    termInfo['Description'] = comDes;
+
+                                    dict[comName + " Terms"] = termInfo;
+
+                                    console.log(dict)
+                                    return dict
+
+                                })
+                                .then(function(dict){
+                                    
+                                    //GET user's github username
+                                    octokit.request(
+                                        `GET /user`
+                                    ).then((response) => {
+                                        console.log(20, response)
+                                        //call fork repo to check if the user has the repo forked
+                                        //if repo is not found then fork it
+                                        forkRepo(response.data.login)
+                                    }).catch((e) => {
+                                        console.log(23, e.message);
+                                    })
+
+                                    // //fork terms repo function
+                                    async function forkRepo(owner){
+                                        octokit.request(
+                                            `GET /repos/{owner}/{repo}`, {
+                                                headers: {
+                                                    'User-Agent': 'terms',
+                                                    'accept': 'application/json'
+                                                },
+                                                owner: owner,
+                                                repo: repo2
+                                            }).then((res) => {
+                                            console.log(47, 'success', owner, repo, newTermJsonld); // repo exists!
+                                            //call function to get the master branch sha
+                                            getSha(owner)
+                                        }).catch((e) => {
+                                            console.log(50, e.message);
+                                            if (e.message === "Not Found") { // repo not present, so fork the repo
+                                                // fork NIDM-Terms/terms repo to add the community and the new term
+                                                octokit.request(
+                                                    `POST /repos/{owner}/{repo}/forks`, {
+                                                        headers: {
+                                                            'Authorization': 'token ' + gitToken,
+                                                        },
+                                                        owner: 'NIDM-Terms',
+                                                        repo: repo2
+                                                    }).then((response) => {
+                                                    console.log(71, 'successfully forked: ', response.status);
+                                                    if (response.status === 200 || response.status=== 201) {
+                                                        //call function to get the master branch sha
+                                                        getSha(owner)
+                                                    } else if (response.status === 202) {
+                                                        setTimeout(getSha, 3000, owner);
+                                                    }
+                                                    console.log(77, "post fork: ", response);
+                                                }).catch((e) => {
+                                                    console.log(79, e.message);
+                                                    reportAnIssue('NIDM Terms UI (Add New Community): an issue with forking NIDM-Terms/nidm-terms.githib.io repo', e);
+                                                })
+
+                                            }
+                                        });
+
+                                        //function to get sha hash of master branch
+                                        async function getSha(user){
+                                            octokit.request(`GET /repos/{owner}/{repo}/branches/{branch}`, {
+                                                owner: user,
+                                                repo: repo2,
+                                                branch: 'master'
+                                            }).then((r) => {
+                                                //call function to create a branch
+                                                createNewBranch(r.data.commit.sha, user)
+                                            })
+                                            .catch((e) => {
+                                                console.log(55, e.message);
+                                                reportAnIssue('NIDM Terms UI (Add New Community): an issue with getting master branch hash of NIDM-Term/nidm-terms.githib.io', e);
+                                            })
+                                        };
+                                    }
+
+
+                                    //function to create a new branch with the term name
+                                    async function createNewBranch(sha,user){
+                                        octokit.request(`POST /repos/{owner}/{repo}/git/refs`, {
+                                            owner: user,
+                                            repo: repo2,
+                                            ref: 'refs/heads/'+newComDir+'_availableCommunities.json',
+                                            sha: sha
+                                        }).then((response) => {
+                                            console.log(72, 'successfully created a new branch: ', response.status);
+                                            //call function to comit file to the new branch
+                                            getFileSha(user);
+                                        }).catch((e) => {
+                                            console.log(67, e.message);
+                                            reportAnIssue('NIDM Terms UI (Add New Community): an issue with creating a new branch NIDM-Term/nidm-terms.githib.io', e);
+                                        });
+                                    }
+
+                                    //function to get sha hash of the availableCommunities.json file
+                                    async function getFileSha(user){
+                                            octokit.request(`GET /repos/{owner}/{repo}/contents/{path}`, {
+                                                owner: user,
+                                                repo: repo2,
+                                                path: 'availableCommunities.json'
+                                            }).then((r) => {
+                                                console.log(232, r.data.sha)
+                                                //call function to create a branch
+                                                UpdateFileInRepo(r.data.sha, user)
+                                            })
+                                            .catch((e) => {
+                                                console.log(55, e.message);
+                                                reportAnIssue('NIDM Terms UI (Add New Community): an issue with getting master branch hash of NIDM-Term/nidm-terms.githib.io', e);
+                                            })
+                                        };
+
+
+                                    //Update availableCommunity.json in nidm-terms.github.io
+                                    async function UpdateFileInRepo(fileSha, user) {
+                                        console.log(57, user);
+                                        const content = btoa(JSON.stringify(dict, undefined, 2)); // for use in browser
+                                        console.log(63, content);
+                                        octokit.request(
+                                            `PUT /repos/{owner}/{repo}/contents/{path}`, {
+                                                headers: {
+                                                    'Authorization': 'token ' + gitToken,
+                                                },
+                                                owner: user,
+                                                repo: repo2,
+                                                sha: fileSha,
+                                                path: 'availableCommunities.json',
+                                                message: 'New Community Added: availableCommunities.json',
+                                                content: content,
+                                                branch: newComDir+'_availableCommunities.json'
+                                            }).then((response) => {
+                                            console.log(91, "statusCode for createFile: ", response.status);
+                                            if (response.status === 200 || response.status=== 201) {
+                                                //call function to raise a pull request
+                                                createPullRequest( user);
+                                            }
+                                        }).catch((e) => {
+                                            console.log(93, e.message);
+                                            reportAnIssue('NIDM Terms UI (Add New Community): an issue with commiting a new community to nidm-terms.githib.io', e);
+                                        });
+                                    }
+
+                                    //function to raise a pull request
+                                    async function createPullRequest(user) {
+                                        console.log(96, 'in createPR');
+                                        octokit.request(
+                                            `POST /repos/{owner}/{repo}/pulls`, {
+                                                headers: {
+                                                    'Authorization': 'token ' + gitToken,
+                                                },
+                                                owner: 'NIDM-Terms',
+                                                repo: repo2,
+                                                title: 'New Community Added: availableCommunities.json',
+                                                body: 'Added new community to availableCommunities.json',
+                                                head: user + ':'+newComDir+'_availableCommunities.json',
+                                                base: 'master'
+                                            }).then(resp => {
+                                            console.log(108, "StatusCode for Pull Request: ", resp.status);
+                                            
+                                        }).catch(e => {
+                                            console.log(110, 'error in raising PR: ', e);
+                                            reportAnIssue('NIDM Terms UI (Add New Community): an issue with sending a pull request to nidm-terms.githib.io', e);
+                                        })
+
+                                    } 
+
+                                })
+                                .then(function sendTerm(){
+
+                                    // //GET user's github username
+                                    octokit.request(
+                                        `GET /user`
+                                    ).then((response) => {
+                                        console.log(20, response)
+                                        //call fork repo to check if the user has the repo forked
+                                        //if repo is not found then fork it
+                                        forkRepo(response.data.login)
+                                    }).catch((e) => {
+                                        console.log(23, e.message);
+                                    })
+
+                                    // //fork terms repo function
+                                    async function forkRepo(owner){
+                                        octokit.request(
+                                            `GET /repos/{owner}/{repo}`, {
+                                                headers: {
+                                                    'User-Agent': 'terms',
+                                                    'accept': 'application/json'
+                                                },
+                                                owner: owner,
+                                                repo: repo
+                                            }).then((res) => {
+                                            console.log(47, 'success', owner, repo, newTermJsonld); // repo exists!
+                                            //call function to get the master branch sha
+                                            getSha(owner)
+                                        }).catch((e) => {
+                                            console.log(50, e.message);
+                                            if (e.message === "Not Found") { // repo not present, so fork the repo
+                                                // fork NIDM-Terms/terms repo to add the community and the new term
+                                                octokit.request(
+                                                    `POST /repos/{owner}/{repo}/forks`, {
+                                                        headers: {
+                                                            'Authorization': 'token ' + gitToken,
+                                                        },
+                                                        owner: 'NIDM-Terms',
+                                                        repo: repo
+                                                    }).then((response) => {
+                                                    console.log(71, 'successfully forked: ', response.status);
+                                                    if (response.status === 200 || response.status=== 201) {
+                                                        //call function to get the master branch sha
+                                                        getSha(owner)
+                                                    } else if (response.status === 202) {
+                                                        setTimeout(getSha, 3000, owner);
+                                                    }
+                                                    console.log(77, "post fork: ", response);
+                                                }).catch((e) => {
+                                                    console.log(79, e.message);
+                                                    reportAnIssue('NIDM Terms UI (Add New Community): an issue with forking NIDM-Terms repo', e);
+                                                })
+
+                                            }
+                                        });
+
+
+                                        
+
+
+                                        //function to get sha hash of master branch
+                                        async function getSha(user){
+                                            octokit.request(`GET /repos/{owner}/{repo}/branches/{branch}`, {
+                                                owner: user,
+                                                repo: repo,
+                                                branch: 'master'
+                                            }).then((r) => {
+                                                //call function to create a branch
+                                                createNewBranch(r.data.commit.sha, user)
+                                            })
+                                            .catch((e) => {
+                                                console.log(55, e.message);
+                                                reportAnIssue('NIDM Terms UI (Add New Community): an issue with getting master branch hash of NIDM-Term/terms', e);
+                                            })
+                                        };
+
+                                        
+
+                                    }
+
+
+                                    //function to create a new branch with the term name
+                                    async function createNewBranch(sha,user){
+                                        octokit.request(`POST /repos/{owner}/{repo}/git/refs`, {
+                                            owner: user,
+                                            repo: repo,
+                                            ref: 'refs/heads/'+newComDir+'_'+fileName,
+                                            sha: sha
+                                        }).then((response) => {
+                                            console.log(72, 'successfully created a new branch: ', response.status);
+                                            //call function to comit file to the new branch
+                                            createFileInRepo(newTermJsonld, 'terms/'+newComDir+'/'+fileName+'.jsonld', user);
+                                        }).catch((e) => {
+                                            console.log(67, e.message);
+                                            reportAnIssue('NIDM Terms UI (Add New Community): an issue with creating a new branch NIDM-Term/terms', e);
+                                        });
+                                    }
+
+
+
+                                    //function to commit to the new branch
+                                    async function createFileInRepo(jsonTermObj, pathToFile, user) {
+                                        console.log(57, jsonTermObj, pathToFile, user);
+                                        // let content = Buffer.from(JSON.stringify(jsonTermObj, undefined, 2)).toString('base64');
+                                        const content = btoa(JSON.stringify(jsonTermObj, undefined, 2)); // for use in browser
+                                        console.log(63, content);
+                                        octokit.request(
+                                            `PUT /repos/{owner}/{repo}/contents/{path}`, {
+                                                headers: {
+                                                    'Authorization': 'token ' + gitToken,
+                                                },
+                                                owner: user,
+                                                repo: repo,
+                                                path: pathToFile,
+                                                message: 'New Community Added: '+fileName,
+                                                content: content,
+                                                branch: newComDir+'_'+fileName
+                                            }).then((response) => {
+                                            console.log(91, "statusCode for createFile: ", response.status);
+                                            if (response.status === 200 || response.status=== 201) {
+                                                //call function to raise a pull request
+                                                createPullRequest(pathToFile, user);
+                                            }
+                                        }).catch((e) => {
+                                            console.log(93, e.message);
+                                            reportAnIssue('NIDM Terms UI (Add New Community): an issue with commiting a new term', e);
+                                        });
+                                    }
+
+                                    //function to raise a pull request
+                                    async function createPullRequest(pathToFile, user) {
+                                        var st = '';
+                                        console.log(96, 'in createPR');
+                                        octokit.request(
+                                            `POST /repos/{owner}/{repo}/pulls`, {
+                                                headers: {
+                                                    'Authorization': 'token ' + gitToken,
+                                                },
+                                                owner: 'NIDM-Terms',
+                                                repo: repo,
+                                                title: 'New Community Added: ' + fileName,
+                                                body: 'Edited or Added Terms:' + pathToFile,
+                                                head: user + ':'+newComDir+'_' + fileName,
+                                                base: 'master'
+                                            }).then(resp => {
+                                            console.log(108, "StatusCode for Pull Request: ", resp.status);
+                                            var st = '1';
+                                            //call confimation function
+                                            submission(st)
+                                        }).catch(e => {
+                                            console.log(110, 'error in raising PR: ', e);
+                                            reportAnIssue('NIDM Terms UI (Add New Community): an issue with sending a pull request', e);
+                                        })
+
+                                    } 
+
+
+                                })
+
+
+                                //function to display confirmation to the pull request
+                                async function submission(state){
+                                    if(state == '1' ){
+
+                                        $('#rmv').html("")
+
+                                        var html = '<br><br><br>';
+
+                                        html += '<center>'
+
+                                        html += '<div class="headerBrdr"> <h2>Thank you for adding a new neuroimaging community to NIDM-Terms<h2> <br> Your community has been added and your first term has been submitted for further discussion';
+                                        html += '<br> Please allow 24 hours for the new community and your first term to be added';
+                                        html += '<br> Once the community is added you can add more terms using "Suggest Terms" <br><br></div></center>';
+                                        
+                                        html += '<center><div class="headerBrdr">';
+
+                                        html += '<form>';
+                                        html += '<button onClick="window.location.reload();" id = "newTerm" class= "subBtn" type = "button"> Add another community </button>';
+                                        html += '</form>';
+                                            
+                                        html += '<form>';
+                                        html += '<a href= "https://github.com/NIDM-Terms/terms/pulls" target = "_blank"> <button id = "viewPR" class= "subBtn" type = "button" > View Pull Request </button></a>';
+                                        html += '</form>';
+
+                                        html += '<br><br>';
+                                        html += '</div>';
+                                        html += '</center>';
+
+                                        $('#rmv').append(html)
+
+                                    }
+                                }
+
+                                //function to display an issue with the code and how to report it
+                                async function reportAnIssue(issue,e){
+
+                                    $('#rmv').html("")
+
+                                    var html = '<br><br><br>';
+
+                                    html += '<center>'
+
+                                    html += '<center><div class="headerBrdr"> Ops! Something went wrong while adding the new neuroimaging community <br><br></div>';
+                                    
+                                    html += '<div class="headerBrdr">';
+                                        
+                                    html += '<form>';
+                                    html += '<button id = "report" class= "subBtn" type = "button" > Report </button>';
+                                    html += '</form>';
+
+                                    html += '<br><br>';
+                                    html += '</div>';
+                                    html += '</center>';
+
+                                    $('#rmv').append(html);
+
+                                    document.getElementById("report").addEventListener("click", function(){ createGithubIssue(issue); })
+    
+                                }
+
+                                async function createGithubIssue(issue, e){
+                                    octokit.request(`POST /repos/{owner}/{repo}/issues`, {
+                                    owner: 'NIDM-Terms',
+                                    repo: 'terms',
+                                    title: issue,
+                                    body: 'An issue occurred while submitting a new term: '+JSON.stringify(newTermJsonld) + '\n' + e
+                                    }).then(l => {
+                                        console.log('issue was posted')
+                                        issueConfirm()
+                                    }).catch(e => {
+                                        console.log(59, 'error in posting an issue: ', e);
+                                    });
+                                }
+
+                                async function issueConfirm(){
+                                    $('#rmv').html("")
+
+                                    var html = '<br><br><br>';
+
+                                    html += '<center>'
+
+                                    html += '<center><div class="headerBrdr"> Thank you for reporting! <br><br></div>';
+                                    html += '<center><div class="headerBrdr"><h5> A GitHub issue in the NIDM-Terms repository reporting the problem was created on your behalf </h5><br></div>';
+                                    
+                                    html += '<div class="headerBrdr">';
+                                        
+                                    html += '<form>';
+                                    html += '<a href= "https://github.com/NIDM-Terms/terms/issues" target = "_blank"> <button id = "viewPR" class= "subBtn" type = "button" > View GitHub Issue </button></a>';
+                                    html += '</form>';
+
+                                    html += '<br>';
+                                    html += '</div>';
+                                    html += '</center>';
+
+                                    $('#rmv').append(html);
+                                }
+
+
+
+
+                            }
+                            
+                                                
+
+                            
+
+                        }
+                    }
+
+
+                </script>
+                
+
+        </div></center>
+
+
+    </body>
+
+    <footer>
+        <div id="footer">
+            <hr id= "bottomLine">
+            <p><center>This project was supported by the National Institutes of Mental Health (NIMH) grant 1RF1MH120021</center></p>
+        <div>
+    </footer>
+
+    <style>
+        header{
+            background-color: #52575e;
+            height: 100px;
+        }
+    
+        .about{
+            color: #52575e;
+            font-size: 12px;
+            cursor: pointer;
+            outline: none;
+            font-weight: lighter;
+        }
+
+        .github{
+            float: right;
+            padding: 20px;
+            margin-right: -10px;
+            margin-top: -48px;
+            color: #646464;
+            font-size: 13px;
+            width: 130px;
+            height:50px;
+            font-weight: lighter;
+        }
+
+        .github:hover{
+            color: #32e17c;
+            transition: 0.1s;
+        }
+        
+        .website{
+            float: right;
+            margin-right: -30px;
+            margin-top: -43px;
+            color:#646464;
+            font-size: 13px;
+            width: 130px;
+            height:50px;
+            font-weight: lighter;
+        }
+
+        .website:hover{
+            color: #32e17c;
+            transition: 0.1s;
+        }
+
+        .nidmSpecs{
+            float: right;
+            margin-right: -20px;
+            margin-top: -43px;
+            color: #646464;
+            font-size: 13px;
+            width: 130px;
+            height:50px;
+            font-weight: lighter;
+        }
+
+        .nidmSpecs:hover{
+            color: #32e17c;
+            transition: 0.1s;
+        }
+
+        .pyNidm{
+            float: right;
+            margin-right: -30px;
+            margin-top: -43px;
+            color: #646464;
+            font-size: 13px;
+            width: 130px;
+            height:50px;
+            font-weight: lighter;
+        }
+
+        .pyNidm:hover{
+            color: #32e17c;
+            transition: 0.1s;
+        }
+
+        .inner{
+            margin: 40px;
+            padding-top: 25px;
+            padding-bottom: -10px;
+            padding-left: 124px;
+            font-weight:lighter;
+            font-size: 40px;
+            font-family: serif;
+            text-transform: uppercase;
+            color: white;
+        }
+        .logo{
+            position: absolute;
+            top: 55px;
+            left: 60px;
+        }
+
+        header{
+            width: 100%;
+        }
+
+        body {
+            background-color: #ffffff;
+        }
+
+        .menuUl{
+            width: auto;
+            margin-top: 40px;
+        }
+
+        .menuLi{
+            display: inline-block;
+            padding: 20px 5px;
+        }
+
+        button{
+            width: 235px;
+            height: 60px;
+            background-color: transparent;
+            border: transparent;
+            border-radius: 0px;
+            font-size: 18px;
+            font-weight:bold;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .available_terms{
+            color: #EA2027;
+            
+        }
+        .available_terms:hover{
+            border: 2px solid #EA2027;
+            border-radius: 5px;
+        }
+
+        .add_terms{
+            color: #EE5A24;
+        }
+        .add_terms:hover{
+            border: 2px solid #EE5A24;
+            border-radius: 5px;
+        }
+
+        .createTable{
+            color: #f1842b;
+        }
+        .createTable:hover{
+            border: 2px solid #f1842b;
+            border-radius: 5px;
+        }
+
+        .add_community{
+            color: #F79F1F;
+            border: 2px solid #F79F1F;
+            border-radius: 5px;
+        }
+
+        .resources{
+            color: #FFC312;
+        }
+        .resources:hover{
+            border: 2px solid #FFC312;
+            border-radius: 5px;
+
+        }
+
+        #menuLine{
+            height: 10px;
+            background-image: linear-gradient(
+                to right, 
+                #EA2027, 
+                #EE5A24, 
+                #F79F1F, 
+                #FFC312
+                );
+            margin-top: -23px;
+            width: 1410px;
+        }
+
+        .container{
+            width: 1050px;
+            height: 170%;
+            text-align: left;
+            font-family:Arial, Helvetica, sans-serif;
+            border: 1px solid #b3b3b3 ;
+            border-radius: 0px;
+            padding: 80px;
+            padding-top: 80px;
+            padding-right: -10px;
+            margin-top: 50px;
+            margin-bottom: 100px;
+            background-color: #F7F7F7 ;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+
+        }
+
+        .headerBrdr{
+            font-size: 15px;
+            color: #686666;
+            text-align: justify;
+            text-justify: inter-word;
+            padding-left: 20px;
+            line-height: 26px;
+            margin-left: 80px;
+            margin-right: 55px; 
+
+        }
+
+        .keyInfo{
+            font-size: 12px;
+            text-indent: 4px;
+            color: #686666;
+            text-align: justify;
+            text-justify: inter-word;
+            padding-left: 10px;
+            line-height: 16px; 
+            font-style: italic;
+        }
+
+        .git{
+            height: 45px;
+            width: 40%;
+            border-radius: 5px;
+            border-color: #7e7e7e;
+            padding: 0px 20px;
+            background-color: #fdfdfd;
+            font-size: 18px;
+            text-indent: 20px;
+            outline: none;
+            font-size: 16px;
+            margin-top: -25px;
+            margin-bottom: 30px;
+        }
+
+        #stepTitles{
+            font-size: 32px;
+            color: #6e6d6d;
+            font-weight: 200;
+            margin-left: 80px;
+            margin-right: 55px;
+        }
+    
+        .TermInput{
+            height: 45px;
+            width: 90%;
+            border-radius: 5px;
+            border-color: #7e7e7e;
+            padding: 0px 20px;
+            background-color: #fdfdfd;
+            font-size: 18px;
+            text-indent: 20px;
+            outline: none;
+            font-size: 16px;
+            margin-top: -25px;
+            margin-bottom: 30px;
+        }
+
+        .inputs{
+            padding-top: 3px;
+            padding-left: 75px;
+        }
+
+        .subTermInput{
+            height: 35px;
+            width: 30%;
+            border-radius: 5px;
+            border-color: #7e7e7e;
+            padding: 0px 20px;
+            background-color: #fdfdfd;
+            font-size: 18px;
+            text-indent: 10px;
+            outline: none;
+            font-size: 16px;
+            margin-left: 35px;
+            margin-top: 5px;
+            margin-bottom: 30px;            
+        }
+
+        #token{
+            height: 45px;
+            width: 40%;
+            border-radius: 3px;
+            border: 1px solid #919191;
+            padding: 0px 30px;
+            background-color: #fdfdfd;
+            font-size: 18px;
+            text-indent: 10px;
+            outline: none;
+            font-size: 16px;
+            margin-left: 197px;
+            margin-top: 5px;
+            margin-bottom: 30px;
+
+            border-top-color: #9e9e9e;
+            border-right-color: #9e9e9e;
+            border-left-color: #9e9e9e;
+            border-bottom-color: #9e9e9e;
+        }
+        .newComInput{
+            width: 90%;
+            height: 45px;
+            border-radius: 3px;
+            border: 1px solid #919191;
+            padding: 0px 20px;
+            background-color: #fdfdfd;
+            font-size: 18px;
+            text-indent: 10px;
+            outline: none;
+            font-size: 16px;
+            margin-top: 5px;
+            margin-bottom: 30px;
+
+            border-top-color: #9e9e9e;
+            border-right-color: #9e9e9e;
+            border-left-color: #9e9e9e;
+            border-bottom-color: #9e9e9e;
+        }
+
+        .newInput{
+            width: 35%;
+            height: 45px;
+            border-radius: 3px;
+            border: 1px solid #919191;
+            padding: 0px 20px;
+            background-color: #fdfdfd;
+            font-size: 18px;
+            text-indent: 10px;
+            outline: none;
+            font-size: 16px;
+            margin-top: 5px;
+            margin-bottom: 30px;
+            margin-left: 20px;
+
+            border-top-color: #9e9e9e;
+            border-right-color: #9e9e9e;
+            border-left-color: #9e9e9e;
+            border-bottom-color: #9e9e9e;
+        }
+
+        #CommunityDes{
+            height: 150px;
+            text-indent: 5px;
+            padding-top: 10px;
+            font-family:sans-serif;
+            font-size: 16px;
+        }
+
+        #newC{
+            margin-left: 80px;
+        }
+
+        .VT{
+            height: 53px;
+            width: 94.5%;
+            border-radius: 3px;
+            border-color: #9e9e9e;
+            border: 1px solid #9e9e9e;
+            background-color: #fdfdfd;
+            font-size: 18px;
+            text-indent: 20px;
+            outline: none;
+            font-size: 16px;
+            margin-top: -25px;
+            margin-bottom: 30px;
+            color: #777676;
+            font-size: 17px;
+            
+            background-color: #fdfdfd;
+            min-width: 160px;
+            padding: 12px 16px;
+        }
+
+        #numOfValues{
+            margin-top: -20px;
+            border: 1px solid #9e9e9e;
+            border-radius: 3px;
+            width: 72%;
+            height: 50px;
+            text-indent: 25px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        #name{
+            float: left;
+            margin-left: 30px;
+            border: 1px solid #9e9e9e;
+        }
+
+        #value{
+            float:right;
+            margin-left: 40px;
+            border: 1px solid #9e9e9e;
+        }
+        
+
+        #wrapper{
+            text-indent: 0px;
+            border: 1px solid #9e9e9e;
+            border-radius: 3px;
+            background-color: #f8f8f8;
+            width: 92%;
+            padding-top: 50px;
+            padding-left: 50px;
+            padding-bottom: 2%;
+            margin-left: 74px;
+            width: 82.75%;
+        }
+
+        .btn{
+            margin-top: -30px;
+        }
+
+        .btn1{
+            float: right;
+            cursor: pointer;
+            width: 200px;
+            height: 50px;
+            background-image: linear-gradient(
+            to right, 
+            #EE5A24, 
+            #F79F1F
+            );
+            border-radius: 5px;
+            font-size: 18px;
+            color: #fefcfb;
+        }
+
+        .btn1:active {
+            background: #e5e5e5;
+            -webkit-box-shadow: inset 0px 0px 5px #96161a;
+                -moz-box-shadow: inset 0px 0px 5px #96161a;
+                    box-shadow: inset 0px 0px 5px #96161a;
+            outline: none;
+
+        }
+        .btn1:hover{
+            color:#fefcfb;
+            background-image: linear-gradient(
+            to right, 
+            #EE5A24, 
+            #F79F1F
+            );
+            border: none;
+        }
+
+        .btn2{
+            float: left;
+            cursor: pointer;
+            width: 285px;
+            height: 50px;
+            background-color: #fefcfb;
+            border: 2px solid #EE5A24;
+            border-radius: 5px;
+            font-size: 18px;
+            color: #EE5A24;
+            margin-top: -36px;
+        }
+
+        .btn2:active {
+            background: #e5e5e5;
+            -webkit-box-shadow: inset 0px 0px 5px #791316;
+                -moz-box-shadow: inset 0px 0px 5px #791316;
+                    box-shadow: inset 0px 0px 5px #791316;
+            outline: none;
+        }
+
+        .btn2:hover{
+            color:#fefcfb;
+            background-image: linear-gradient(
+            to right, 
+            #EE5A24, 
+            #F79F1F
+            );
+            border: none;
+        }
+
+        .btn3{
+            float: right;
+            cursor: pointer;
+            width: 200px;
+            height: 54px;
+            background-color: #f0f0f0;
+            border: 1px solid #52575e;
+            border-radius: 3px;
+            font-size: 16px;
+            color: #727272;
+            margin-top: -18px;
+            margin-right: 55px;
+        }
+        .btn3:hover{
+            border: 1px solid #47494d;
+            background-color: #e2e2e2;
+        }
+        .btn3:active {
+            background: #e5e5e5;
+        }
+
+        .btn4{
+            float: right;
+            cursor: pointer;
+            width: 200px;
+            height: 47px;
+            background-image: linear-gradient(
+            to right, 
+            #EE5A24, 
+            #F79F1F
+            );
+            border-radius: 3px;
+            font-size: 18px;
+            color: #fefcfb;
+            margin-top: -77px;
+            margin-right: 160px;
+            outline: none;
+
+            border-top-style: hidden;
+            border-right-style: hidden;
+            border-left-style: hidden;
+            border-bottom-style: hidden;
+        }
+
+        .btn4:active {
+            -webkit-box-shadow: inset 0px 0px 5px #96161a;
+                -moz-box-shadow: inset 0px 0px 5px #96161a;
+                    box-shadow: inset 0px 0px 5px #96161a;
+            outline: none;
+
+        }
+
+        .subBtn{
+            cursor: pointer;
+            width: 200px;
+            height: 50px;
+            background-color: #fefcfb;
+            border: 2px solid #EE5A24;
+            border-radius: 5px;
+            font-size: 15px;
+            color: #EE5A24;
+            margin-top: 20px;
+        }
+
+        .subBtn:active {
+            background: #e5e5e5;
+            -webkit-box-shadow: inset 0px 0px 5px #96161a;
+                -moz-box-shadow: inset 0px 0px 5px #96161a;
+                    box-shadow: inset 0px 0px 5px #96161a;
+            outline: none;
+
+        }
+        .subBtn:hover{
+            color:#fefcfb;
+            background-image: linear-gradient(
+            to right, 
+            #EE5A24, 
+            #F79F1F
+            );
+            border: none;
+        }
+
+
+        h4{
+            color: #757575;
+            font-weight:bold;
+            font-size: 20px;
+            text-indent: 20px;
+        }
+
+        
+
+        #bottomLine{
+            height: 3px;
+            background-image: linear-gradient(
+                to right, 
+                #EA2027, 
+                #EE5A24, 
+                #F79F1F, 
+                #FFC312
+                );
+            width: 100%;
+        }
+
+        #footer{
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            background-color: white;
+        }
+
+        /************** Tool Tip Styles ********************************/
+        .tool-tip {
+            display: inline-block;
+            position: absolute;
+            margin-left: 0.5em;
+        }
+        .tool-tip .tool-tip__icon {
+            border-radius: 10px;
+            cursor: pointer;
+            font-style: italic;
+            font-family: times new roman;
+            height: 18px;
+            line-height: 1.3em;
+            width: 18px;
+            margin-left: -23px;
+            margin-top: -8px;
+            color: #43acdd;
+        }
+        .tool-tip .tool-tip__info {
+            display: none;
+            background: #52575e;
+            border: 1px solid #52575e;
+            border-radius: 3px;
+            font-size: 16px;
+            color: rgb(238, 238, 238);
+            padding: 1em;
+            position: absolute;
+            left: 27px;
+            top: -20px;
+            width: 500px;
+            z-index: 0;
+            text-indent: 7px;
+            font-family:sans-serif;
+            font-weight: normal;
+        }
+        .tool-tip .tool-tip__info:before, .tool-tip .tool-tip__info:after {
+            content: "";
+            position: absolute;
+            left: -10px;
+            top: 7px;
+            border-style: solid;
+            border-width: 10px 10px 10px 0;
+            border-color: transparent #52575e;
+        }
+        .tool-tip .tool-tip__info:after {
+            left: -8px;
+            border-right-color: #52575e;
+        }
+        .tool-tip .tool-tip__info .info {
+            display: block;
+        }
+        .tool-tip .tool-tip__info .info__title {
+            color: #2a2b2c;
+        }
+        .tool-tip:hover .tool-tip__info, .tool-tip:focus .tool-tip__info {
+            display: inline-block;
+        }
+
+        a:focus + .tool-tip .tool-tip__info {
+            display: inline-block;
+        }
+
+
+
+        .step2_tool-tip {
+            display: inline-block;
+            position: absolute;
+            margin-left: 0.5em;
+        }
+        .step2_tool-tip .step2_tool-tip__icon {
+            border-radius: 10px;
+            cursor: pointer;
+            font-style: italic;
+            font-family: times new roman;
+            height: 18px;
+            line-height: 1.3em;
+            width: 18px;
+            margin-left: 90px;
+            margin-top: 70px;
+            color: #43acdd;
+        }
+        .step2_tool-tip .step2_tool-tip__info {
+            display: none;
+            background: #52575e;
+            border: 1px solid #52575e;
+            border-radius: 3px;
+            font-size: 16px;
+            color: rgb(238, 238, 238);
+            padding: 1em;
+            position: absolute;
+            left: 320px;
+            top: -23px;
+            width: 500px;
+            z-index: 0;
+            text-indent: 7px;
+            font-family:sans-serif;
+            font-weight: normal;
+        }
+        .step2_tool-tip .step2_tool-tip__info:before, .step2_tool-tip .step2_tool-tip__info:after {
+            content: "";
+            position: absolute;
+            left: -10px;
+            top: 7px;
+            border-style: solid;
+            border-width: 10px 10px 10px 0;
+            border-color: transparent #52575e;
+        }
+        .step2_tool-tip .step2_tool-tip__info:after {
+            left: -8px;
+            border-right-color: #52575e;
+        }
+        .step2_tool-tip .step2_tool-tip__info .info {
+            display: block;
+        }
+        .step2_tool-tip .step2_tool-tip__info .step2_info__title {
+            color: #2a2b2c;
+        }
+        .step2_tool-tip:hover .step2_tool-tip__info, .step2_tool-tip:focus .step2_tool-tip__info {
+            display: inline-block;
+        }
+
+        a:focus + .step2_tool-tip .step2_tool-tip__info {
+            display: inline-block;
+        }
+
+       
+
+    </style>
+
+    
+
+    
+</html>
