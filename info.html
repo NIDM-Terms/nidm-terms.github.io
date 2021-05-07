@@ -71,6 +71,12 @@
                 </li>
 
                 <li class= "menuLi">
+                    <form action= "addCommunity.html">
+                        <button class = "add_community" type="submit">Add New Community</button>
+                    </form>
+                </li>
+
+                <li class= "menuLi">
                     <form action="info.html">
                         <button class = "resources">About</button>
                     </form> 
@@ -277,11 +283,11 @@
 
         .menuLi{
             display: inline-block;
-            padding: 20px 10px;
+            padding: 20px 5px;
         }
 
         button{
-            width: 250px;
+            width: 235px;
             height: 60px;
             background-color: transparent;
             border: transparent;
@@ -310,12 +316,19 @@
         }
         
         .createTable{
-            color: #F79F1F;
+            color: #f1842b;
         }
         .createTable:hover{
+            border: 2px solid #f1842b;
+            border-radius: 5px;
+        }
+
+        .add_community{
+            color: #F79F1F;
+        }
+        .add_community:hover{
             border: 2px solid #F79F1F;
             border-radius: 5px;
-
         }
 
         .resources{
@@ -334,26 +347,23 @@
                 #FFC312
                 );
             margin-top: -23px;
-            width: 1200px;
+            width: 1450px;
         }
 
         .container{
-            width: 875px;
+            width: 1050px;
             height: 170%;
             text-align: left;
-            text-indent: 50px;
             font-family:Arial, Helvetica, sans-serif;
             border: 1px solid #b3b3b3 ;
             border-radius: 0px;
             padding: 80px;
             padding-top: 80px;
             padding-right: -10px;
-            padding-bottom: 20px;
             margin-top: 50px;
+            margin-bottom: 100px;
             background-color: #F7F7F7 ;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            margin-bottom: 160px;
-            padding-bottom: 120px;
 
         }
 

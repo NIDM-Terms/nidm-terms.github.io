@@ -80,6 +80,12 @@
                     </li>
 
                     <li class= "menuLi">
+                        <form action= "addCommunity.html">
+                            <button class = "add_community" type="submit">Add New Community</button>
+                        </form>
+                    </li>
+
+                    <li class= "menuLi">
                         <form action="info.html">
                             <button class = "resources">About</button>
                         </form> 
@@ -100,20 +106,7 @@
         <div class= "container">
             <div id="selectComunity">
                 <h2 id="selectTitle">.</h2>
-                    <div id="options">
-                        <label id="nidmTerms" class="con">NIDM Terms
-                            <input type="checkbox" name="checkbox" value="https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/NIDM_Terms.jsonld" checked="checked">
-                            <span class="checkmark"></span>
-                        </label>
-                        <label id="nidmConcepts" class="con">NIDM Concepts
-                            <input type="checkbox" name="checkbox" value="https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/NIDM_Concepts.jsonld" checked="checked">
-                            <span class="checkmark"></span>
-                        </label>
-                        <label id="bidsTerms" class="con">BIDS Specification Terms
-                            <input type="checkbox" name="checkbox" value="https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/BIDS_Terms.jsonld" checked="checked">
-                            <span class="checkmark"></span>
-                        </label>
-                    </div>
+                <center><div id="options"></div></center>
             </div>
             <br>
             <br>
@@ -300,11 +293,11 @@
 
         .menuLi{
             display: inline-block;
-            padding: 20px 10px;
+            padding: 20px 5px;
         }
 
         button{
-            width: 250px;
+            width: 235px;
             height: 60px;
             background-color: transparent;
             border: transparent;
@@ -331,12 +324,19 @@
         }
 
         .createTable{
-            color: #F79F1F;
+            color: #f1842b;
         }
         .createTable:hover{
+            border: 2px solid #f1842b;
+            border-radius: 5px;
+        }
+
+        .add_community{
+            color: #F79F1F;
+        }
+        .add_community:hover{
             border: 2px solid #F79F1F;
             border-radius: 5px;
-
         }
 
         .resources{
@@ -358,20 +358,20 @@
                 #FFC312
                 );
             margin-top: -23px;
-            width: 1200px;
+            width: 1450px;
         }
 
         .container{
-            width: 875px;
+            width: 1050px;
             height: 170%;
             text-align: left;
             font-family:Arial, Helvetica, sans-serif;
             border: 1px solid #b3b3b3 ;
             border-radius: 0px;
             padding: 80px;
-            padding-top: 60px;
+            padding-top: 80px;
             padding-right: -10px;
-            margin-top: 70px;
+            margin-top: 50px;
             margin-bottom: 100px;
             background-color: #F7F7F7 ;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
@@ -448,7 +448,6 @@
         }
 
         #options{
-            margin-left: 40px;
             margin-top: -38px;
             color: rgb(85, 85, 85);
         }
@@ -464,7 +463,6 @@
             background-color: rgb(240, 240, 240);
             padding-top: 15px;
             padding-bottom: 20px;
-            padding-left: 20px;
             width: 100%;
         }
         
@@ -504,244 +502,275 @@
         // 1. Inside the HTML code to add a checkbox and a label to it.
         // 2. Below in "urlList" array.
 
-        // a list that contain all of the url we need to parse
-        var urlList = ['https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/BIDS_Terms.jsonld','https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/NIDM_Terms.jsonld','https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/NIDM_Concepts.jsonld']
-
 
         /// This function fetches data from the BIDS_Terms jsonld file
         $(document).ready(function(event) {
 
-            
-            //Call fetch all and give it a list of urls to the raw github files to display
-            fetchAll(urlList)
+            //Fetch 'https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json' to get a list of the available communities in NIDM-Terms/terms
+            fetch('https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json')
+            .then(function(res){
+                return res.json(); 
+            })
 
-            //Get the values selected in the checkboxes
-            var checkboxElems = document.querySelectorAll("input[type='checkbox']");
-            //create anempty list to add the check box values to it
-            let list = [];
-            //loop through the checked elements and call displayCheck
-            for (var i = 0; i < checkboxElems.length; i++) {
-                checkboxElems[i].addEventListener("click", displayCheck);
-            }
+            //Create chackboxes with the available communities and create a list of their URLS and pass it
+            .then(function(avCom){
 
-            //This function checks which checkboxes were unchecked and passes a list of urls to the function fetchAll to display
-            function displayCheck(e) {
-                //create a list of the term catagories that were unchecked to filter out
-                if (!e.target.checked) {
-                    for(i = 0; i < urlList.length; i++){
-                        if (urlList[i] == e.target.value){
-                            delete urlList[i]
-                        }
-                    }
-                    urlList = removeNull(urlList)
-                    //if the user unchecks all of the checkboxes then display a message
-                    if(urlList.length == 0){
-                        document.getElementById('termsView').innerHTML = ''
-                        doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;"> Setect one or more term category </div>'
-                        $('#termsView').append(doc);
-                        return;
-                    }
-                    else{
-                        fetchAll(urlList)
-                    }
-                    console.log(urlList.length)
+                //create am array containing all the urls to pass to pass
+                var urlList = []
+
+                html = ''
+
+                for (const [key,value] of Object.entries(avCom)){
                     
-                    //list.push(e.target.value)
-                } else if (e.target.checked) {
-                    //recheck after uncheck
-                    urlList.push(e.target.value)
-                    urlList = removeNull(urlList)
-                    fetchAll(urlList)
-                    console.log(13, urlList)
+                    //add checkboxes
+                    html += '<label id = "'+value['label']+'" class="con">' + key ;
+                    html += '<input id = "'+value['label']+'" type="checkbox" name="checkbox" value="'+value['URL']+'" checked="checked">';
+                    html += '<span class="checkmark"></span>';
+                    html += '</label>';
+
+                    //add urls to urlList
+                    urlList.push(value['URL']);
+
                 }
-                //filters out t
-                function removeNull(array) {
-                    return array.filter(x => typeof x === 'string')
-                };
-                
 
-            }
-            
-            //function that takes a list of urls of raw github jsonld file fetch them, and add the data to the mainDict
-            function fetchAll(urlList){
+                $("#options").append(html);
 
-                //Main dictionary that contains either all Terms available or filtered terms
-                var mainList = []
-                
-                //loop through each jsonld github raw file, fetch, and add terms to a list
-                for(var i = 0; i < urlList.length; i++){
-                    fetch(urlList[i])
-                    .then(function(resp){
-                        return resp.json(); 
-                    })
-                    .then(function(data){
-                        var temp = mainList.concat(data['terms'])
-                        mainList = temp
-                        //Call sortOnKeys first to sort the terms
-                        sortOnKeys(mainList)
-                    })
-                }  
-                
-            }
+                return urlList
 
-            //This function sorts the terms in an alphabetical order
-            function sortOnKeys(dict_data) {
-                var sorted = [];
-                //sort terms based on the label of the dictionary
-                dict_data.sort((a, b) => (a.label > b.label) ? 1 : (a.label === b.label) ? ((a.description > b.size) ? 1 : -1) : -1 );
-                //Add sorted terms to a list
-                for (var p in dict_data) {
-                    sorted[sorted.length] = dict_data[p].label;
+            })
+            .then(function(urlList){
+                //Call fetch all and give it a list of urls to the raw github files to display
+                fetchAll(urlList)
+
+                //Get the values selected in the checkboxes
+                var checkboxElems = document.querySelectorAll("input[type='checkbox']");
+                //create anempty list to add the check box values to it
+                let list = [];
+                //loop through the checked elements and call displayCheck
+                for (var i = 0; i < checkboxElems.length; i++) {
+                    checkboxElems[i].addEventListener("click", displayCheck);
                 }
-                //sorted.sort();
-                //call Display function and pass the sorted list
-                display(dict_data)
-            }
 
-            function display(data){
-
-                //Get search input and pass the search
-                const searchBar = document.getElementById("searchBar");
-
-                searchBar.addEventListener("keyup", (e) => {
-                    console.log(e.target.value)
-                    const searchString = e.target.value;
-
-                    const searchedTerms = filterTerms(data, searchString);
-
-                    if(isEmpty(searchedTerms)){
-                        document.getElementById('termsView').innerHTML = ''
-                        doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;"> NO MATCHING TERMS HAVE BEEN FOUND... </div>'
-                        $('#termsView').append(doc);
-                        return;
-                    }
-
-                    displayTerms(searchedTerms)
-
-                });
-
-
-                displayTerms(data) 
-
-                //Function to display the terms in a treeview
-                function displayTerms(data) {
-
-                    //Clear previous term display
-                    document.getElementById('termsView').innerHTML = "";
-
-                    var html = '<ul class= "treeview">';
-
-                    //loop through the terms objects and display terms
-                    for (var d = 0; d < data.length; d++) { // Each sub-entry
-                        
-                        html += '<li>' + data[d].label + '<ul>';
-
-                        for (const [key,value] of Object.entries(data[d])){
-                            if (key != 'label'){
-                                if(typeof(value) === 'object'){
-                                    html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
-                                    for(const [k,v] of Object.entries(value)){
-                                        if(typeof(v) === 'object'){
-                                            html += '<li>'  +  '<b>'+ k +'</b>  ' + '<ul>'
-                                            for(const [kk,vv] of Object.entries(v)){
-                                                html += '<li>'  +  '<b>' + kk +'</b>  ' + ':  '+ vv + '</li>';
-                                            }
-                                            html += '</li></ul>'
-                                        }
-                                        else if (typeof(v) === 'array'){
-                                            html += '<li>'  +  '<b>'+ k +'</b>  ' + '<ul>'
-                                            for(var s = 0; v.length; s++){
-                                                if(typeof(v[s]) === 'string'){
-                                                    html += '<li>'  +  v[s] + '</li>';
-                                                }
-                                                else if (typeof(v[s]) === 'object'){
-                                                    html += '<ul>'
-                                                    for(const [ke,val] of Object.entries(v[s])){
-                                                        html += '<li>'  +  '<b>' + ke +'</b>  ' + ':  '+ val + '</li>';
-                                                    }
-                                                    html += '</ul>'
-                                                }
-                                            }
-                                            html += '</ul></li>';
-                                        }
-                                        else {
-                                            html += '<li>'  +  '<b>' + k +'</b>  ' + ':  '+ v + '</li>';
-                                        }
-                                        
-                                    }
-                                    html += '</li></ul>'
-                                }
-                                else if (typeof(value) === 'array'){
-                                    html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
-                                    for(const a = 0; a< value.length; a++){
-                                        html += '<li>' + value[a] + '</li>';
-                                    }
-                                    html += '</ul></li>';
-                                }
-                                else{
-                                    html += '<li>'  +  '<b>' + key +'</b>  ' + ':  '+ value + '</li>';
-                                }
+                //This function checks which checkboxes were unchecked and passes a list of urls to the function fetchAll to display
+                function displayCheck(e) {
+                    //create a list of the term catagories that were unchecked to filter out
+                    if (!e.target.checked) {
+                        for(i = 0; i < urlList.length; i++){
+                            if (urlList[i] == e.target.value){
+                                delete urlList[i]
                             }
                         }
- 
-                        html += '</ul></li>';
+                        urlList = removeNull(urlList)
+                        //if the user unchecks all of the checkboxes then display a message
+                        if(urlList.length == 0){
+                            document.getElementById('termsView').innerHTML = ''
+                            doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;"> Setect one or more community </div>'
+                            $('#termsView').append(doc);
+                            return;
+                        }
+                        else{
+                            fetchAll(urlList)
+                        }
+                        console.log(urlList.length)
+                        
+                        //list.push(e.target.value)
+                    } else if (e.target.checked) {
+                        //recheck after uncheck
+                        urlList.push(e.target.value)
+                        urlList = removeNull(urlList)
+                        fetchAll(urlList)
+                        console.log(13, urlList)
+                    }
+                    //filters out t
+                    function removeNull(array) {
+                        return array.filter(x => typeof x === 'string')
+                    };
                     
+
+                }
+
+                //function that takes a list of urls of raw github jsonld file fetch them, and add the data to the mainDict
+                function fetchAll(urlList){
+
+                    //Main dictionary that contains either all Terms available or filtered terms
+                    var mainList = []
+                    
+                    //loop through each jsonld github raw file, fetch, and add terms to a list
+                    for(var i = 0; i < urlList.length; i++){
+                        fetch(urlList[i])
+                        .then(function(resp){
+                            return resp.json(); 
+                        })
+                        .then(function(data){
+                            var temp = mainList.concat(data['terms'])
+                            mainList = temp
+                            //Call sortOnKeys first to sort the terms
+                            sortOnKeys(mainList)
+                        })
+                    }  
+                    
+                }
+
+                //This function sorts the terms in an alphabetical order
+                function sortOnKeys(dict_data) {
+                    var sorted = [];
+                    //sort terms based on the label of the dictionary
+                    dict_data.sort((a, b) => (a.label > b.label) ? 1 : (a.label === b.label) ? ((a.description > b.size) ? 1 : -1) : -1 );
+                    //Add sorted terms to a list
+                    for (var p in dict_data) {
+                        sorted[sorted.length] = dict_data[p].label;
+                    }
+                    //sorted.sort();
+                    //call Display function and pass the sorted list
+                    display(dict_data)
+                }
+
+                function display(data){
+
+                    //Get search input and pass the search
+                    const searchBar = document.getElementById("searchBar");
+
+                    searchBar.addEventListener("keyup", (e) => {
+                        console.log(e.target.value)
+                        const searchString = e.target.value;
+
+                        const searchedTerms = filterTerms(data, searchString);
+
+                        if(isEmpty(searchedTerms)){
+                            document.getElementById('termsView').innerHTML = ''
+                            doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;"> NO MATCHING TERMS HAVE BEEN FOUND... </div>'
+                            $('#termsView').append(doc);
+                            return;
+                        }
+
+                        displayTerms(searchedTerms)
+
+                    });
+
+
+                    displayTerms(data) 
+
+                    //Function to display the terms in a treeview
+                    function displayTerms(data) {
+
+                        //Clear previous term display
+                        document.getElementById('termsView').innerHTML = "";
+
+                        var html = '<ul class= "treeview">';
+
+                        //loop through the terms objects and display terms
+                        for (var d = 0; d < data.length; d++) { // Each sub-entry
+                            
+                            html += '<li>' + data[d].label + '<ul>';
+
+                            for (const [key,value] of Object.entries(data[d])){
+                                if (key != 'label'){
+                                    if(typeof(value) === 'object'){
+                                        html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
+                                        for(const [k,v] of Object.entries(value)){
+                                            if(typeof(v) === 'object'){
+                                                html += '<li>'  +  '<b>'+ k +'</b>  ' + '<ul>'
+                                                for(const [kk,vv] of Object.entries(v)){
+                                                    html += '<li>'  +  '<b>' + kk +'</b>  ' + ':  '+ vv + '</li>';
+                                                }
+                                                html += '</li></ul>'
+                                            }
+                                            else if (typeof(v) === 'array'){
+                                                html += '<li>'  +  '<b>'+ k +'</b>  ' + '<ul>'
+                                                for(var s = 0; v.length; s++){
+                                                    if(typeof(v[s]) === 'string'){
+                                                        html += '<li>'  +  v[s] + '</li>';
+                                                    }
+                                                    else if (typeof(v[s]) === 'object'){
+                                                        html += '<ul>'
+                                                        for(const [ke,val] of Object.entries(v[s])){
+                                                            html += '<li>'  +  '<b>' + ke +'</b>  ' + ':  '+ val + '</li>';
+                                                        }
+                                                        html += '</ul>'
+                                                    }
+                                                }
+                                                html += '</ul></li>';
+                                            }
+                                            else {
+                                                html += '<li>'  +  '<b>' + k +'</b>  ' + ':  '+ v + '</li>';
+                                            }
+                                            
+                                        }
+                                        html += '</li></ul>'
+                                    }
+                                    else if (typeof(value) === 'array'){
+                                        html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
+                                        for(const a = 0; a< value.length; a++){
+                                            html += '<li>' + value[a] + '</li>';
+                                        }
+                                        html += '</ul></li>';
+                                    }
+                                    else{
+                                        html += '<li>'  +  '<b>' + key +'</b>  ' + ':  '+ value + '</li>';
+                                    }
+                                }
+                            }
+
+                            html += '</ul></li>';
+                        
+                        }   
+
+                        html += '</ul>';
+
+                        $('#termsView').append(html);
+
+                        $('.treeview').treeView();
+
+                        var style = ".treeview,";
+                        style += ".treeview ul {list-style-type:none;overflow:hidden;}";
+                        style += ".treeview li {text-indent:1%;margin-top:0.2em;padding:0.15em 0 0.5em 1.5em;line-height:22px;background-repeat:no-repeat;background-size:24px 24px;}";
+                        style += ".treeview li.contains-items {background-image:url('js_lib/icons/arrow-left.png');}";
+                        style += ".treeview li.contains-items {background-image:url('js_lib/icons/arrow-right.png');}";
+                        style += ".treeview>li:hover {cursor:pointer; .add_terms:hover;background-color: #dbe9ee}";
+                        style += ".treeview span:hover {background-color: rgba(246,246,246,0.7); }";
+
+
+                        //$('#style').append(style);
+
+                        // Expands all the nodes of treeviews
+                        //$('.treeview').treeView('expandAll');
+                        // Collapses all the nodes of treeviews
+                        $('.treeview').treeView('collapseAll');
+
+
+
                     }   
 
-                    html += '</ul>';
+                    // this function filters the data dictionary based on the input of the search bar
+                    function filterTerms(data, searchedTerms){
+                        
+                        var termsDict = {};
+                        var termsList = [];
 
-                    $('#termsView').append(html);
-
-                    $('.treeview').treeView();
-
-                    var style = ".treeview,";
-                    style += ".treeview ul {list-style-type:none;overflow:hidden;}";
-                    style += ".treeview li {text-indent:1%;margin-top:0.2em;padding:0.15em 0 0.5em 1.5em;line-height:22px;background-repeat:no-repeat;background-size:24px 24px;}";
-                    style += ".treeview li.contains-items {background-image:url('js_lib/icons/arrow-left.png');}";
-                    style += ".treeview li.contains-items {background-image:url('js_lib/icons/arrow-right.png');}";
-                    style += ".treeview>li:hover {cursor:pointer; .add_terms:hover;background-color: #dbe9ee}";
-                    style += ".treeview span:hover {background-color: rgba(246,246,246,0.7); }";
-
-
-                    //$('#style').append(style);
-
-                    // Expands all the nodes of treeviews
-                    //$('.treeview').treeView('expandAll');
-                    // Collapses all the nodes of treeviews
-                    $('.treeview').treeView('collapseAll');
-
-
-
-                }   
-
-                // this function filters the data dictionary based on the input of the search bar
-                function filterTerms(data, searchedTerms){
-                    
-                    var termsDict = {};
-                    var termsList = [];
-
-                    for (var l = 0; l < data.length; l++){
-                        $.each(data[l], function (key, value) {
-                            //search on label and convert both the search and the label to lower case
-                            if(key == 'label' & data[l].label.toLowerCase().includes(searchedTerms.toLowerCase())){
-                                termsDict = data[l] 
-                                termsList.push(termsDict)  
-                            };                          
-                        }); 
+                        for (var l = 0; l < data.length; l++){
+                            $.each(data[l], function (key, value) {
+                                //search on label and convert both the search and the label to lower case
+                                if(key == 'label' & data[l].label.toLowerCase().includes(searchedTerms.toLowerCase())){
+                                    termsDict = data[l] 
+                                    termsList.push(termsDict)  
+                                };                          
+                            }); 
+                        };
+                        return termsList
                     };
-                    return termsList
-                };
 
 
-                // This function checks if the dictionary is empty
-                function isEmpty(obj) {                
-                    for(var key in obj) {
-                        if(obj.hasOwnProperty(key))
-                            return false;
+                    // This function checks if the dictionary is empty
+                    function isEmpty(obj) {                
+                        for(var key in obj) {
+                            if(obj.hasOwnProperty(key))
+                                return false;
+                        }
+                        return true;
                     }
-                    return true;
                 }
-            }
+
+            });
 
         });
 
