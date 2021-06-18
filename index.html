@@ -581,16 +581,15 @@
                         fetchAll(urlList)
                         console.log(13, urlList)
                     }
-                    //filters out t
+                    //filters out
                     function removeNull(array) {
                         return array.filter(x => typeof x === 'string')
                     };
-                    
-
                 }
 
                 //function that takes a list of urls of raw github jsonld file fetch them, and add the data to the mainDict
                 function fetchAll(urlList){
+                    console.log(4,urlList)
 
                     //Main dictionary that contains either all Terms available or filtered terms
                     var mainList = []
@@ -602,6 +601,9 @@
                             return resp.json(); 
                         })
                         .then(function(data){
+
+                            console.log(5,mainList)
+
                             var temp = mainList.concat(data['terms'])
                             mainList = temp
                             //Call sortOnKeys first to sort the terms
