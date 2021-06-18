@@ -128,11 +128,11 @@
                 </div>
 
                 <div id="newC">
-                    <h4 style="margin-bottom: 5px; margin-left: -5px;">Name</h4>
+                    <h4 style="margin-bottom: 5px; margin-left: -5px;">Name *</h4>
                     <input class = "newComInput" id= "CommunityName" class="TermInput" type="text" name="CommunityName" placeholder = "Enter the name of the new community in camelCase" required>
                     
-                    <h4 style="margin-bottom: 10px; margin-left: -5px;">Description</h4>
-                    <textarea class = "newComInput" id= "CommunityDes" class="TermInput" type="text" name="CommunityDes" placeholder = "Enter a brief description about the new community" ></textarea>
+                    <h4 style="margin-bottom: 10px; margin-left: -5px;">Description *</h4>
+                    <textarea class = "newComInput" id= "CommunityDes" class="TermInput" type="text" name="CommunityDes" placeholder = "Enter a brief description about the new community" required></textarea>
                 </div>
 
                 <br><br><br><br>
@@ -142,7 +142,7 @@
 
                 <form class="inputs">
                     
-                    <h4 style="margin-bottom: 10px; margin-left: -5px;">Label
+                    <h4 style="margin-bottom: 10px; margin-left: -5px;">Label *
                         <div class="tool-tip">
                             <i class="tool-tip__icon">i</i>
                             <p class="tool-tip__info">
@@ -152,7 +152,7 @@
                     </h4> 
                     <input id= "label" class="newComInput" type="text" name="label" placeholder = "REQUIRED: Term in cammelCase (e.g. durationTime, author)" required>
                     
-                    <h4 style="margin-bottom: 10px; margin-left: -5px;">Description
+                    <h4 style="margin-bottom: 10px; margin-left: -5px;">Description *
                         <div class="tool-tip">
                             <i class="tool-tip__icon">i</i>
                             <p class="tool-tip__info">
@@ -257,6 +257,8 @@
 
                     <br>
 
+                    <div id="progress"></div>
+
 
                 </form>
 
@@ -273,14 +275,34 @@
                     function nextStep(){
                     
                         //if label and description don't have values call the validation fonction
-                        if (document.getElementById('label').value.length == 0 & document.getElementById('des').value.length == 0){
-                            alert('An input is required for Label and Description')
+                        if (document.getElementById('CommunityName').value.length == 0){
+
+                            document.getElementById('CommunityName').style.borderColor = 'red'
+                            document.getElementById('CommunityName').style.borderWidth = '1px'
+                            document.getElementById('CommunityName').style.backgroundColor = '#FFF1F1'
+                            $('#CommunityName').focus();
+
                         }
-                        else if (document.getElementById('label').value.length == 0 & document.getElementById('des').value.length != 0){
-                            alert('An input for Label is required')
+                        else if (document.getElementById('CommunityDes').value.length == 0){
+
+                            document.getElementById('CommunityDes').style.borderColor = 'red'
+                            document.getElementById('CommunityDes').style.borderWidth = '1px'
+                            document.getElementById('CommunityDes').style.backgroundColor = '#FFF1F1'
+                            $('#CommunityDes').focus();
                         }
-                        else if (document.getElementById('label').value.length != 0 & document.getElementById('des').value.length == 0 ){
-                            alert('An input for Description is required')
+                        else if (document.getElementById('label').value.length == 0){
+
+                            document.getElementById('label').style.borderColor = 'red'
+                            document.getElementById('label').style.borderWidth = '1px'
+                            document.getElementById('label').style.backgroundColor = '#FFF1F1'
+                            $('#label').focus();
+                        }
+                        else if (document.getElementById('des').value.length == 0){
+
+                            document.getElementById('des').style.borderColor = 'red'
+                            document.getElementById('des').style.borderWidth = '1px'
+                            document.getElementById('des').style.backgroundColor = '#FFF1F1'
+                            $('#des').focus();
                         }
                         //else next step, which is an iput for the github API and a button 
                         else {
@@ -352,6 +374,8 @@
                     document.getElementById("catValue").addEventListener("click", addOptions)
 
                     function submitTerm(){
+
+                        $('#progress').append('<div id="p" style="color:#BAB8B8; font-size: 20px; text-indent: 80px;"> Processing the new term... </div>')
 
                         //empty dicttionary 
                         var dict = {};
@@ -430,7 +454,6 @@
                                 //always associate the term with BIDS and NIDM
                                 dict[context["@context"]["associatedWith"]] = associatedWith;
 
-
                                 //compact term dictionary
                                 const compacted = await jsonld.compact(dict, 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld');
                                 console.log(compacted)
@@ -457,9 +480,15 @@
                         var state = '';
 
                         if(document.getElementById("token").value.length == 0){
-                                    alert('GitHub Token is required')
+                            document.getElementById("token").style.borderWidth = '1px';
+                            document.getElementById("token").style.borderColor = 'red';
+                            document.getElementById("token").style.backgroundColor = '#FFF1F1';
+                            $('#token').focus();
                         } 
                         else {
+
+                            document.getElementById('p').parentNode.removeChild(document.getElementById('p'));
+                            $('#progress').append('<div id="p" style="color:#BAB8B8; font-size: 20px; text-indent: 80px;"> Sending the pull request... </div>')
 
                             const newComName = document.getElementById("CommunityName").value;
                             const newComDir  = newComName + '_Terms'
@@ -513,6 +542,10 @@
                                         forkRepo(response.data.login)
                                     }).catch((e) => {
                                         console.log(23, e.message);
+                                        if(e.message == 'Bad credentials'){
+                                            document.getElementById('p').parentNode.removeChild(document.getElementById('p'));
+                                            alert('Bad credentials: please Enter a valid Github Token')
+                                        }
                                     })
 
                                     // //fork terms repo function
@@ -666,6 +699,9 @@
                                 })
                                 .then(function sendTerm(){
 
+                                    document.getElementById('p').parentNode.removeChild(document.getElementById('p'));
+                                    $('#progress').append('<div id="p" style="color:#BAB8B8; font-size: 20px; text-indent: 80px;"> Sending the pull request....... </div>')
+
                                     // //GET user's github username
                                     octokit.request(
                                         `GET /user`
@@ -676,6 +712,10 @@
                                         forkRepo(response.data.login)
                                     }).catch((e) => {
                                         console.log(23, e.message);
+                                        if(e.message == 'Bad credentials'){
+                                            document.getElementById('p').parentNode.removeChild(document.getElementById('p'));
+                                            alert('Bad credentials: please Enter a valid Github Token')
+                                        }
                                     })
 
                                     // //fork terms repo function

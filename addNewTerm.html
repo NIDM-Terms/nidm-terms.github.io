@@ -143,7 +143,7 @@
 
                 <form class="inputs">
                     
-                    <h4 style="margin-bottom: 10px; margin-left: -5px;">Label
+                    <h4 style="margin-bottom: 10px; margin-left: -5px;">Label *
                         <div class="tool-tip">
                             <i class="tool-tip__icon">i</i>
                             <p class="tool-tip__info">
@@ -153,7 +153,7 @@
                     </h4> 
                     <input id= "label" class="newComInput" type="text" name="label" placeholder = "REQUIRED: Term in cammelCase (e.g. durationTime, author)" required>
                     
-                    <h4 style="margin-bottom: 10px; margin-left: -5px;">Description
+                    <h4 style="margin-bottom: 10px; margin-left: -5px;">Description *
                         <div class="tool-tip">
                             <i class="tool-tip__icon">i</i>
                             <p class="tool-tip__info">
@@ -302,62 +302,43 @@
                     //validat that label and description have values and that terms do not already exist
                     ////////////////////////////////////////////////////////////////////////////////////
                     function nextStep(){
-                        //var state = '';
-                    
-                        // // fetch the BIDS_Terms.jsonld file and read as a dictionary
-                        // fetch("https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/BIDS_Terms.jsonld")
-                        // .then(function(resp){
-                        //     return resp.json(); 
-                        // })
+                       
+                        //if label and description don't have values call the validation fonction
+                        if (document.getElementById('CommunityName').value.length == 0){
 
-                        // .then(function(termsDict){
-                        //     //list to contain available labels
-                        //     var avLabelList = [];
+                            document.getElementById('CommunityName').style.borderColor = 'red'
+                            document.getElementById('CommunityName').style.borderWidth = '1px'
+                            document.getElementById('CommunityName').style.backgroundColor = '#FFF1F1'
+                            $('#CommunityName').focus();
 
-                        //     for (var t in termsDict['terms']) {
+                        }
+                        else if (document.getElementById('CommunityDes').value.length == 0){
 
-                        //         var label = termsDict.terms[t].label;
+                            document.getElementById('CommunityDes').style.borderColor = 'red'
+                            document.getElementById('CommunityDes').style.borderWidth = '1px'
+                            document.getElementById('CommunityDes').style.backgroundColor = '#FFF1F1'
+                            $('#CommunityDes').focus();
+                        }
+                        else if (document.getElementById('label').value.length == 0){
 
-                        //         avLabelList.push(label.toLowerCase())
+                            document.getElementById('label').style.borderColor = 'red'
+                            document.getElementById('label').style.borderWidth = '1px'
+                            document.getElementById('label').style.backgroundColor = '#FFF1F1'
+                            $('#label').focus();
+                        }
+                        else if (document.getElementById('des').value.length == 0){
 
-                        //     }
-                        //     return avLabelList
+                            document.getElementById('des').style.borderColor = 'red'
+                            document.getElementById('des').style.borderWidth = '1px'
+                            document.getElementById('des').style.backgroundColor = '#FFF1F1'
+                            $('#des').focus();
+                        }
+                        //else next step, which is an iput for the github API and a button 
+                        else {
+                            submitTerm()
+                        }
 
-                        // })
-                        
-                        // .then(function(avLabelList){
-                        //     //if label and description don't have values call the validation fonction
-                        //     if (document.getElementById('label').value.length == 0 & document.getElementById('des').value.length == 0){
-                        //         alert('An input is required for Label and Description')
-                        //     }
-                        //     else if (document.getElementById('label').value.length == 0 & document.getElementById('des').value.length != 0){
-                        //         alert('An input for Label is required')
-                        //     }
-                        //     else if (document.getElementById('label').value.length != 0 & document.getElementById('des').value.length == 0 ){
-                        //         alert('An input for Description is required')
-                        //     }
-                        //     else if (document.getElementById('label').value.length != 0 & document.getElementById('des').value.length != 0 & avLabelList.includes(document.getElementById('label').value.toLowerCase()) == true){
-                        //         window.alert('This term already exists in the NIDM-Terms GitHub repository')
-                        //         location.reload()
-                        //     }
-                        //     //else next step, which is an iput for the github API and a button 
-                        //     else {
-
-                        //         submitTerm()
-
-                        //     }
-                        // })
-
-                        // // .then(function(){
-                        // //     if(state == '1'){
-                        // //         submitTerm()
-                        // //     } else {
-                        // //         console.log('submitTerms() wanst called')
-                        // //     }
-
-                        // // })
-
-                        submitTerm()
+                        //submitTerm()
                         
                     }
 
@@ -420,7 +401,7 @@
 
                     function submitTerm(){
 
-                        if(document.querySelector('input[name="radio"]:checked').value === 0){
+                        if(document.querySelector('input[name="radio"]:checked').value === ''){
                             alert('Please select a neuroimaging community in which you would like the the term to be added')
                         }
                         else{
@@ -542,8 +523,10 @@
                     function sendPR (newTermJsonld, community){
                         //Get GitHub API key
                         if(document.getElementById("token").value.length == 0){
-                            alert('GitHub Token is required')
-                            console.log("no token")
+                            alert('A GitHub API Token is required to complete the pull request')
+                            document.getElementById("token").style.borderWidth = '1px';
+                            document.getElementById("token").style.borderColor = 'red';
+                            document.getElementById("token").style.backgroundColor = '#FFF1F1';
                         } 
                         else {
                         
