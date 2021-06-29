@@ -255,7 +255,10 @@
                     <br><br><br><br>
 
                     <div><button id = "pullRequest" class= "btn1" type = "button"> Send Pull Request </button></div>
-
+                    <div id = "loader" class="loader"> </div>
+                    <div id = "grayScreen" class="grayScreen"></div>
+                    <div id = "loadingText" class="loadingText">Processing Pull Request...</div>
+                    
                     <br>
 
 
@@ -529,7 +532,10 @@
                             document.getElementById("token").style.backgroundColor = '#FFF1F1';
                         } 
                         else {
-                        
+                            document.getElementById("loader").style.display = "flex";
+                            document.getElementById("grayScreen").style.display = "block";
+                            document.getElementById("loadingText").style.display = "flex";
+
                             const gitToken = document.getElementById("token").value;
 
                             const octokit = new Octokit({ auth: gitToken });
@@ -688,31 +694,33 @@
                             //function to display confirmation to the pull request
                             async function submission(state){
                                 if(state == '1'){
-
+                                    document.getElementById("loader").style.display = "none";
+                                    document.getElementById("grayScreen").style.display = "none";
+                                    document.getElementById("loadingText").style.display = "none";
+                                    
                                     $('#rmv').html("")
 
                                     var html = '<br><br><br>';
 
-                                    html += '<center>'
+                                    html += '<h2 id="stepTitles">Submission Complete <hr style="margin-top: 5px;"></h2>'
 
-                                    html += '<center><div class="headerBrdr"> Term has been submitted for further discussion <br><br></div>';
-                                    
+                                    html += '<div class="headerBrdr"><center>Thank you for adding a new term to NIDM-Terms. ';
+                                    html += 'Your term has been submitted for further discussion.<br><br></center></div>';
+
                                     html += '<div class="headerBrdr">';
 
-                                    html += '<form>';
+                                    html += '<form><center>';
                                     html += '<button onClick="window.location.reload();" id = "newTerm" class= "subBtn" type = "button"> Add another term </button>';
-                                    html += '</form>';
+                                    html += '</center></form>';
                                         
-                                    html += '<form>';
+                                    html += '<form><center>';
                                     html += '<a href= "https://github.com/NIDM-Terms/terms/pulls" target = "_blank"> <button id = "viewPR" class= "subBtn" type = "button" > View Pull Request </button></a>';
-                                    html += '</form>';
+                                    html += '</center></form>';
 
                                     html += '<br><br>';
                                     html += '</div>';
-                                    html += '</center>';
 
                                     $('#rmv').append(html)
-
                                 }
                             }
 
@@ -723,23 +731,22 @@
 
                                 var html = '<br><br><br>';
 
-                                html += '<center>'
+                                html += '<h2 id="stepTitles">Issue with Submission <hr style="margin-top: 5px;"></h2>'
 
-                                html += '<center><div class="headerBrdr"> Ops! Something went wrong.. <br><br></div>';
-                                
+                                html += '<div class="headerBrdr"><center>Oops! Something went wrong while adding the new term.<br><br></center></div>';
+
                                 html += '<div class="headerBrdr">';
-                                    
-                                html += '<form>';
+
+                                html += '<form><center>';
                                 html += '<button id = "report" class= "subBtn" type = "button" > Report </button>';
-                                html += '</form>';
+                                html += '</center></form>';
 
                                 html += '<br><br>';
                                 html += '</div>';
-                                html += '</center>';
 
                                 $('#rmv').append(html);
 
-                                document.getElementById("report").addEventListener("click", function(){ createGithubIssue(issue, e); })
+                                document.getElementById("report").addEventListener("click", function(){ createGithubIssue(issue); })
    
                             }
 
@@ -761,21 +768,20 @@
                                 $('#rmv').html("")
 
                                 var html = '<br><br><br>';
-
-                                html += '<center>'
-
-                                html += '<center><div class="headerBrdr"> Thank you for reporting! <br><br></div>';
-                                html += '<center><div class="headerBrdr"><h5> A GitHub issue in the NIDM-Terms repository reporting the problem was created on your behalf </h5><br></div>';
                                 
+                                html += '<h2 id="stepTitles">Issue Reported <hr style="margin-top: 5px;"></h2>'
+
+                                html += '<div class="headerBrdr"><center>Thank you for reporting! ';
+                                html += 'A GitHub issue in the NIDM-Terms repository reporting the problem was created on your behalf.<br><br></center></div>';
+
                                 html += '<div class="headerBrdr">';
-                                    
-                                html += '<form>';
+
+                                html += '<form><center>';
                                 html += '<a href= "https://github.com/NIDM-Terms/terms/issues" target = "_blank"> <button id = "viewPR" class= "subBtn" type = "button" > View GitHub Issue </button></a>';
-                                html += '</form>';
+                                html += '</center></form>';
 
                                 html += '<br>';
                                 html += '</div>';
-                                html += '</center>';
 
                                 $('#rmv').append(html);
                             }
@@ -811,6 +817,7 @@
             cursor: pointer;
             outline: none;
             font-weight: lighter;
+            
         }
 
         .github{
@@ -1371,6 +1378,57 @@
             font-size: 16px;
             text-indent: 30px; 
             display: inline;
+        }
+
+        .loader {
+            align-items: center;
+            position: fixed;
+            display: none;
+            justify-content: center;
+            left: 50%;
+            top: 50%;
+            border-top: 8px solid #EA2027;
+            border-right: 8px solid #EE5A24;
+            border-bottom: 8px solid #F79F1F;
+            border-left: 8px solid #FFC312;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;   
+            z-index: 3;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }    
+
+        .grayScreen{
+            display: none;
+            position: fixed;
+            justify-content: center;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color:rgba(175, 175, 175, 0.301);
+            width: 100vw;
+            height: 100vh;
+            outline: none;
+            z-index: 2;
+        }
+
+        .loadingText{
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-35%, -120%);
+            display: none;
+            color: #ff4400;
+            font-size: 20px;
+            font-weight: bold;
+            left: 50%;
+            top: 50%;
         }
 
         #bottomLine{
