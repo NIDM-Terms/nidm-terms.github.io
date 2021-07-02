@@ -290,7 +290,7 @@
                                 
                                 //add checkboxes
                                 html += '<label class="con">'+ key;
-                                html += '<input type="radio" name="radio" value = "'+value['label']+'">';
+                                html += '<input id="community" type="radio" name="radio" value = "'+value['label']+'">';
                                 html += '<span class="checkmark"></span>';
                                 html += '</label>';
 
@@ -307,20 +307,13 @@
                     function nextStep(){
                        
                         //if label and description don't have values call the validation fonction
-                        if (document.getElementById('CommunityName').value.length == 0){
+                        if (document.getElementById('token').value.length == 0){
 
-                            document.getElementById('CommunityName').style.borderColor = 'red'
-                            document.getElementById('CommunityName').style.borderWidth = '1px'
-                            document.getElementById('CommunityName').style.backgroundColor = '#FFF1F1'
-                            $('#CommunityName').focus();
+                            document.getElementById('token').style.borderColor = 'red'
+                            document.getElementById('token').style.borderWidth = '1px'
+                            document.getElementById('token').style.backgroundColor = '#FFF1F1'
+                            $('#token').focus();
 
-                        }
-                        else if (document.getElementById('CommunityDes').value.length == 0){
-
-                            document.getElementById('CommunityDes').style.borderColor = 'red'
-                            document.getElementById('CommunityDes').style.borderWidth = '1px'
-                            document.getElementById('CommunityDes').style.backgroundColor = '#FFF1F1'
-                            $('#CommunityDes').focus();
                         }
                         else if (document.getElementById('label').value.length == 0){
 
@@ -404,8 +397,11 @@
 
                     function submitTerm(){
 
-                        if(document.querySelector('input[name="radio"]:checked').value === ''){
-                            alert('Please select a neuroimaging community in which you would like the the term to be added')
+                        if(document.querySelector('input[name="radio"]:checked') == null){
+                            document.getElementById('selectComunity').style.borderColor = 'red'
+                            document.getElementById('selectComunity').style.borderWidth = '1px'
+                            document.getElementById('selectComunity').style.backgroundColor = '#FFF1F1'
+                            $('#selectComunity').focus();
                         }
                         else{
                         
