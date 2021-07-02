@@ -15,12 +15,12 @@
 		"label" : "BIDS_Terms",
 		"URL" : "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/BIDS_Terms.jsonld",
 		"Description" : "",
-		"association" : "BIDS"
+		"association" : ["NIDM","BIDS"]
 	},
 	"CONP DATS Terms": {
 		"label" : "CONP_DATS_Terms",
 		"URL" : "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/CONP_DATS.jsonld",
 		"Description" : "",
-		"association" : "CONP"
+		"association" : ["CONP","DATS"]
 	} 
 }
