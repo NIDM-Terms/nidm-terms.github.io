@@ -565,7 +565,7 @@
         /// This function fetches data from the BIDS_Terms jsonld file
         $(document).ready(function(event) {
             //display the loading screen
-            function displayLoading(){
+            function addLoading(){
                 document.getElementById("loader").style.display = "flex";
                 document.getElementById("grayScreen").style.display = "block";
                 document.getElementById("loadingText").style.display = "flex";
@@ -611,9 +611,18 @@
 
             })
             .then(function(urlList){
+                var displayedUrlList = []       //List of URLs for communities that are on display
+                var communityList = ["DICOM", "NIDMC", "BIDS", "CONP"]      //Names of communities that are associated with the URLs
+                var mainList = []       //Main dictionary that contains all Terms available
+                addLoading()
                 //Call fetch all and give it a list of urls to the raw github files to display
                 fetchAll(urlList)
 
+                for(var j = 0; j < urlList.length; j++)
+                {
+                    displayedUrlList.push(urlList[j])   //copy URLs to dynamic copy
+                }
+                
                 //Get the values selected in the checkboxes
                 var checkboxElems = document.querySelectorAll("input[type='checkbox']");
                 //create anempty list to add the check box values to it
@@ -625,50 +634,70 @@
 
                 //This function checks which checkboxes were unchecked and passes a list of urls to the function fetchAll to display
                 function displayCheck(e) {
-                    displayLoading();
                     //create a list of the term catagories that were unchecked to filter out
                     if (!e.target.checked) {
-                        for(i = 0; i < urlList.length; i++){
-                            if (urlList[i] == e.target.value){
-                                delete urlList[i]
+                        for(i = 0; i < displayedUrlList.length; i++){
+                            if (displayedUrlList[i] == e.target.value){
+                                delete displayedUrlList[i]
                             }
                         }
-                        urlList = removeNull(urlList)
+                        displayedUrlList = removeNull(displayedUrlList)
+                        updateCommunities()
+
                         //if the user unchecks all of the checkboxes then display a message
-                        if(urlList.length == 0){
-                            removeLoading();
+                        if(displayedUrlList.length == 0){
                             document.getElementById('termsView').innerHTML = ''
                             doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;"> Select one or more community </div>'
                             $('#termsView').append(doc);
                             return;
+                            
                         }
                         else{
-                            fetchAll(urlList)
+                            //updateTerms with communities that are checked
+                            updateTerms(mainList)
                         }
-                        console.log(urlList.length)
                         
                         //list.push(e.target.value)
                     } else if (e.target.checked) {
                         //recheck after uncheck
-                        displayLoading();
-                        urlList.push(e.target.value)
-                        urlList = removeNull(urlList)
-                        fetchAll(urlList)
-                        console.log(13, urlList)
+                        displayedUrlList.push(e.target.value)
+                        displayedUrlList = removeNull(displayedUrlList)
+                        updateCommunities()
+                        updateTerms(mainList)
                     }
+
+                    //console.log(communityList)
+                    //console.log(shownTerms.length)
                     //filters out
                     function removeNull(array) {
                         return array.filter(x => typeof x === 'string')
                     };
                 }
 
+                //associates each of the urls of the desired communities with a community name
+                //necessary because of NIDM Concepts, which doesn't have a unique community name and only has the tag 'NIDM'
+                function updateCommunities(){
+                    communityList = []
+                    for(var i = 0; i < displayedUrlList.length; i++)
+                    {
+                        if(displayedUrlList[i].includes("NIDM_Terms"))
+                        {
+                            communityList.push("DICOM")
+                        }else if(displayedUrlList[i].includes("NIDM_Concepts"))
+                        {
+                            communityList.push("NIDMC")
+                        }else if(displayedUrlList[i].includes("BIDS_Terms"))
+                        {
+                            communityList.push("BIDS")
+                        }else if(displayedUrlList[i].includes("CONP_DATS"))
+                        {
+                            communityList.push("CONP")
+                        }
+                    }
+                }
+
                 //function that takes a list of urls of raw github jsonld file fetch them, and add the data to the mainDict
                 function fetchAll(urlList){
-                    console.log(4,urlList)
-
-                    //Main dictionary that contains either all Terms available or filtered terms
-                    var mainList = []
-                    
                     //loop through each jsonld github raw file, fetch, and add terms to a list
                     for(var i = 0; i < urlList.length; i++){
                         fetch(urlList[i])
@@ -676,9 +705,6 @@
                             return resp.json(); 
                         })
                         .then(function(data){
-
-                            console.log(5,mainList)
-
                             var temp = mainList.concat(data['terms'])
                             mainList = temp
                             //Call sortOnKeys first to sort the terms
@@ -699,7 +725,37 @@
                     }
                     //sorted.sort();
                     //call Display function and pass the sorted list
-                    display(dict_data)
+                    //display(dict_data)
+                    updateTerms(mainList)
+                }
+
+                //sorts through mainList and passes to display() only the terms from the desired communities
+                function updateTerms(data){
+                    shownTerms = []
+
+                    for (var l = 0; l < data.length; l++){
+                        for (const [key,value] of Object.entries(data[l])){
+                            if(key == 'associatedWith')
+                            {
+                                for(const [k,v] of Object.entries(value)){
+                                    for (var j = 0; j < communityList.length; j++)
+                                    {
+                                        //access each item and see if includes desired community tag
+                                        //NIDM Concepts only has the 'NIDM' tag, so when parsing the function checks for length 1
+                                        if((communityList[j]==='NIDMC' && value.length===1)
+                                            || v.toLowerCase().includes(communityList[j].toLowerCase())){
+                                            if(!(shownTerms.includes(data[l]))){
+                                                shownTerms.push(data[l])
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                
+                            };                   
+                        }; 
+                    };
+                    display(shownTerms)
                 }
 
                 function display(data){
@@ -794,8 +850,6 @@
 
                         html += '</ul>';
 
-                        removeLoading();
-
                         $('#termsView').append(html);
 
                         $('.treeview').treeView();
@@ -816,8 +870,7 @@
                         // Collapses all the nodes of treeviews
                         $('.treeview').treeView('collapseAll');
 
-
-
+                        removeLoading();
                     }   
 
                     // this function filters the data dictionary based on the input of the search bar
