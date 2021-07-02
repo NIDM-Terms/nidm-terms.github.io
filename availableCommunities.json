@@ -3,13 +3,13 @@
 		"label" : "NIDM_Terms",
 		"URL" : "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/NIDM_Terms.jsonld",
 		"Description" : "",
-		"association" : "NIDM"
+		"association" : ["NIDM","DICOM"]
 	},
 	"NIDM Concepts": {
 		"label" : "NIDM_Concepts",
 		"URL" : "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/NIDM_Concepts.jsonld",
 		"Description" : "",
-		"association" : "NIDM_C"
+		"association" : "NIDM"
 	},
 	"BIDS Specification Terms": {
 		"label" : "BIDS_Terms",
