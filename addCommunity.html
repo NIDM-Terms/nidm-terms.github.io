@@ -529,12 +529,12 @@
                                     termInfo['label'] = comName + "_Terms";
                                     termInfo['URL'] = "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/"+comName+"_Terms.jsonld";
                                     termInfo['Description'] = comDes;
+                                    termInfo['association'] = [comName]
 
                                     dict[comName + " Terms"] = termInfo;
 
-                                    console.log(dict)
+                                    console.log(11, dict)
                                     return dict
-
                                 })
                                 .then(function(dict){
                                     
