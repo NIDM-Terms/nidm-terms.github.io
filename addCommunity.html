@@ -378,8 +378,6 @@
 
                     function submitTerm(){
 
-                        //$('#progress').append('<div id="p" style="color:#BAB8B8; font-size: 20px; text-indent: 80px;"> Processing the new term... </div>')
-
                         //empty dicttionary 
                         var dict = {};
                         var responseOption = {};
@@ -493,8 +491,6 @@
                             document.getElementById("grayScreen").style.display = "block";
                             document.getElementById("loadingText").style.display = "flex";
                             
-                            document.getElementById('p').parentNode.removeChild(document.getElementById('p'));
-                            //$('#progress').append('<div id="p" style="color:#BAB8B8; font-size: 20px; text-indent: 80px;"> Sending the pull request... </div>')
 
                             const newComName = document.getElementById("CommunityName").value;
                             const newComDir  = newComName + '_Terms'
@@ -704,9 +700,6 @@
 
                                 })
                                 .then(function sendTerm(){
-
-                                    document.getElementById('p').parentNode.removeChild(document.getElementById('p'));
-                                    $('#progress').append('<div id="p" style="color:#BAB8B8; font-size: 20px; text-indent: 80px;"> Sending the pull request....... </div>')
 
                                     // //GET user's github username
                                     octokit.request(
