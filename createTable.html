@@ -115,62 +115,107 @@
                 
 
                 <div class="container mt-5">
+
                     <div>
-                        <button class="btn" id="downloadBtn" onclick="getFile()"> Download </button>
+                        <button class="btn" id="downloadBtn" onclick="getFile()"> Export </button>
                     </div>
+                    <br><br><br><br>
+
+                    <h2 id="stepTitles">Select Neuroimaging Communities <hr style="margin-top: 5px;"></h2>
+
+                    <div class="headerBrdr"><center>
+                    </center></div>
                     <br><br>
-                    <div class= "cont">
-                        <div class="row">
+
+                    <div class="headerBrdr"><center>
+                        
+                    </center></div>
+
+                    <center><div id = "selection">
+                        <div id="selectComunity">
+                            <h2 id="selectTitle">.</h2>
+                            <div id = "options"></div>
+                        </div>
+                        
+                    </div></center>
+
+                    <div>
+                        <button class="btn0" id="startBtn"> Add </button>
+                    </div>
+
+                    <br><br><br><br><br><br>
+
+                    <div id= "stepTwo">
+                        <h2 id="stepTitles">Build Your File(s) <hr style="margin-top: 5px;"></h2>
+                        <br><br>
+                        <div class= "cont">
+                            <div class="row">
+                                    
+                                <div class="col-md-6">
+                                    <div id="format" class="form-group"> <label><h4>Select File Format *</h4></label> 
+                                        <select class="form-control select2 select2-hidden-accessible" multiple="" data-placeholder="  select or search formats" style="width: 100%;" tabindex="-1" aria-hidden="true">     
+                                            <option value="md">Markdown Table</option>
+                                            <option value="json">JSON</option>
+                                            <option value="jsonld">JSON-LD</option>
+                                            <option value="csv">CSV</option>
+                                        </select></div> <!-- /.form-group -->
+                                </div> <!-- /.col -->
+
+                                <br><br><br><br>
                                 
-                            <div class="col-md-6">
-                                <div id="format" class="form-group"> <label><h4>Select File Format</h4></label> 
-                                    <select class="form-control select2 select2-hidden-accessible" multiple="" data-placeholder="  select or search formats" style="width: 100%;" tabindex="-1" aria-hidden="true">     
-                                        <option value="md">Markdown Table</option>
-                                        <option value="json">JSON</option>
-                                        <option value="jsonld">JSON-LD</option>
-                                        <option value="csv">CSV</option>
-                                    </select></div> <!-- /.form-group -->
-                            </div> <!-- /.col -->
+                                <div class="col-md-6">
+                                    <div id="properties" class="form-group"> <label><h4>Select Term Properties *</h4></label>
+                                        <select class="form-control select2 select2-hidden-accessible" multiple="" data-placeholder="  select or search term properties" style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                            <option>-- All Available Properties --</option>
+                                            <option>Allowable Values</option>
+                                            <option>Associated With</option>
+                                            <option>Candidate Terms</option>
+                                            <option>Choices</option>
+                                            <option>Citation</option>
+                                            <option>Close Match</option>
+                                            <option>Comment</option>
+                                            <option>Concept</option>
+                                            <option>Datum Type</option>
+                                            <option>Derivative</option>
+                                            <option>Description</option>
+                                            <option>Interlex ID</option>
+                                            <option>Is About</option>
+                                            <option>Is Part Of</option>
+                                            <option>Measure Of</option>
+                                            <option>Maximum Value</option>
+                                            <option>Minimum Value</option>
+                                            <option>Ontology Concept ID</option>
+                                            <option>Related Concepts</option>
+                                            <option>Same As</option>
+                                            <option>SubType CDEs</option>
+                                            <option>Super Type CDEs</option>
+                                            <option>Unit Code</option>
+                                            <option>URL</option>
+                                            <option>Value Type</option>
+                                            <option>Was Derived From</option>
+                                        </select> </div> <!-- /.form-group -->
+                                </div> <!-- /.col -->
 
-                            <br><br><br><br>
-                            
-                            <div class="col-md-6">
-                                <div id="properties" class="form-group"> <label><h4>Select Term Properties</h4></label>
-                                    <select class="form-control select2 select2-hidden-accessible" multiple="" data-placeholder="  select or search term properties" style="width: 100%;" tabindex="-1" aria-hidden="true">
-                                        <option>Associated With</option>
-                                        <option>Candidate Terms</option>
-                                        <option>Comment</option>
-                                        <option>Description</option>
-                                        <option>Interlex ID</option>
-                                        <option>Same As</option>
-                                        <option>Super Type CDEs</option>
-                                        <option>Unit</option>
-                                        <option>URL</option>
-                                        <option>Was Derived From</option>
-                                    </select> </div> <!-- /.form-group -->
-                            </div> <!-- /.col -->
+                                <br><br><br><br>
 
-                            <br><br><br><br>
-
-                            <h4>Select Terms</h4>
-                            <div class="bidsTitle">
-                                <div class= "search-box">
-                                    <input id= "searchBar" class="search_bar" type="text" name="box" placeholder = "Search Terms"><i id= "searchIcon" class="fa fa-search" style="font-size:24px"></i>
+                                <h4>Select Terms *</h4>
+                                <div class="bidsTitle">
+                                    <div class= "search-box">
+                                        
+                                    </div>
+                                    
                                 </div>
+                                <div class= "selectionReq"><h5 style = "color:rgb(133, 133, 133); font-size: 20px; font-weight: 300; margin-top: 50px;">To select terms, one or more neuroimaging communities must be selected and added.</h5></div>
+                                
+                                <div id="buttons"></div>
+                                <br><br><br><br><br>
+
+                                <div id="termsView"></div>
+
+                                <br><br><br><br><br>
+
+                                
                             </div>
-                            
-                            <br><br><br><br><br>
-
-                            <div id="selectComunity">
-                                <h2 id="selectTitle">.</h2>
-                                <center><div id="options"></div></center>
-                            </div>
-
-                            <br><br><br><br>
-
-                            <div id="termsView"></div>
-
-                            
                         </div>
                     </div>
                 </div>
@@ -411,6 +456,14 @@
 
         }
 
+        #stepTitles{
+            font-size: 32px;
+            color: #6e6d6d;
+            font-weight: 200;
+            margin-left: 55px;
+            margin-right: 55px;
+        }
+
         .bidsTitle{
             color: white;
             background-size: 100px;
@@ -458,10 +511,11 @@
     
 
         h4{
-            color: #6e6d6d;
-            font-weight:200;
-            font-size: 32px;
-            text-indent: 10px;
+            color: #6d6d6d;
+            font-weight:bold;
+            font-size: 22px;
+            font-weight: 400;
+            text-indent: 3px;
             line-height: 20px;
             margin-bottom: 15px;
         }
@@ -472,28 +526,110 @@
             padding-top: 90px;
         }
 
-
-        .btn{
+        #startBtn{
+            box-shadow:inset 0px 1px 0px 0px #ffffff;
+            background:linear-gradient(to bottom, #f9f9f9 5%, #e9e9e9 100%);
+            background-color:#f9f9f9;
+            border-radius:6px;
+            border:1px solid #dcdcdc;
+            display:inline-block;
+            cursor:pointer;
+            color:#707070;
+            font-family:Arial;
+            font-size:18px;
+            padding:2px 13px;
+            text-decoration:none;
+            text-shadow:0px 1px 0px #ffffff;
             float: right;
-            cursor: pointer;
-            width: 200px;
-            height: 54px;
-            background-color: #f0f0f0;
-            border: 1px solid #52575e;
-            border-radius: 3px;
-            font-size: 16px;
-            color: #727272;
-            margin-top: -18px;
+            height: 50px;
+            width: 235px;
+            margin-top: 30px;
             margin-right: 55px;
         }
-        .btn:hover{
-            border: 1px solid #47494d;
-            background-color: #e2e2e2;
+        #startBtn:hover {
+            background:linear-gradient(to bottom, #e9e9e9 5%, #f9f9f9 100%);
+            background-color:#e9e9e9;
+        }
+        #startBtn:active {
+            position:relative;
+            top:1px;
+        }
+
+        .btn{
+            box-shadow:inset 0px 1px 0px 0px #caefab;
+            background:linear-gradient(to bottom, #77d42a 5%, #5cb811 100%);
+            background-color:#77d42a;
+            border-radius:6px;
+            border:1px solid #268a16;
+            display:inline-block;
+            cursor:pointer;
+            color:#306108;
+            font-family:Arial;
+            font-size:18px;
+            font-weight:bold;
+            padding:12px 40px;
+            text-decoration:none;
+            text-shadow:0px 1px 0px #aade7c;
+            float: right;
+            width: 180px;
+            height: 54px;
+            margin-right: 55px;
+            margin-top: 0px;
+        }
+        .btn:hover {
+            background:linear-gradient(to bottom, #5cb811 5%, #77d42a 100%);
+            background-color:#5cb811;
         }
         .btn:active {
-            background: #e5e5e5;
+            position:relative;
+            top:1px;
         }
         
+        .btn1{
+            background: none!important;
+            border: none;
+            padding: 10px!important;
+            /*optional*/
+            font-family: arial, sans-serif;
+            font-size: 21px;
+            font-weight: 600;
+            /*input has OS specific font-family*/
+            color: #2196F3;
+            text-decoration: underline;
+            cursor: pointer;
+            margin-top: -20px;
+            margin-left: -78px;
+        }
+
+        .btn2 {
+            box-shadow:inset 0px 1px 0px 0px #ffffff;
+            background:linear-gradient(to bottom, #f9f9f9 5%, #e9e9e9 100%);
+            background-color:#f9f9f9;
+            border-radius:6px;
+            border:1px solid #dcdcdc;
+            display:inline-block;
+            cursor:pointer;
+            color:#707070;
+            font-family:Arial;
+            font-size:18px;
+            padding:2px 13px;
+            text-decoration:none;
+            text-shadow:0px 1px 0px #ffffff;
+            height: 50px;
+            width: 260px;
+            margin-top: 50px;
+            margin-left: 30px;
+            
+        }
+        .btn2:hover {
+            background:linear-gradient(to bottom, #e9e9e9 5%, #f9f9f9 100%);
+            background-color:#e9e9e9;
+        }
+        .btn2:active {
+            position:relative;
+            top:1px;
+        }
+
 
         .process{
             color:#7e7e7e;
@@ -634,8 +770,8 @@
             display: inline-block;
             position: relative;
             padding-left: 35px;
-            margin-bottom: 12px;
-            margin-left: 75px;
+            margin-bottom: 22px;
+            margin-left: 45px;
             cursor: pointer;
             font-size: 16px;
             -webkit-user-select: none;
@@ -714,7 +850,7 @@
             background-color: rgb(240, 240, 240);
             padding-top: 15px;
             padding-bottom: 20px;
-            width: 100%;
+            width: 90%;
         }
 
 
@@ -723,6 +859,14 @@
 
     <script>
 
+        //List that contains url's of all of the selected communities
+        var List = [];
+        // List that contains all selected terms
+        var selectedTerms = [];
+        //variable to state is used to check whether all terms were selected given the value 1 
+        //or if all terms were unselected giving it the value 0
+        var state = "";
+
         /////////////////////////////////////////////
         //bootstrap dropdown list function
         $(document).ready(function() {
@@ -730,6 +874,10 @@
                 closeOnSelect: false
             });
 
+            
+
+            //create a list that contains checked terms
+            var checkedTerms = [];
 
             //Add options
             //Fetch 'https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json' to get a list of the available communities in NIDM-Terms/terms
@@ -742,7 +890,7 @@
             .then(function(avCom){
 
                 //create am array containing all the urls to pass to pass
-                var urlList = []
+                //var urlList = []
 
                 html = ''
 
@@ -750,30 +898,228 @@
                     
                     //add checkboxes
                     html += '<label id = "'+value['label']+'" class="con">' + key ;
-                    html += '<input id = "'+value['label']+'" type="checkbox" name="checkbox" value="'+value['URL']+'" checked="checked">';
+                    html += '<input id = "'+value['label']+'" type="checkbox" class="comOptions " name="checkbox" value="'+value['URL']+'" unchecked="checked">';
                     html += '<span class="checkmark"></span>';
                     html += '</label>';
 
                     //add urls to urlList
-                    urlList.push(value['URL']);
+                    //urlList.push(value['URL']);
 
                 }
 
                 $("#options").append(html);
 
-                return urlList
+                //return urlList
 
-            }).then(function(urlList){
-                for(var i = 0; i < urlList.length; i++){
-                    console.log('fetch terms here')
+            })
+            .then(function(){
 
-                    //Call fetch all and give it a list of urls to the raw github files to display
+                // fetch selested communities
+                $("#startBtn").click(function(){
+                    var urlList = [];
+                    $.each($("input[type='checkbox']:checked"), function(){
+                        urlList.push($(this).val());
+                    });
+                    $('#stepTwo').focus();
+                    List = urlList
                     fetchAll(urlList)
+                });
+
+
+                //function that takes a list of urls of raw github jsonld file fetch them, and add the data to the mainDict
+                function fetchAll(urlList){
+
+                    //Main dictionary that contains either all Terms available or filtered terms
+                    var mainList = []
+                    
+                    //loop through each jsonld github raw file, fetch, and add terms to a list
+                    for(var i = 0; i < urlList.length; i++){
+                        fetch(urlList[i])
+                        .then(function(resp){
+                            return resp.json(); 
+                        })
+                        .then(function(data){
+                            var temp = mainList.concat(data['terms'])
+                            mainList = temp
+                            //Call sortOnKeys first to sort the terms
+                            sortOnKeys(mainList)
+                        })
+                    }  
+                    
+                }
+
+                //This function sorts the terms in an alphabetical order
+                function sortOnKeys(dict_data) {
+                    var sorted = [];
+                    //sort terms based on the label of the dictionary
+                    dict_data.sort((a, b) => (a.label > b.label) ? 1 : (a.label === b.label) ? ((a.description > b.size) ? 1 : -1) : -1 );
+                    //Add sorted terms to a list
+                    for (var p in dict_data) {
+                        sorted[sorted.length] = dict_data[p].label;
+                    }
+                    //sorted.sort();
+                    //call Display function and pass the sorted list
+                    display(dict_data)
+                }
+
+                function display(data){
+
+                    //add search bar for select terms and add buttons for term slecetion
+                    $('.selectionReq').html("")
+                    $('.search-box').html("")
+                    $('#buttons').html("")
+                    var search = '';
+                    var buttons = '';
+                    search += '<input id= "searchBar" class="search_bar" type="text" name="box" placeholder = "Search Terms"><i id= "searchIcon" class="fa fa-search" style="font-size:24px"></i>';
+                    buttons += '<button class="btn2" id="selectAll"> Select All Terms </button>'
+                    buttons += '<button class="btn2" id="unselectAll"> Unselect All Terms </button>'
+                    buttons += '<a href= "https://nidm-terms.github.io/index.html?" target = "_blank"><button class="btn2" id="unselectAll"> View Terms Properties </button></a>'
+                    $('.search-box').append(search);
+                    $('#buttons').append(buttons);
+
+                    //Get search input and pass the search
+                    const searchBar = document.getElementById("searchBar");
+
+                    searchBar.addEventListener("keyup", (e) => {
+                        console.log(e.target.value)
+                        const searchString = e.target.value;
+
+                        const searchedTerms = filterTerms(data, searchString);
+
+                        if(isEmpty(searchedTerms)){
+                            document.getElementById('termsView').innerHTML = ''
+                            doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;"> NO MATCHING TERMS HAVE BEEN FOUND... </div>'
+                            $('#termsView').append(doc);
+                            return;
+                        }
+
+                        displayTerms(searchedTerms)
+
+                    });
+
+
+                    displayTerms(data) 
+
+                    //Function to display the terms in a treeview
+                    function displayTerms(data) {
+
+                        //Clear previous term display
+                        document.getElementById('termsView').innerHTML = "";
+
+                        var terms = '<br>'
+                        //loop through the terms objects and display terms
+                        for (var d = 0; d < data.length; d++) { // Each sub-entry
+
+
+                            if(selectedTerms.length > 0){
+                                console.log(999,data[d].label)
+                                    if( selectedTerms.includes(data[d].label)){
+                                        terms += '<div style= "margin-top: -40px;">'
+                                        terms += '<label style= "font-size: 19px; color:#666666;" id = "'+data[d].label+'" class="con"><b>' + data[d].label +'</b>';
+                                        terms += '<h5 style = "color: #7e7e7e; margin-top: 5px; font-size:14px; font-weight: 100;">'+data[d].description+'</h5>'
+                                        terms += '<input id = "'+data[d].label+'" type="checkbox" name="termsCheckbox" value="'+data[d].label+'" checked>';
+                                        terms += '<span class="checkmark"></span>';
+                                        terms += '</label>';
+                                        terms += '</div>'   
+                                        terms += '<br>'
+                                    }
+                                    else{
+                                        terms += '<div style= "margin-top: -40px;">'
+                                        terms += '<label style= "font-size: 19px; color:#666666;" id = "'+data[d].label+'" class="con"><b>' + data[d].label +'</b>';
+                                        terms += '<h5 style = "color: #7e7e7e; margin-top: 5px; font-size:14px; font-weight: 100;">'+data[d].description+'</h5>'
+                                        terms += '<input id = "'+data[d].label+'" type="checkbox" name="termsCheckbox" value="'+data[d].label+'">';
+                                        terms += '<span class="checkmark"></span>';
+                                        terms += '</label>';
+                                        terms += '</div>'   
+                                        terms += '<br>'
+                                    }
+                            }
+                            else if ( selectedTerms == 1){
+                                terms += '<div style= "margin-top: -40px;">'
+                                terms += '<label style= "font-size: 19px; color:#666666;" id = "'+data[d].label+'" class="con"><b>' + data[d].label +'</b>';
+                                terms += '<h5 style = "color: #7e7e7e; margin-top: 5px; font-size:14px; font-weight: 100;">'+data[d].description+'</h5>'
+                                terms += '<input id = "'+data[d].label+'" type="checkbox" name="termsCheckbox" value="'+data[d].label+'" checked>';
+                                terms += '<span class="checkmark"></span>';
+                                terms += '</label>';
+                                terms += '</div>'   
+                                terms += '<br>'
+                            }
+                            else{
+                                terms += '<div style= "margin-top: -40px;">'
+                                terms += '<label style= "font-size: 19px; color:#666666;" id = "'+data[d].label+'" class="con"><b>' + data[d].label +'</b>';
+                                terms += '<h5 style = "color: #7e7e7e; margin-top: 5px; font-size:14px; font-weight: 100;">'+data[d].description+'</h5>'
+                                terms += '<input id = "'+data[d].label+'" type="checkbox" name="termsCheckbox" value="'+data[d].label+'">';
+                                terms += '<span class="checkmark"></span>';
+                                terms += '</label>';
+                                terms += '</div>'   
+                                terms += '<br>'
+                            }
+                            
+                        }   
+                        $('#termsView').append(terms);
+                    }
+                    
+                    function selects(){
+                        //if the selectedTerms variable equals to 1 then all terms are selected
+                        selectedTerms = 1
+                        var ele=document.getElementsByName('termsCheckbox');  
+                        for(var i=0; i<ele.length; i++){  
+                            if(ele[i].type=='checkbox')  
+                                ele[i].checked=true;  
+                        } 
+                    }  
+                    function deSelect(){ 
+                        //assign an empty list to selectedTerms if all terms are unselected
+                        selectedTerms = [] 
+                        var ele=document.getElementsByName('termsCheckbox');  
+                        for(var i=0; i<ele.length; i++){  
+                            if(ele[i].type=='checkbox')  
+                                ele[i].checked=false;  
+                            
+                        }  
+                    } 
+
+                    // this function filters the data dictionary based on the input of the search bar
+                    function filterTerms(data, searchedTerms){
+                        
+                        var termsDict = {};
+                        var termsList = [];
+
+                        for (var l = 0; l < data.length; l++){
+                            $.each(data[l], function (key, value) {
+                                //search on label and convert both the search and the label to lower case
+                                if(key == 'label' & data[l].label.toLowerCase().includes(searchedTerms.toLowerCase())){
+                                    termsDict = data[l] 
+                                    termsList.push(termsDict)  
+                                };                          
+                            }); 
+                        };
+                        console.log(14, termsList)
+                        return termsList
+                        
+                    };
+
+
+                    // This function checks if the dictionary is empty
+                    function isEmpty(obj) {                
+                        for(var key in obj) {
+                            if(obj.hasOwnProperty(key))
+                                return false;
+                        }
+                        return true;
+                    }
+
+                    document.getElementById("selectAll").addEventListener("click", selects)
+                    document.getElementById("unselectAll").addEventListener("click", deSelect)
+
+                    //put all selected terms in a list
+                    console.log("test checked items", state)
+
 
                     //Get the values selected in the checkboxes
-                    var checkboxElems = document.querySelectorAll("input[type='checkbox']");
+                    var checkboxElems = document.querySelectorAll("input[name='termsCheckbox']");
                     //create anempty list to add the check box values to it
-                    let list = [];
+                    //let tempList = [];
                     //loop through the checked elements and call displayCheck
                     for (var i = 0; i < checkboxElems.length; i++) {
                         checkboxElems[i].addEventListener("click", displayCheck);
@@ -783,160 +1129,40 @@
                     function displayCheck(e) {
                         //create a list of the term catagories that were unchecked to filter out
                         if (!e.target.checked) {
-                            for(i = 0; i < urlList.length; i++){
-                                if (urlList[i] == e.target.value){
-                                    delete urlList[i]
+                            for(i = 0; i < selectedTerms.length; i++){
+                                if (selectedTerms[i] == e.target.value){
+                                    delete selectedTerms[i]
                                 }
                             }
-                            urlList = removeNull(urlList)
-                            //if the user unchecks all of the checkboxes then display a message
-                            if(urlList.length == 0){
-                                document.getElementById('termsView').innerHTML = ''
-                                doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;"> Setect one or more community </div>'
-                                $('#termsView').append(doc);
-                                return;
-                            }
-                            else{
-                                fetchAll(urlList)
-                            }
-                            console.log(urlList.length)
+                            selectedTerms = removeNull(selectedTerms)
+                            console.log(selectedTerms.length)
                             
                             //list.push(e.target.value)
                         } else if (e.target.checked) {
                             //recheck after uncheck
-                            urlList.push(e.target.value)
-                            urlList = removeNull(urlList)
-                            fetchAll(urlList)
-                            console.log(13, urlList)
+                            selectedTerms.push(e.target.value)
+                            selectedTerms = removeNull(selectedTerms)
+                            console.log(13, selectedTerms)
                         }
-                        //filters out t
+                        //filters out
                         function removeNull(array) {
                             return array.filter(x => typeof x === 'string')
                         };
-                        
-
                     }
 
-                    //function that takes a list of urls of raw github jsonld file fetch them, and add the data to the mainDict
-                    function fetchAll(urlList){
-
-                        //Main dictionary that contains either all Terms available or filtered terms
-                        var mainList = []
-                        
-                        //loop through each jsonld github raw file, fetch, and add terms to a list
-                        for(var i = 0; i < urlList.length; i++){
-                            fetch(urlList[i])
-                            .then(function(resp){
-                                return resp.json(); 
-                            })
-                            .then(function(data){
-                                var temp = mainList.concat(data['terms'])
-                                mainList = temp
-                                //Call sortOnKeys first to sort the terms
-                                sortOnKeys(mainList)
-                            })
-                        }  
-                        
-                    }
-
-                    //This function sorts the terms in an alphabetical order
-                    function sortOnKeys(dict_data) {
-                        var sorted = [];
-                        //sort terms based on the label of the dictionary
-                        dict_data.sort((a, b) => (a.label > b.label) ? 1 : (a.label === b.label) ? ((a.description > b.size) ? 1 : -1) : -1 );
-                        //Add sorted terms to a list
-                        for (var p in dict_data) {
-                            sorted[sorted.length] = dict_data[p].label;
-                        }
-                        //sorted.sort();
-                        //call Display function and pass the sorted list
-                        display(dict_data)
-                    }
-
-                    function display(data){
-
-                        //Get search input and pass the search
-                        const searchBar = document.getElementById("searchBar");
-
-                        searchBar.addEventListener("keyup", (e) => {
-                            console.log(e.target.value)
-                            const searchString = e.target.value;
-
-                            const searchedTerms = filterTerms(data, searchString);
-
-                            if(isEmpty(searchedTerms)){
-                                document.getElementById('termsView').innerHTML = ''
-                                doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;"> NO MATCHING TERMS HAVE BEEN FOUND... </div>'
-                                $('#termsView').append(doc);
-                                return;
-                            }
-
-                            displayTerms(searchedTerms)
-
-                        });
-
-
-                        displayTerms(data) 
-
-                        //Function to display the terms in a treeview
-                        function displayTerms(data) {
-
-                            //Clear previous term display
-                            document.getElementById('termsView').innerHTML = "";
-
-                            var terms = ''
-
-                            //loop through the terms objects and display terms
-                            for (var d = 0; d < data.length; d++) { // Each sub-entry
-                                
-                                terms += '<label id = "'+data[d].label+'" class="con">' + data[d].label ;
-                                terms += '<input id = "'+data[d].label+'" type="checkbox" name="checkbox" value="'+data[d].label+'" unchecked>';
-                                terms += '<span class="checkmark"></span>';
-                                terms += '</label>'; 
-                                terms += '<br>'   
-                            
-                            }   
-
-
-                            $('#termsView').append(terms);
-
-                        }   
-
-                        // this function filters the data dictionary based on the input of the search bar
-                        function filterTerms(data, searchedTerms){
-                            
-                            var termsDict = {};
-                            var termsList = [];
-
-                            for (var l = 0; l < data.length; l++){
-                                $.each(data[l], function (key, value) {
-                                    //search on label and convert both the search and the label to lower case
-                                    if(key == 'label' & data[l].label.toLowerCase().includes(searchedTerms.toLowerCase())){
-                                        termsDict = data[l] 
-                                        termsList.push(termsDict)  
-                                    };                          
-                                }); 
-                            };
-                            return termsList
-                        };
-
-
-                        // This function checks if the dictionary is empty
-                        function isEmpty(obj) {                
-                            for(var key in obj) {
-                                if(obj.hasOwnProperty(key))
-                                    return false;
-                            }
-                            return true;
-                        }
-                    }
                 }
             });
         });
 
+
         ///////////////////////////////////////////////////////////
         //function to fetch the single jsonld file
         function getFile(){
+
+            //get the checked communities urls from the html tags
+            console.log(36, List)
+
+
 
             fetch("https://raw.githubusercontent.com/nqueder/terms/master/terms/BIDS_Terms.jsonld")
 
@@ -961,7 +1187,7 @@
                     tempDict['@context'] = dict_data['@context'];
                     tempDict['terms'] = dict_data['terms']
                 };
-                
+                console.log(tempDict)
                 return tempDict
 
             })
