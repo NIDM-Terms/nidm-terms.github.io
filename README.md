@@ -1,3 +1,3 @@
-NIDM-Terms Candidate Terms Webpage
+[nidm-terms.github.io](nidm-terms.github.io)
 
 # WIP
