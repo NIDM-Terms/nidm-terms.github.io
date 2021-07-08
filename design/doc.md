@@ -7,27 +7,27 @@
 
 #### Available Terms (View Terms)
 
-##### Suggestions
+Suggestions
 
 
 #### Suggest Terms
 
-##### Suggestions
+Suggestions
 
 
 #### Export Terms 
 
-##### Suggestions
+Suggestions
 
 
 #### Add New Community
 
-##### Suggestions
+Suggestions
 
 
 #### About
 
-##### Suggestions
+Suggestions
 
 
 
