@@ -5,31 +5,34 @@
 ## UI's WIP Features
 
 
-### Available Terms (View Terms)
+#### Available Terms (View Terms)
 
-#### Suggestions
-
-
-### Suggest Terms
-
-#### Suggestions
+##### Suggestions
 
 
-### Export Terms 
+#### Suggest Terms
 
-#### Suggestions
-
-
-### Add New Community
-
-#### Suggestions
+##### Suggestions
 
 
-### About
+#### Export Terms 
 
-#### Suggestions
+##### Suggestions
+
+
+#### Add New Community
+
+##### Suggestions
+
+
+#### About
+
+##### Suggestions
 
 
 
 
 ## General Suggestions
+
+
+
