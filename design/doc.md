@@ -1,6 +1,6 @@
 # Desgin Document for the NIDM-Terms Term Viewer
 
-nidm-terms.github.io
+[nidm-terms.github.io](nidm-terms.github.io)
 
 ## UI's WIP Features
 
