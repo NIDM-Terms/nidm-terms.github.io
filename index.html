@@ -495,7 +495,6 @@
 
         .grayScreen{
             display: block;
-            /*display: none;*/
             position: fixed;
             justify-content: center;
             top: 0;
@@ -561,7 +560,8 @@
         // 1. Inside the HTML code to add a checkbox and a label to it.
         // 2. Below in "urlList" array.
 
-
+        var communityList = [] //Names of communities that are associated with the URLs
+        var mainDict = {} //Dictionary with separate lists for each community's terms
         /// This function fetches data from the BIDS_Terms jsonld file
         $(document).ready(function(event) {
             //display the loading screen
@@ -581,13 +581,13 @@
             //Fetch 'https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json' to get a list of the available communities in NIDM-Terms/terms
             fetch('https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json')
             .then(function(res){
+                removeLoading()
                 return res.json(); 
             })
 
-            //Create chackboxes with the available communities and create a list of their URLS and pass it
+            //Create checkboxes with the available communities and create a list of their URLS and pass it
             .then(function(avCom){
-
-                //create am array containing all the urls to pass to pass
+                //create am array containing all the urls to pass to pass, create another array with all the community association properties
                 var urlList = []
 
                 html = ''
@@ -596,13 +596,14 @@
                     
                     //add checkboxes
                     html += '<label id = "'+value['label']+'" class="con">' + key ;
-                    html += '<input id = "'+value['label']+'" type="checkbox" name="checkbox" value="'+value['URL']+'" checked="checked">';
+                    html += '<input id = "'+value['label']+'" type="checkbox" name="checkbox" value="'+value['label']+'" checked="checked">';
                     html += '<span class="checkmark"></span>';
                     html += '</label>';
 
                     //add urls to urlList
                     urlList.push(value['URL']);
-
+                    communityList.push(value['label'])
+                    mainDict[value['label']] = []
                 }
 
                 $("#options").append(html);
@@ -611,17 +612,8 @@
 
             })
             .then(function(urlList){
-                var displayedUrlList = []       //List of URLs for communities that are on display
-                var communityList = ["DICOM", "NIDMC", "BIDS", "CONP"]      //Names of communities that are associated with the URLs
-                var mainList = []       //Main dictionary that contains all Terms available
-                addLoading()
                 //Call fetch all and give it a list of urls to the raw github files to display
                 fetchAll(urlList)
-
-                for(var j = 0; j < urlList.length; j++)
-                {
-                    displayedUrlList.push(urlList[j])   //copy URLs to dynamic copy
-                }
                 
                 //Get the values selected in the checkboxes
                 var checkboxElems = document.querySelectorAll("input[type='checkbox']");
@@ -636,16 +628,15 @@
                 function displayCheck(e) {
                     //create a list of the term catagories that were unchecked to filter out
                     if (!e.target.checked) {
-                        for(i = 0; i < displayedUrlList.length; i++){
-                            if (displayedUrlList[i] == e.target.value){
-                                delete displayedUrlList[i]
+                        for(i = 0; i < communityList.length; i++){
+                            if (communityList[i] == e.target.value){
+                                delete communityList[i]
                             }
                         }
-                        displayedUrlList = removeNull(displayedUrlList)
-                        updateCommunities()
+                        communityList = removeNull(communityList)
 
                         //if the user unchecks all of the checkboxes then display a message
-                        if(displayedUrlList.length == 0){
+                        if(communityList.length == 0){
                             document.getElementById('termsView').innerHTML = ''
                             doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;"> Select one or more community </div>'
                             $('#termsView').append(doc);
@@ -654,64 +645,45 @@
                         }
                         else{
                             //updateTerms with communities that are checked
-                            updateTerms(mainList)
+                            updateTerms()
                         }
                         
                         //list.push(e.target.value)
                     } else if (e.target.checked) {
                         //recheck after uncheck
-                        displayedUrlList.push(e.target.value)
-                        displayedUrlList = removeNull(displayedUrlList)
-                        updateCommunities()
-                        updateTerms(mainList)
+                        communityList.push(e.target.value)
+                        communityList = removeNull(communityList)
+                        updateTerms()
                     }
+                    
+                    console.log(communityList)
 
-                    //console.log(communityList)
-                    //console.log(shownTerms.length)
                     //filters out
                     function removeNull(array) {
-                        return array.filter(x => typeof x === 'string')
+                        return array.filter(x => typeof x !== 'undefined')
                     };
-                }
-
-                //associates each of the urls of the desired communities with a community name
-                //necessary because of NIDM Concepts, which doesn't have a unique community name and only has the tag 'NIDM'
-                function updateCommunities(){
-                    communityList = []
-                    for(var i = 0; i < displayedUrlList.length; i++)
-                    {
-                        if(displayedUrlList[i].includes("NIDM_Terms"))
-                        {
-                            communityList.push("DICOM")
-                        }else if(displayedUrlList[i].includes("NIDM_Concepts"))
-                        {
-                            communityList.push("NIDMC")
-                        }else if(displayedUrlList[i].includes("BIDS_Terms"))
-                        {
-                            communityList.push("BIDS")
-                        }else if(displayedUrlList[i].includes("CONP_DATS"))
-                        {
-                            communityList.push("CONP")
-                        }
-                    }
                 }
 
                 //function that takes a list of urls of raw github jsonld file fetch them, and add the data to the mainDict
                 function fetchAll(urlList){
-                    //loop through each jsonld github raw file, fetch, and add terms to a list
+                    //NIDMT = 3630, NIDMC = 274, BIDS = 235, CONP = 143
+                    var comms = [] //a new list that used to keep track of which communities the jsonld terms are assigned to
+                    //copy values from communityList to comms
+                    for(var j = 0; j < communityList.length; j++){
+                        comms.push(communityList[j])
+                    }
                     for(var i = 0; i < urlList.length; i++){
                         fetch(urlList[i])
                         .then(function(resp){
                             return resp.json(); 
                         })
                         .then(function(data){
-                            var temp = mainList.concat(data['terms'])
-                            mainList = temp
-                            //Call sortOnKeys first to sort the terms
-                            sortOnKeys(mainList)
+                            mainDict[comms[0]] = data['terms'];
+                            delete comms[0]
+                            comms = comms.filter(x => typeof x !== 'undefined')
                         })
-                    }  
-                    
+                    }
+                    updateTerms()
                 }
 
                 //This function sorts the terms in an alphabetical order
@@ -723,43 +695,22 @@
                     for (var p in dict_data) {
                         sorted[sorted.length] = dict_data[p].label;
                     }
-                    //sorted.sort();
-                    //call Display function and pass the sorted list
-                    //display(dict_data)
-                    updateTerms(mainList)
                 }
 
-                //sorts through mainList and passes to display() only the terms from the desired communities
-                function updateTerms(data){
-                    shownTerms = []
-
-                    for (var l = 0; l < data.length; l++){
-                        for (const [key,value] of Object.entries(data[l])){
-                            if(key == 'associatedWith')
-                            {
-                                for(const [k,v] of Object.entries(value)){
-                                    for (var j = 0; j < communityList.length; j++)
-                                    {
-                                        //access each item and see if includes desired community tag
-                                        //NIDM Concepts only has the 'NIDM' tag, so when parsing the function checks for length 1
-                                        if((communityList[j]==='NIDMC' && value.length===1)
-                                            || v.toLowerCase().includes(communityList[j].toLowerCase())){
-                                            if(!(shownTerms.includes(data[l]))){
-                                                shownTerms.push(data[l])
-                                            }
-                                        }
-                                    }
-                                }
-                                
-                                
-                            };                   
-                        }; 
-                    };
+                function updateTerms(){
+                    var shownTerms = []
+                    for(var key in mainDict){
+                        if(communityList.includes(key)){
+                            var temp = shownTerms.concat(mainDict[key])
+                            shownTerms = temp
+                        }
+                    }
+                    console.log(mainDict)
+                    sortOnKeys(shownTerms)
                     display(shownTerms)
                 }
 
                 function display(data){
-
                     //Get search input and pass the search
                     const searchBar = document.getElementById("searchBar");
 
@@ -785,7 +736,6 @@
 
                     //Function to display the terms in a treeview
                     function displayTerms(data) {
-
                         //Clear previous term display
                         document.getElementById('termsView').innerHTML = "";
 
@@ -793,20 +743,32 @@
 
                         //loop through the terms objects and display terms
                         for (var d = 0; d < data.length; d++) { // Each sub-entry
-                            
                             html += '<li>' + data[d].label + '<ul>';
-
+                        
                             for (const [key,value] of Object.entries(data[d])){
                                 if (key != 'label'){
                                     if(typeof(value) === 'object'){
                                         html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
                                         for(const [k,v] of Object.entries(value)){
                                             if(typeof(v) === 'object'){
-                                                html += '<li>'  +  '<b>'+ k +'</b>  ' + '<ul>'
                                                 for(const [kk,vv] of Object.entries(v)){
-                                                    html += '<li>'  +  '<b>' + kk +'</b>  ' + ':  '+ vv + '</li>';
+                                                    if(typeof(vv) === 'string'){
+                                                        html += '<li>' + vv + '</li>';
+                                                    }else if(typeof(vv) === 'object'){
+                                                        html += '<li>'  +  '<b>'+ kk +'</b>  ' + '<ul>'
+                                                        for(const [keys,vvv] of Object.entries(vv)){ //for responseOptions
+                                                            if(typeof(vvv) === 'object'){ 
+                                                                for(const [keyss,vvvv] of Object.entries(vvv)){
+                                                                    html += '<li>' + keyss + ': ' + vvvv + '</li>';
+                                                                }
+                                                                
+                                                            }else if(typeof(vvv) === 'string'){
+                                                                html += '<li>' + vvv + '</li>';
+                                                            }
+                                                        }
+                                                        html += '</ul>'
+                                                    }
                                                 }
-                                                html += '</li></ul>'
                                             }
                                             else if (typeof(v) === 'array'){
                                                 html += '<li>'  +  '<b>'+ k +'</b>  ' + '<ul>'
@@ -817,7 +779,7 @@
                                                     else if (typeof(v[s]) === 'object'){
                                                         html += '<ul>'
                                                         for(const [ke,val] of Object.entries(v[s])){
-                                                            html += '<li>'  +  '<b>' + ke +'</b>  ' + ':  '+ val + '</li>';
+                                                            html += '<li>' + val + '</li>';
                                                         }
                                                         html += '</ul>'
                                                     }
@@ -825,7 +787,7 @@
                                                 html += '</ul></li>';
                                             }
                                             else {
-                                                html += '<li>'  +  '<b>' + k +'</b>  ' + ':  '+ v + '</li>';
+                                                html += '<li>' + v + '</li>';
                                             }
                                             
                                         }
@@ -862,14 +824,12 @@
                         style += ".treeview>li:hover {cursor:pointer; .add_terms:hover;background-color: #dbe9ee}";
                         style += ".treeview span:hover {background-color: rgba(246,246,246,0.7); }";
 
-
                         //$('#style').append(style);
 
                         // Expands all the nodes of treeviews
                         //$('.treeview').treeView('expandAll');
                         // Collapses all the nodes of treeviews
                         $('.treeview').treeView('collapseAll');
-
                     }   
 
                     // this function filters the data dictionary based on the input of the search bar
