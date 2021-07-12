@@ -3,24 +3,20 @@
 		"label" : "NIDM_Terms",
 		"URL" : "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/NIDM_Terms.jsonld",
 		"Description" : "Neuroimaging Data Modeling Terms",
-		"association" : ["NIDM","DICOM"]
 	},
 	"NIDM Concepts": {
 		"label" : "NIDM_Concepts",
 		"URL" : "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/NIDM_Concepts.jsonld",
 		"Description" : "Neuroimaging Data Modeling Concepts",
-		"association" : "NIDM"
 	},
 	"BIDS Specification Terms": {
 		"label" : "BIDS_Terms",
 		"URL" : "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/BIDS_Terms.jsonld",
 		"Description" : "Brain Imaging Data Structure Specification Terms",
-		"association" : ["NIDM","BIDS"]
 	},
 	"CONP DATS Terms": {
 		"label" : "CONP_DATS_Terms",
 		"URL" : "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/CONP_DATS.jsonld",
 		"Description" : "",
-		"association" : ["CONP","DATS"]
 	} 
 }
