@@ -753,6 +753,7 @@
                     document.getElementById('termsView').innerHTML = "";
 
                     var html = '<ul class= "treeview">';
+                    var style = ".treeview,";
 
                     //loop through the terms objects and display terms
                     for (var d = 0; d < data.length; d++) { // Each sub-entry
@@ -820,6 +821,13 @@
                         }
 
                         html += '</ul></li>';
+
+                        style += ".treeview ul {list-style-type:none;overflow:hidden;}";
+                        style += ".treeview li {text-indent:1%;margin-top:0.2em;padding:0.15em 0 0.5em 1.5em;line-height:22px;background-repeat:no-repeat;background-size:24px 24px;}";
+                        style += ".treeview li.contains-items {background-image:url('js_lib/icons/arrow-left.png');}";
+                        style += ".treeview li.contains-items {background-image:url('js_lib/icons/arrow-right.png');}";
+                        style += ".treeview>li:hover {cursor:pointer; .add_terms:hover;background-color: #dbe9ee}";
+                        style += ".treeview span:hover {background-color: rgba(246,246,246,0.7); }";
                     
                     }   
 
@@ -829,13 +837,8 @@
 
                     $('.treeview').treeView();
 
-                    var style = ".treeview,";
-                    style += ".treeview ul {list-style-type:none;overflow:hidden;}";
-                    style += ".treeview li {text-indent:1%;margin-top:0.2em;padding:0.15em 0 0.5em 1.5em;line-height:22px;background-repeat:no-repeat;background-size:24px 24px;}";
-                    style += ".treeview li.contains-items {background-image:url('js_lib/icons/arrow-left.png');}";
-                    style += ".treeview li.contains-items {background-image:url('js_lib/icons/arrow-right.png');}";
-                    style += ".treeview>li:hover {cursor:pointer; .add_terms:hover;background-color: #dbe9ee}";
-                    style += ".treeview span:hover {background-color: rgba(246,246,246,0.7); }";
+                    
+                    
 
                     //$('#style').append(style);
 
