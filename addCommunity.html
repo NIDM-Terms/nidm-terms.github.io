@@ -271,7 +271,19 @@
             </div>
 
                 <script type = "module">
+                    //display the loading screen
+                    function addLoading(){
+                        document.getElementById("loader").style.display = "flex";
+                        document.getElementById("grayScreen").style.display = "block";
+                        document.getElementById("loadingText").style.display = "flex";
+                    }
 
+                    //remove the loading screen
+                    function removeLoading(){
+                        document.getElementById("loader").style.display = "none";
+                        document.getElementById("grayScreen").style.display = "none";
+                        document.getElementById("loadingText").style.display = "none";  
+                    }
                     ///////////////////////////////////////////////////////////////////////////
                     //validat that label and description have values
                     ///////////////////////////////////////////////////////////////////////////
@@ -377,8 +389,6 @@
                     document.getElementById("catValue").addEventListener("click", addOptions)
 
                     function submitTerm(){
-
-                        //$('#progress').append('<div id="p" style="color:#BAB8B8; font-size: 20px; text-indent: 80px;"> Processing the new term... </div>')
 
                         //empty dicttionary 
                         var dict = {};
@@ -489,12 +499,7 @@
                             $('#token').focus();
                         } 
                         else {
-                            document.getElementById("loader").style.display = "flex";
-                            document.getElementById("grayScreen").style.display = "block";
-                            document.getElementById("loadingText").style.display = "flex";
-                            
-                            document.getElementById('p').parentNode.removeChild(document.getElementById('p'));
-                            //$('#progress').append('<div id="p" style="color:#BAB8B8; font-size: 20px; text-indent: 80px;"> Sending the pull request... </div>')
+                            addLoading()
 
                             const newComName = document.getElementById("CommunityName").value;
                             const newComDir  = newComName + '_Terms'
@@ -549,7 +554,7 @@
                                     }).catch((e) => {
                                         console.log(23, e.message);
                                         if(e.message == 'Bad credentials'){
-                                            document.getElementById('p').parentNode.removeChild(document.getElementById('p'));
+                                            removeLoading()
                                             alert('Bad credentials: please Enter a valid Github Token')
                                         }
                                     })
@@ -705,9 +710,6 @@
                                 })
                                 .then(function sendTerm(){
 
-                                    document.getElementById('p').parentNode.removeChild(document.getElementById('p'));
-                                    $('#progress').append('<div id="p" style="color:#BAB8B8; font-size: 20px; text-indent: 80px;"> Sending the pull request....... </div>')
-
                                     // //GET user's github username
                                     octokit.request(
                                         `GET /user`
@@ -719,7 +721,7 @@
                                     }).catch((e) => {
                                         console.log(23, e.message);
                                         if(e.message == 'Bad credentials'){
-                                            document.getElementById('p').parentNode.removeChild(document.getElementById('p'));
+                                            removeLoading()
                                             alert('Bad credentials: please Enter a valid Github Token')
                                         }
                                     })
