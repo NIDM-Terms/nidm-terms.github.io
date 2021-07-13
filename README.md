@@ -1,1 +1,3 @@
-NIDM-Terms Candidate Terms Webpage
+nidm-terms webpages for reviewing candidate terms
+
+# WIP
