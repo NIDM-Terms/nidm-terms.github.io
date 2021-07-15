@@ -381,6 +381,34 @@
 
         }
 
+        input + .des-tool-tip-text {
+            display: none;
+        }
+        input:hover + .des-tool-tip-text {
+            display: block;
+            position: absolute;
+            text-align:left;
+            padding: 0.3em;
+            width: 150px;
+            bottom: 150%;
+            font-size: 16px;
+            background: #52575e81;
+            color: rgb(238, 238, 238);
+            border-radius: 3px;
+        }
+        input:hover + .des-tool-tip-text:after {
+            content: "";
+            position: absolute;
+            border:1px solid #52575e67;
+            left: 0%;
+            top: 100%;
+            width: 0; 
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 10px solid #52575e67;
+        }
+
         /* The container */
         .con {
             display: inline-block;
@@ -596,8 +624,9 @@
                 for (const [key,value] of Object.entries(avCom)){
                     
                     //add checkboxes
-                    html += '<label id = "'+value['label']+'" class="con">' + key ;
-                    html += '<input id = "'+value['label']+'" type="checkbox" name="checkbox" value="'+value['label']+'" checked="checked">';
+                    html += '<label id = "'+value['label']+'" class="con">'+key;
+                    html += '<input id = "'+value['label']+'" type="checkbox" name="checkbox" value = "'+value['label']+'" checked="checked">';
+                    html += '<div class="des-tool-tip-text">'+value['Description']+'</div>'
                     html += '<span class="checkmark"></span>';
                     html += '</label>';
 
@@ -627,20 +656,22 @@
                     })
                     .then(function(data){
                         mainDict[label] = data['terms'];
-                        console.log(33, mainDict)
+                        //console.log(33, mainDict)
                         delete comms[0]
                         comms = comms.filter(x => typeof x !== 'undefined')
                     })
                     .then(function(){
+                        console.log("fetchAll version of updateTerms is called")
                         var shownTerms = []
                         for(var key in mainDict){
+                            //console.log(mainDict.length)
                             if(communityList.includes(key)){
                                 var temp = shownTerms.concat(mainDict[key])
-                                console.log(4, key)
+                                //console.log(4, key)
                                 shownTerms = temp
                             }
                         }
-                        console.log(886, shownTerms)
+                        //console.log(886, shownTerms)
                         sortOnKeys(shownTerms)
                         display(shownTerms)
                     })      
@@ -706,7 +737,7 @@
                         }
                     }
                     
-                    console.log(111, shownTerms)
+                    //console.log(111, shownTerms)
                     sortOnKeys(shownTerms)
                     display(shownTerms)
                 }
@@ -725,10 +756,13 @@
 
             function display(data){  
                 console.log(65, data) 
+                //make a copy of data, changes so either all terms from desired comms or only terms containing searchString
+                var finalData = data; //so displayTerms is only called once, not twice (one time in search bar event listener and one time after)
+                console.log(finalData.length)
                 //Get search input and pass the search
-                const searchBar = document.getElementById("searchBar");
+                var searchBar = document.getElementById("searchBar");
 
-                searchBar.addEventListener("keyup", (e) => {
+                searchBar.addEventListener("keyup", debounce(function(e){
                     console.log(e.target.value)
                     const searchString = e.target.value;
 
@@ -741,11 +775,26 @@
                         return;
                     }
 
-                    displayTerms(searchedTerms)
-
-                });
-
-                displayTerms(data) 
+                    finalData = searchedTerms
+                }, 250));
+                //sets a timer --> not all keystrokes trigger filter method so no input overload
+                function debounce(func, delay) {
+                    var timerId;
+                    return function() {
+                        var context = this, args = arguments;
+                        var later = function() {
+                            timerId = null;
+                            func.apply(context, args);
+                        };
+                        var ready = !timerId;
+                        clearTimeout(timerId);
+                        timerId = setTimeout(later, delay);
+                        if (ready) func.apply(context, args);
+                    };
+                };
+                //if no input in search bar, just displays terms from desired communities
+                //if there is input, finalData is terms from desired communities that contain that input
+                displayTerms(finalData) 
 
                 //Function to display the terms in a treeview
                 function displayTerms(data) {
