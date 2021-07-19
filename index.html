@@ -661,20 +661,24 @@
                         comms = comms.filter(x => typeof x !== 'undefined')
                     })
                     .then(function(){
-                        console.log("fetchAll version of updateTerms is called")
                         var shownTerms = []
                         for(var key in mainDict){
-                            //console.log(mainDict.length)
                             if(communityList.includes(key)){
                                 var temp = shownTerms.concat(mainDict[key])
-                                //console.log(4, key)
                                 shownTerms = temp
                             }
                         }
-                        //console.log(886, shownTerms)
+                        callDisp(shownTerms)
+                    }) 
+                }
+                //only calls display after all communities' terms have been added to shownTerms
+                var numCalls = 0
+                function callDisp(shownTerms){
+                    numCalls++
+                    if(numCalls===communityList.length){
                         sortOnKeys(shownTerms)
-                        display(shownTerms)
-                    })      
+                        display(shownTerms) 
+                    }
                 }
             })
             .then(function(){       
@@ -726,20 +730,29 @@
                         return array.filter(x => typeof x !== 'undefined')
                     };
                 }
+                //keeps track of # of updateTerms calls --> only display after all desired terms have been added to shownTerms
+                var numCalls = 0
                 function updateTerms(){
+                    document.getElementById("searchBar").value = ''     //clear search bar when update terms on display
+                    numCalls = 0    //reset call count every time communityList changes
                     console.log("updateTerms is called")
                     var shownTerms = []
                     for(var key in mainDict){
                         if(communityList.includes(key)){
                             var temp = shownTerms.concat(mainDict[key])
-                            console.log(4, key)
                             shownTerms = temp
                         }
+                        callDisp(shownTerms)
                     }
-                    
-                    //console.log(111, shownTerms)
-                    sortOnKeys(shownTerms)
-                    display(shownTerms)
+                }
+                //only calls display after all communities' terms have been added to shownTerms
+                function callDisp(shownTerms){
+                    numCalls++
+                    if(numCalls===communityList.length){
+                        sortOnKeys(shownTerms)
+                        display(shownTerms)
+                        numCalls = 0    //reset call count after updating the display
+                    }
                 }
             });
 
@@ -753,15 +766,14 @@
                     sorted[sorted.length] = dict_data[p].label;
                 }
             }
-
+            var numFilterCalls = 0
             function display(data){  
                 console.log(65, data) 
                 //make a copy of data, changes so either all terms from desired comms or only terms containing searchString
                 var finalData = data; //so displayTerms is only called once, not twice (one time in search bar event listener and one time after)
-                console.log(finalData.length)
                 //Get search input and pass the search
                 var searchBar = document.getElementById("searchBar");
-
+                console.log('full data length: '+finalData.length)
                 searchBar.addEventListener("keyup", debounce(function(e){
                     console.log(e.target.value)
                     const searchString = e.target.value;
@@ -776,8 +788,10 @@
                     }
 
                     finalData = searchedTerms
+                    console.log('searchedterms length: '+finalData.length)
+                    displayTerms(finalData)
                 }, 250));
-                //sets a timer --> not all keystrokes trigger filter method so no input overload
+                //sets a timer --> calls filter method after specific delay so no input overload
                 function debounce(func, delay) {
                     var timerId;
                     return function() {
@@ -899,8 +913,9 @@
 
                 // this function filters the data dictionary based on the input of the search bar
                 function filterTerms(data, searchedTerms){
-
-                    console.log(777, data)
+                    numFilterCalls++
+                    console.log('numFilterCalls: '+numFilterCalls)
+                    console.log(777, data.length)
                     
                     var termsDict = {};
                     var termsList = [];
