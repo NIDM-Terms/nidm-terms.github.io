@@ -141,34 +141,7 @@
                                 
                                 <div class="col-md-6">
                                     <div id="properties" class="form-group"> <label><h4>Select Term Properties *</h4></label>
-                                        <select class="form-control select2 select2-hidden-accessible" multiple="" data-placeholder="  select or search term properties" style="width: 100%;" tabindex="-1" aria-hidden="true">
-                                            <option>-- All Available Properties --</option>
-                                            <option>Allowable Values</option>
-                                            <option>Associated With</option>
-                                            <option>Candidate Terms</option>
-                                            <option>Choices</option>
-                                            <option>Citation</option>
-                                            <option>Close Match</option>
-                                            <option>Comment</option>
-                                            <option>Concept</option>
-                                            <option>Datum Type</option>
-                                            <option>Derivative</option>
-                                            <option>Description</option>
-                                            <option>Interlex ID</option>
-                                            <option>Is About</option>
-                                            <option>Is Part Of</option>
-                                            <option>Measure Of</option>
-                                            <option>Maximum Value</option>
-                                            <option>Minimum Value</option>
-                                            <option>Ontology Concept ID</option>
-                                            <option>Related Concepts</option>
-                                            <option>Same As</option>
-                                            <option>SubType CDEs</option>
-                                            <option>Super Type CDEs</option>
-                                            <option>Unit Code</option>
-                                            <option>URL</option>
-                                            <option>Value Type</option>
-                                            <option>Was Derived From</option>
+                                        <select id = "addProperties" class="form-control select2 select2-hidden-accessible" multiple="" data-placeholder="  select or search term properties" style="width: 100%;" tabindex="-1" aria-hidden="true">
                                         </select> </div> <!-- /.form-group -->
                                 </div> <!-- /.col -->
 
@@ -376,7 +349,7 @@
         }
 
         button{
-            width: 250px;
+            width: 235px;
             height: 60px;
             background-color: transparent;
             border: transparent;
@@ -896,16 +869,49 @@
         //variable to state is used to check whether all terms were selected given the value 1 
         //or if all terms were unselected giving it the value 0
         var state = "";
+        //a list of properties that don't need to be displayed
+        var dontDisplay = ['rdfs','xsd','nidm','skos','owl','prov','terms','responseOptions','@version','label','reproschema','DataElement','PersonalDataElement','CommonDataElement']
 
-        /////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////////
+        //fetch the NIDM-Terms Context file and save into a variable
+        //////////////////////////////////////////////////////////////////////////////////////////
+        var context = {};
+        fetch('https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld')
+        .then(function(res){
+            return res.json(); 
+        })
+        .then(function(temp){
+            console.log(1, temp)
+
+            //Add properties available in the context file to select term properties
+
+            var options = '';
+            options += '<option value = "all">-- All Available Properties --</option>'
+            //loop throught the context file and display all available properties in the "Select Term Properties" drop down menu
+            for(const property in temp['@context']){
+                if(dontDisplay.includes(property)){
+                    console.log()
+                }else{
+                    options += '<option value = "'+property+'">'+property+'</option>';
+                }
+            }
+            //asign temp to the global dictionary context
+            context = temp
+            //append the variable optionsto the html document
+            $('#addProperties').append(options)
+        })
+        
+
+
+        //////////////////////////////////////////////////////////////////////////////////////////
         //bootstrap dropdown list function
+        //////////////////////////////////////////////////////////////////////////////////////////
         $(document).ready(function() {
             $('.select2').select2({
                 closeOnSelect: false
             });
 
             
-
             //create a list that contains checked terms
             var checkedTerms = [];
 
@@ -1192,7 +1198,6 @@
         function getFile(){
 
             
-
             //loop through the urlList and fetch each url and put the terms in a dictionary
             //check if only one community is selected
             if(List.lenth != 0 & List.length == 1){
@@ -1223,7 +1228,7 @@
                 })
 
             }
-            //if more than one url is selected then fetch each selected url
+            //if more than one community is selected then fetch each selected url
             else if(List.lenth != 0 & List.length > 1){
                 var tempList = [];
                 var temp = {};
@@ -1250,6 +1255,7 @@
                     })
                 }
                 temp['terms'] = tempList
+                console.log(88, temp)
                 download(temp)
             }
         }
@@ -1259,18 +1265,18 @@
 
             //get selected properties
             selectedProperties = $('#properties :selected').map((_,e) => e.value).get();
+            console.log(55, selectedProperties)
             if(selectedProperties.length == 0){
                 alert('You must select at least one term property')
             }
 
-
             //get selected formats
             selectedFormats = $('#format :selected').map((_,e) => e.value).get();
+            console.log(66, selectedFormats)
             arrayLength = selectedFormats.length;
             if(selectedFormats == 0){
                 alert('You must select at least one format')
             }
-
 
             else{
                 //call formats functions
@@ -1296,7 +1302,6 @@
         
         //This function exports a Mark down Table of the choosen terms
         function mdTable(jsonldData,selectedProperties,selectedTerms){
-            console.log('mdTable is working')
 
             rowDiv = '--------------';
             colDiv = '|'
@@ -1321,86 +1326,21 @@
             buildRows += "\n"
             buildRows += colDiv
 
-            for (var l in jsonldData['terms']) {
-                    
+            for (var l in jsonldData['terms']) {                    
                 //for every term selected get the selected properties of that term
                 selectedTermsLength = selectedTerms.length;
                 for(t = 0; t < selectedTermsLength; t++){
-                    
                     if(jsonldData.terms[l].label.toLowerCase() == selectedTerms[t].toLowerCase()){
 
                         buildRows += jsonldData.terms[l].label + colDiv 
 
                         for(tp = 0; tp < selectedPropertiesLength; tp++){
-                            if(selectedProperties[tp] == "Associated With"){
-                                if('associatedWith' in jsonldData.terms[l]){
-                                    buildRows += " NIDM, BIDS" + colDiv
-                                } else{
-                                    buildRows += "         " + colDiv
-                                }
-                            }
-                            if(selectedProperties[tp] == "Candidate Terms"){
-                                if('candidateTerms' in jsonldData.terms[l]){
-                                    buildRows += jsonldData.terms[l].candidateTerms + colDiv
-                                } else{
-                                    buildRows += "         " + colDiv
-                                }
-                            }
-                            if(selectedProperties[tp] == "Comment"){
-                                if('comment' in jsonldData.terms[l]){
-                                    buildRows += jsonldData.terms[l].comment + colDiv
-                                } else{
-                                    buildRows += "         " + colDiv
-                                }
-                            }
-                            if(selectedProperties[tp] == "Description"){
-                                if('description' in jsonldData.terms[l]){
-                                    buildRows += jsonldData.terms[l].description + colDiv
-                                } else{
-                                    buildRows += "         " + colDiv
-                                }
-                            }
-                            if(selectedProperties[tp] == "Interlex ID"){
-                                if('ilxId' in jsonldData.terms[l]){
-                                    buildRows += jsonldData.terms[l].ilxId + colDiv
-                                } else{
-                                    buildRows += "         " + colDiv
-                                }
-                            }
-                            if(selectedProperties[tp] == "Same As"){    
-                                if('sameAs' in jsonldData.terms[l]){
-                                    buildRows += jsonldData.terms[l].sameAs + colDiv
-                                } else{
-                                    buildRows += "         " + colDiv
-                                }
-                            }
-                            if(selectedProperties[tp] == "Super Type CDEs"){
-                                if('supertypeCDEs' in jsonldData.terms[l]){
-                                    buildRows += jsonldData.terms[l].supertypeCDEs + colDiv
-                                } else{
-                                    buildRows += "         " + colDiv
-                                }
-                            }
-                            if(selectedProperties[tp] == "Unit"){
-                                if('unit' in jsonldData.terms[l]){
-                                    buildRows += jsonldData.terms[l].unit + colDiv
-                                } else{
-                                    buildRows += "         " + colDiv
-                                }
-                            }
-                            if(selectedProperties[tp] == "URL"){
-                                if('url' in jsonldData.terms[l]){
-                                    buildRows += jsonldData.terms[l].url + colDiv
-                                } else{
-                                    buildRows += "         " + colDiv
-                                }
-                            }
-                            if(selectedProperties[tp] == "Was Derived From"){
-                                if('wasDerivedFrom' in jsonldData.terms[l]){
-                                    buildRows += jsonldData.terms[l].wasDerivedFrom + colDiv
-                                } else{
-                                    buildRows += "         " + colDiv
-                                }
+                            console.log(selectedProperties[tp])
+                            var tempProp = selectedProperties[tp]
+                            if( tempProp in jsonldData.terms[l]){
+                                buildRows += jsonldData.terms[l][tempProp] + colDiv
+                            } else{
+                                buildRows += "         " + colDiv
                             }
 
                         }
@@ -1412,7 +1352,7 @@
                 
 
             }      
-
+            //Download file
             downloadObjectAsJson(buildRows, "Terms_MD_Table")
 
             function downloadObjectAsJson(exportObj, exportName){
@@ -1432,7 +1372,6 @@
             jsonDict = {};
 
             for (var l in jsonldData['terms']) {
-
                 //for every term selected get the selected properties of that term
                 selectedTermsLength = selectedTerms.length;
                 for(t = 0; t < selectedTermsLength; t++){
@@ -1442,53 +1381,13 @@
                         //get the selected properties
                         selectedPropertiesLength = selectedProperties.length;
                         for(p = 0; p < selectedPropertiesLength; p++){
-                            //temp['label'] = jsonldData.terms[l].label
+
+                            var tempProp = selectedProperties[p]
+
                             temp['associatedWith'] = ["NIDM","BIDS"]
     
-                            if(selectedProperties[p] == "Candidate Terms"){
-                                if('candidateTerms' in jsonldData.terms[l]){
-                                    temp['candidateTerms'] = jsonldData.terms[l].candidateTerms
-                                }
-                            }
-                            if(selectedProperties[p] == "Comment"){
-                                if('comment' in jsonldData.terms[l]){
-                                    temp['comment'] = jsonldData.terms[l].comment
-                                }
-                            }
-                            if(selectedProperties[p] == "Description"){
-                                if('description' in jsonldData.terms[l]){
-                                    temp['description'] = jsonldData.terms[l].description
-                                }
-                            }
-                            if(selectedProperties[p] == "Interlex ID"){
-                                if('ilxId' in jsonldData.terms[l]){
-                                    temp['ilxId'] = jsonldData.terms[l].ilxId
-                                }
-                            } 
-                            if(selectedProperties[p] == "Same As"){
-                                if('sameAs' in jsonldData.terms[l]){
-                                    temp['sameAs'] = jsonldData.terms[l].sameAs
-                                }
-                            }
-                            if(selectedProperties[p] == "Super Type CDEs"){
-                                if('supertypeCDEs' in jsonldData.terms[l]){
-                                    temp['supertypeCDEs'] = jsonldData.terms[l].supertypeCDEs
-                                }
-                            }
-                            if(selectedProperties[p] == "Unit"){
-                                if('unitCode' in jsonldData.terms[l]){
-                                    temp['unit'] = jsonldData.terms[l].unitCode
-                                }
-                            }
-                            if(selectedProperties[p] == "URL"){
-                                if('url' in jsonldData.terms[l]){
-                                    temp['url'] = jsonldData.terms[l].url
-                                }
-                            }
-                            if(selectedProperties[p] == "Was Derived From"){
-                                if('wasDerivedFrom' in jsonldData.terms[l]){
-                                    temp['wasDerivedFrom'] = jsonldData.terms[l].wasDerivedFrom
-                                }
+                            if(tempProp in jsonldData.terms[l]){
+                                temp[tempProp] = jsonldData.terms[l][tempProp]
                             }
                         };
 
@@ -1497,6 +1396,7 @@
                 }
             }
 
+            //Download file
             downloadObjectAsJson(jsonDict, "Terms")
 
             function downloadObjectAsJson(exportObj, exportName){
@@ -1513,112 +1413,109 @@
 
         function getjsonld(jsonldData,selectedProperties,selectedTerms){
 
-            //get the context file
-            fetch("https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld")
+            mainTemp = {};
+            tempList =[];
 
-            .then(function(resp){
-                return resp.json(); 
-            })
-
-            .then(async function  getDict(context){
-
-                mainTemp = {};
-                tempList =[];
-
-                mainTemp['@context'] = 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld';
+            mainTemp['@context'] = 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld';
 
 
-                for (var l in jsonldData['terms']) {
+            for (var l in jsonldData['terms']) {
+                
+                //for every term selected get the selected properties of that term
+                selectedTermsLength = selectedTerms.length;
+                for(t = 0; t < selectedTermsLength; t++){
+                    if(jsonldData.terms[l].label.toLowerCase() == selectedTerms[t].toLowerCase()){
+                        
+                        
+                        temp = {};
+                        
+                        temp['@type'] = context['@context']['PersonalDataElement'];
 
-                    //for every term selected get the selected properties of that term
-                    selectedTermsLength = selectedTerms.length;
-                    for(t = 0; t < selectedTermsLength; t++){
-                        if(jsonldData.terms[l].label.toLowerCase() == selectedTerms[t].toLowerCase()){
+                        //get the selected properties
+                        selectedPropertiesLength = selectedProperties.length;
+                        for(p = 0; p < selectedPropertiesLength; p++){
+
+                            var tempProp = selectedProperties[p]
                             
-                            temp = {};
-                            
-                            temp['@type'] = 'nidm:DataElement';
-                            temp[context['@context']['associatedWith']] = ["NIDM","BIDS"];
+                            temp[context['@context']['label']] = jsonldData.terms[l].label;
+                            temp[context['@context']['associatedWith']] = jsonldData.terms[l].associatedWith;
 
-                            //get the selected properties
-                            selectedPropertiesLength = selectedProperties.length;
-                            for(p = 0; p < selectedPropertiesLength; p++){
-                                
-                                temp[context['@context']['label']] = jsonldData.terms[l].label;
+                            //if(selectedProperties[p] == "candidateTerms"){
+                                if(tempProp in jsonldData.terms[l]){
+                                    temp[context['@context'][tempProp]] = jsonldData.terms[l][tempProp]
+                                }
+                            // }
+                            // if(selectedProperties[p] == "comment"){
+                            //     if('comment' in jsonldData.terms[l]){
+                            //         temp[context['@context']['comment']] = jsonldData.terms[l].comment
+                            //     }
+                            // }
+                            // if(selectedProperties[p] == "description"){
+                            //     if('description' in jsonldData.terms[l]){
+                            //         temp[context['@context']['description']] = jsonldData.terms[l].description
+                            //     }
+                            // }
+                            // if(selectedProperties[p] == "ilxId"){
+                            //     if('ilxId' in jsonldData.terms[l]){
+                            //         temp[context['@context']['ilxId']] = jsonldData.terms[l].ilxId
+                            //     }
+                            // }
+                            // if(selectedProperties[p] == "sameAs"){
+                            //     if('sameAs' in jsonldData.terms[l]){
+                            //         temp[context['@context']['sameAs']['@id']] = jsonldData.terms[l].sameAs
+                            //     }
+                            // }
+                            // if(selectedProperties[p] == "supertypeCDEs"){
+                            //     if('supertypeCDEs' in jsonldData.terms[l]){                             
+                            //         temp[context['@context']['supertypeCDEs']['@id']] = jsonldData.terms[l].supertypeCDEs
+                            //     }
+                            // }
+                            // if(selectedProperties[p] == "unitCode"){
+                            //     if('unitCode' in jsonldData.terms[l]){
+                            //         temp[context['@context']['unitCode']] = jsonldData.terms[l].unitCode
+                            //     }
+                            // }
+                            // if(selectedProperties[p] == "url"){
+                            //     if('url' in jsonldData.terms[l]){
+                            //         temp[context['@context']['url']['@id']] = jsonldData.terms[l].url
+                            //     }
+                            // }
+                            // if(selectedProperties[p] == "wasDerivedFrom"){
+                            //     if('wasDerivedFrom' in jsonldData.terms[l]){
+                            //         temp[context['@context']['wasDerivedFrom']['@id']] = jsonldData.terms[l].wasDerivedFrom
+                            //     }
+                            // }
+                        };
 
-                                if(selectedProperties[p] == "Candidate Terms"){
-                                    if('candidateTerms' in jsonldData.terms[l]){
-                                        temp[context['@context']['candidateTerms']] = jsonldData.terms[l].candidateTerms
-                                    }
-                                }
-                                if(selectedProperties[p] == "Comment"){
-                                    if('comment' in jsonldData.terms[l]){
-                                        temp[context['@context']['comment']] = jsonldData.terms[l].comment
-                                    }
-                                }
-                                if(selectedProperties[p] == "Description"){
-                                    if('description' in jsonldData.terms[l]){
-                                        temp[context['@context']['description']] = jsonldData.terms[l].description
-                                    }
-                                }
-                                if(selectedProperties[p] == "Interlex ID"){
-                                    if('ilxId' in jsonldData.terms[l]){
-                                        temp[context['@context']['ilxId']] = jsonldData.terms[l].ilxId
-                                    }
-                                }
-                                if(selectedProperties[p] == "Same As"){
-                                    if('sameAs' in jsonldData.terms[l]){
-                                        temp[context['@context']['sameAs']['@id']] = jsonldData.terms[l].sameAs
-                                    }
-                                }
-                                if(selectedProperties[p] == "Super Type CDEs"){
-                                    if('supertypeCDEs' in jsonldData.terms[l]){                             
-                                        temp[context['@context']['supertypeCDEs']['@id']] = jsonldData.terms[l].supertypeCDEs
-                                    }
-                                }
-                                if(selectedProperties[p] == "Unit"){
-                                    if('unitCode' in jsonldData.terms[l]){
-                                        temp[context['@context']['unitCode']] = jsonldData.terms[l].unitCode
-                                    }
-                                }
-                                if(selectedProperties[p] == "URL"){
-                                    if('url' in jsonldData.terms[l]){
-                                        temp[context['@context']['url']['@id']] = jsonldData.terms[l].url
-                                    }
-                                }
-                                if(selectedProperties[p] == "Was Derived From"){
-                                    if('wasDerivedFrom' in jsonldData.terms[l]){
-                                        temp[context['@context']['wasDerivedFrom']['@id']] = jsonldData.terms[l].wasDerivedFrom
-                                    }
-                                }
-                            };
+                        tempList.push(temp)
 
-                            tempList.push(temp)
-
-                        }
                     }
                 }
+            }
 
-                mainTemp[context['@context']['terms']['@id']] = tempList
+            mainTemp[context['@context']['terms']['@id']] = tempList
 
-                //compact term dictionary
-                const compacted = await jsonld.compact(mainTemp, 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld');
+            //compact term dictionary
+            const compacted = jsonld.compact(mainTemp, 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld');
 
-                compacted['terms'] = compacted['prov:hasMember']
-                delete compacted['prov:hasMember']
-                
-                downloadObjectAsJson(compacted, 'Terms')
+            compacted['terms'] = compacted['prov:hasMember']
+            delete compacted['prov:hasMember']
+            
+            console.log(888, compacted)
 
-                function downloadObjectAsJson(exportObj, exportName){
-                    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
-                    var downloadAnchorNode = document.createElement('a');
-                    downloadAnchorNode.setAttribute("href",     dataStr);
-                    downloadAnchorNode.setAttribute("download", exportName + ".jsonld");
-                    document.body.appendChild(downloadAnchorNode); // required for firefox
-                    downloadAnchorNode.click();
-                    downloadAnchorNode.remove();
-                }
-            }) 
+            //Download file
+            downloadObjectAsJson(compacted, 'Terms')
+
+            function downloadObjectAsJson(exportObj, exportName){
+                var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+                var downloadAnchorNode = document.createElement('a');
+                downloadAnchorNode.setAttribute("href",     dataStr);
+                downloadAnchorNode.setAttribute("download", exportName + ".jsonld");
+                document.body.appendChild(downloadAnchorNode); // required for firefox
+                downloadAnchorNode.click();
+                downloadAnchorNode.remove();
+            }
+             
         }
 
         function rdf(jsonldData,selectedProperties,selectedTerms){
@@ -1737,66 +1634,70 @@
                             temp['label'] = jsonldData.terms[l].label
 
                             
-                            if (selectedProperties[p] == "Associated With"){
-                                temp['associatedWith'] = ['BIDS', 'NIDM']
+                            if (selectedProperties[p] == "associatedWith"){
+                                if('associatedWith' in jsonldData.terms[l]){
+                                    temp['associatedWith'] = jsonldData.terms[l].associatedWith
+                                } else {
+                                temp['associatedWith'] = ''
+                                }
                             } 
-                            if(selectedProperties[p] == "Candidate Terms"){
+                            if(selectedProperties[p] == "candidateTerms"){
                                 if('candidateTerms' in jsonldData.terms[l]){
                                     temp['candidateTerms'] = jsonldData.terms[l].candidateTerms
                                 } else {
                                 temp['candidateTerms'] = ''
                             }
                             } 
-                            if(selectedProperties[p] == "Comment"){
+                            if(selectedProperties[p] == "comment"){
                                 if('comment' in jsonldData.terms[l]){
                                     temp['comment'] = jsonldData.terms[l].comment
                                 } else {
                                     temp['comment'] = ''
                                 }
                             } 
-                            if(selectedProperties[p] == "Description"){
+                            if(selectedProperties[p] == "description"){
                                 if('description' in jsonldData.terms[l]){
                                     temp['description'] = jsonldData.terms[l].description
                                 } else {
                                     temp['description'] = ''
                                 }
                             } 
-                            if(selectedProperties[p] == "Interlex ID"){
+                            if(selectedProperties[p] == "ilxId"){
                                 if('ilxId' in jsonldData.terms[l]){
                                     temp['ilxId'] = jsonldData.terms[l].ilxId
                                 } else {
                                     temp['ilxId'] = ''
                                 } 
                             } 
-                            if(selectedProperties[p] == "Same As"){
+                            if(selectedProperties[p] == "sameAs"){
                                 if('sameAs' in jsonldData.terms[l]){
                                     temp['sameAs'] = jsonldData.terms[l].sameAs
                                 } else {
                                     temp['sameAs'] = ''
                                 }
                             } 
-                            if(selectedProperties[p] == "Super Type CDEs"){
+                            if(selectedProperties[p] == "supertypeCDEs"){
                                 if('supertypeCDEs' in jsonldData.terms[l]){
                                     temp['supertypeCDEs'] = jsonldData.terms[l].supertypeCDEs
                                 } else {
                                     temp['supertypeCDEs'] = ''
                                 }
                             } 
-                            if(selectedProperties[p] == "Unit"){
+                            if(selectedProperties[p] == "unit"){
                                 if('unit' in jsonldData.terms[l]){
                                     temp['unit'] = jsonldData.terms[l].unit
                                 } else {
                                     temp['unit'] = ''
                                 }
                             } 
-                            if(selectedProperties[p] == "URL"){
+                            if(selectedProperties[p] == "url"){
                                 if('url' in jsonldData.terms[l]){
                                     temp['url'] = jsonldData.terms[l].url
                                 } else {
                                     temp['url'] = ''
                                 }
                             } 
-                            if(selectedProperties[p] == "Was Derived From"){
+                            if(selectedProperties[p] == "wasDerivedFrom"){
                                 if('wasDerivedFrom' in jsonldData.terms[l]){
                                     temp['wasDerivedFrom'] = jsonldData.terms[l].wasDerivedFrom
                                 } else {
