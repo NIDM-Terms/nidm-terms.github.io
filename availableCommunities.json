@@ -17,6 +17,6 @@
 	"CONP DATS Terms": {
 		"label" : "CONP_DATS_Terms",
 		"URL" : "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/CONP_DATS.jsonld",
-		"Description" : ""
+		"Description" : "The Canadian Open Neuroscience Platform combines access to dataset meta-data with computational tools for preprocessing and analysis to provide an ecosystem for reproducible neuroscience. "
 	} 
 }
