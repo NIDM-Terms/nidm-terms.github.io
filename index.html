@@ -115,7 +115,7 @@
             <br>
             <div id="termsView"></div>
             <div id="selectCommunitiesAgain"></div>
-            <div id="needInput"></div>
+            <div id="noMatches"></div>
         </div>
     </center>
     
@@ -530,8 +530,7 @@
         .loader {
             align-items: center;
             position: fixed;
-            display: flex;
-            /*display: none;*/
+            display: none;
             justify-content: center;
             left: 50%;
             top: 50%;
@@ -542,7 +541,7 @@
             border-radius: 50%;
             width: 40px;
             height: 40px;
-            animation: spin 2s linear infinite;   
+            animation: spin 2s linear infinite;  
             z-index: 3;
         }
 
@@ -552,7 +551,7 @@
         }    
 
         .grayScreen{
-            display: block;
+            display: none;
             position: fixed;
             justify-content: center;
             top: 0;
@@ -571,8 +570,7 @@
             left: 50%;
             top: 50%;
             transform: translate(-30%, -120%);
-            display: flex;
-            /*display: none;*/
+            display: none;
             color: #ff4400;
             font-size: 20px;
             font-weight: bold;
@@ -640,10 +638,10 @@
                 document.getElementById("loadingText").style.display = "none";  
             }
 
+            addLoading()    //show a loading display while the page is loading
             //Fetch 'https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json' to get a list of the available communities in NIDM-Terms/terms
             fetch('https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json')
             .then(function(res){
-                removeLoading()
                 return res.json(); 
             })
 
@@ -678,9 +676,6 @@
                 html = '<div id="treeviewsearched"></div>';
                 
                 $("#termsView").append(html);
-                console.log(document.getElementById('treeviewsearched'))
-
-                console.log(551, 'treeview for all communities added')
 
                 function fetchAll(url,commName){
                     //NIDMT = 3622, NIDMC = 274, BIDS = 235, CONP = 143
@@ -691,66 +686,69 @@
                     .then(function(data){
                         //add the terms to this community in mainDict
                         mainDict[commName] = data['terms'];
+                        
                         //add the terms to a singular main list and sort
                         var temp = mainList.concat(data['terms'])
                         mainList = temp
                         var sorted = sortOnKeys(mainList)
+
                         //add the labels of the terms to this community in labelsDict
                         labelsDict[commName] = sortOnKeys(data['terms'])
 
-                        displayTerms(mainList, sorted, labelsDict)
+                        displayTerms(mainList, sorted, labelsDict, mainDict)
                     })
                 }
             })
             .then(function(){       
                 //Get the values selected in the checkboxes
                 var checkboxElems = document.querySelectorAll("input[type='checkbox']");
-                //create an empty list to add the check box values to it
-                let list = [];
                 //loop through the checked elements and call displayCheck
                 for (var i = 0; i < checkboxElems.length; i++) {
                     checkboxElems[i].addEventListener("click", displayCheck);
                 }
 
-            
                 //This function checks which checkboxes were unchecked and passes a list of urls to the function fetchAll to display
                 function displayCheck(e) {
-                    //create a list of the term catagories that were unchecked to filter out
-                    if (!e.target.checked) {
-                        for(i = 0; i < communityList.length; i++){
-                            if (communityList[i] == e.target.value){
-                                delete communityList[i]
-                            }
-                        }
-                        communityList = removeNull(communityList)
-
-                        //if the user unchecks all of the checkboxes then display a message
-                        if(communityList.length == 0){
-                            //hide all of the communities in the treeview
-                            for(var key in mainDict){
-                                var elements = document.getElementsByClassName('treeview_'+key);
-                                for(var j = 0; j < elements.length; j++){
-                                    elements[j].style.display = "none"
+                    addLoading()
+                    //the checkbox displays update (check/uncheck shows up right away) while the display asynchronously updates  
+                    setTimeout(() => {
+                        // create a list of the term categories that were unchecked to filter out
+                        if (!e.target.checked) {
+                            for(i = 0; i < communityList.length; i++){
+                                if (communityList[i] == e.target.value){
+                                    delete communityList[i]
                                 }
                             }
-                            doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;"> Select one or more community </div>'
-                            $('#selectCommunitiesAgain').append(doc);
-                            return;
-                            
-                        }
-                        else{
-                            //updateTerms with communities that are checked
+                            communityList = removeNull(communityList)
+
+                            //if the user unchecks all of the checkboxes then display a message
+                            if(communityList.length == 0){
+                                //hide all of the communities in the treeview
+                                for(var key in mainDict){
+                                    var elements = document.getElementsByClassName('treeview_'+key);
+                                    for(var j = 0; j < elements.length; j++){
+                                        elements[j].style.display = "none"
+                                    }
+                                }
+                                doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;"> Select one or more community </div>'
+                                removeLoading()
+                                $('#selectCommunitiesAgain').append(doc);
+                                return;
+                                
+                            }
+                            else{
+                                //updateTerms with communities that are checked
+                                updateTerms()
+                            }
+                        } else if (e.target.checked) {
+                            //recheck after uncheck
+                            communityList.push(e.target.value)
+                            communityList = removeNull(communityList)
                             updateTerms()
                         }
-                        
-                        //list.push(e.target.value)
-                    } else if (e.target.checked) {
-                        //recheck after uncheck
-                        communityList.push(e.target.value)
-                        communityList = removeNull(communityList)
-                        updateTerms()
-                    }
-                    
+                        removeLoading()
+                    },0);
+
                     console.log(communityList)
 
                     //filters out
@@ -758,7 +756,6 @@
                         return array.filter(x => typeof x !== 'undefined')
                     };
                 }
-                
             });
             
             function updateTerms(){
@@ -766,15 +763,17 @@
                 document.getElementById("searchBar").value = ''     //clear search bar when update terms on display
                 document.getElementById("selectCommunitiesAgain").innerHTML = '' //after box is checked, remove message to select 1+ communities
                 document.getElementById("treeviewsearched").innerHTML = ''
-                document.getElementById('needInput').innerHTML = ''
+                document.getElementById('noMatches').innerHTML = ''
                 $('.treeview').treeView('collapseAll');
                 for(var key in mainDict){
                     var elements = document.getElementsByClassName('treeview_'+key);
                     if(communityList.includes(key)){
+                        // console.log(11, key+': '+elements.length)
                         for(var j = 0; j < elements.length; j++){
                             elements[j].style.display = "block"
                         }
                     }else{
+                        // console.log(12, key+': '+elements.length)
                         for(var j = 0; j < elements.length; j++){
                             elements[j].style.display = "none"
                         }
@@ -794,24 +793,13 @@
                 return sorted
             }
 
-            
             //Get search input and pass the search
             const searchBar = document.getElementById("searchBar");
             //get searched items
             searchBar.addEventListener("keyup", (e) => {
-                //hide all terms when there is user input for search bar
-                for(var key in mainDict){
-                    var elements = document.getElementsByClassName('treeview_'+key);
-                    for(var j = 0; j < elements.length; j++){
-                        elements[j].style.display = "none"
-                    }
-                }
+                addLoading()
                 console.log(e.target.value)
                 const searchString = e.target.value;
-                
-                //clear the displays from the last search
-                document.getElementById('needInput').innerHTML = ''
-                document.getElementById('treeviewsearched').innerHTML = ''
 
                 //since display only hides/unhides instead of adding/deleting terms, need to
                 //create a new array of terms that are from the communities that are checked
@@ -829,18 +817,64 @@
                 var sortedSearch = dataForSearch.sort((a, b) => (a.label > b.label) ? 1 : (a.label === b.label) ? ((a.description > b.size) ? 1 : -1) : -1 )
 
                 const searchedTerms = filterTerms(sortedSearch, searchString);
-
                 if(isEmpty(searchedTerms)){
+                    //clear the displays from the last search
+                    document.getElementById('noMatches').innerHTML = ''
+                    document.getElementById('treeviewsearched').innerHTML = ''
+
                     doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;"> NO MATCHING TERMS HAVE BEEN FOUND... </div>'
-                    $('#needInput').append(doc);
+                    removeLoading()
+                    $('#noMatches').append(doc);
                     return;
                 }
-                displaySearchedTerms(searchedTerms)
+
+                //if there are a lot of terms to display, show the loading sign while the treeview loads
+                //otherwise if the treeview will update instantaneously, do not interrupt the display by flashing the loading sign with every key press
+                if(searchedTerms.length>=1000){
+                    setTimeout(() => {
+                        modifySearchDisplay()
+                    })
+                }else{
+                    modifySearchDisplay()
+                }
+
+                function modifySearchDisplay() {
+                    //hide all terms when there is user input for search bar
+                    for(var key in mainDict){
+                        var elements = document.getElementsByClassName('treeview_'+key);
+                        for(var j = 0; j < elements.length; j++){
+                            elements[j].style.display = "none"
+                        }
+                    }
+
+                    //clear the displays from the last search
+                    document.getElementById('noMatches').innerHTML = ''
+                    document.getElementById('treeviewsearched').innerHTML = ''
+
+                    displaySearchedTerms(searchedTerms)
+                }
             });
 
             //Function to display the terms in a treeview
-            //fullList is alphabetized list of all of the terms, sortedList is labels only from fullList, labelsDict has sorted labels divided into communities
-            function displayTerms(fullList, sortedList, labelsDict) {
+            //fullList is alphabetized list of all of the terms, sortedList is labels only from fullList
+            //labelsDict has sorted labels divided into communities, mainDict has all terms divided into communities
+            function displayTerms(fullList, sortedList, labelsDict, mainDict) {
+                //make a deep copy of mainDict to destructively parse without affecting mainDict
+                const deepCopy = (origArr) => {
+                    let copyArr, value, key
+                    if(typeof origArr !== "object" || origArr === null){
+                        return origArr
+                    }
+                    copyArr = Array.isArray(origArr) ? [] : {}
+                    for(key in origArr){
+                        value = origArr[key]
+                        copyArr[key] = deepCopy(value)
+                    }
+                    return copyArr
+                }
+
+                var mainDictCopy = deepCopy(mainDict)
+                
                 console.log(552, 'displayTerms called')
 
                 var numCalls = Object.keys(labelsDict).length
@@ -862,9 +896,14 @@
                     for(var key in labelsDict){
                         //find whether the term exists in this community
                         var placeInDict = labelsDict[key].indexOf(sortedList[index])
-                        if(placeInDict !== -1){
+                        var newIndex = placeInDict
+                        //while this key in mainDictCopy contains the term label AND the description doesn't match the correct description, increment newIndex
+                        while(placeInDict !== -1 && mainDictCopy[key][newIndex]!==undefined
+                        && mainDictCopy[key][newIndex].description !== fullList[index].description){
+                            newIndex++
+                        }
+                        if(placeInDict !== -1 && newIndex!==mainDictCopy[key].length){
                             html += '<div class="treeview_'+key+'"' 
-
                             //color codes the communities' terms to differentiate them
                             // if(key==='NIDM_Terms'){html += 'style="color:darkred"';}   
                             // else if(key==='NIDM_Concepts') {html += 'style="color:darkorange"';}
@@ -939,13 +978,13 @@
                             
                             $('#treeview_'+key).append(html);
 
-                            //delete this term in labelsDict; necessary so that all future terms are NOT given the value of the first occurrence of this label
+                            //delete this term in labelsDict and mainDictCopy; necessary so that all future terms are NOT given the value of the first occurrence of this label
                             delete labelsDict[key][placeInDict]
+                            delete mainDictCopy[key][newIndex]
                             return;
                         }
                     }
                 }
-                
                 html += '</ul></div>';
                 
                 $('#termsView').append(html);
@@ -963,6 +1002,7 @@
                 //$('.treeview').treeView('expandAll');
                 // Collapses all the nodes of treeviews
                 $('.treeview').treeView('collapseAll');
+                removeLoading()
             }
 
             //separate display for individual searched terms, not an entire section of community terms
@@ -1061,6 +1101,7 @@
                 //$('.treeview').treeView('expandAll');
                 // Collapses all the nodes of treeviews
                 $('.treeview2').treeView('collapseAll');
+                removeLoading()
             }
 
             // this function filters the data dictionary based on the input of the search bar
