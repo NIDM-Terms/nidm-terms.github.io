@@ -800,6 +800,10 @@
                 addLoading()
                 console.log(e.target.value)
                 const searchString = e.target.value;
+                
+                //clear the displays from the last search
+                document.getElementById('needInput').innerHTML = ''
+                document.getElementById('treeviewsearched').innerHTML = ''
 
                 //since display only hides/unhides instead of adding/deleting terms, need to
                 //create a new array of terms that are from the communities that are checked
