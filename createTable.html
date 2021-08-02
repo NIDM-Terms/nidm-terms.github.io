@@ -507,7 +507,6 @@
             background-color:#f9f9f9;
             border-radius:6px;
             border:1px solid #dcdcdc;
-            display:inline-block;
             cursor:pointer;
             color:#707070;
             font-family:Arial;
@@ -536,7 +535,6 @@
             background-color:#77d42a;
             border-radius:6px;
             border:1px solid #268a16;
-            display:inline-block;
             cursor:pointer;
             color:#306108;
             font-family:Arial;
@@ -740,6 +738,34 @@
             width: 20px
         }
 
+        input + .des-tool-tip-text {
+            display: none;
+        }
+        input:hover + .des-tool-tip-text {
+            display: block;
+            position: absolute;
+            text-align:left;
+            padding: 0.3em;
+            width: 150px;
+            bottom: 150%;
+            font-size: 16px;
+            background: #52575e81;
+            color: rgb(238, 238, 238);
+            border-radius: 3px;
+        }
+        input:hover + .des-tool-tip-text:after {
+            content: "";
+            position: absolute;
+            border:1px solid #52575e67;
+            left: 0%;
+            top: 100%;
+            width: 0; 
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 10px solid #52575e67;
+        }
+
         /* The container */
         .con {
             display: inline-block;
@@ -905,8 +931,9 @@
                 for (const [key,value] of Object.entries(avCom)){
                     
                     //add checkboxes
-                    html += '<label id = "'+value['label']+'" class="con">' + key ;
-                    html += '<input id = "'+value['label']+'" type="checkbox" class="comOptions " name="checkbox" value="'+value['URL']+'" unchecked="checked">';
+                    html += '<label id = "'+value['label']+'" class="con">'+key;
+                    html += '<input id = "'+value['label']+'" type="checkbox" class="comOptions " name="checkbox" value = "'+value['label']+'" checked="checked">';
+                    html += '<div class="des-tool-tip-text">'+value['Description']+'</div>'
                     html += '<span class="checkmark"></span>';
                     html += '</label>';
 
