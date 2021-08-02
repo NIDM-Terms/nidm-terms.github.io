@@ -507,6 +507,7 @@
             background-color:#f9f9f9;
             border-radius:6px;
             border:1px solid #dcdcdc;
+            display:inline-block;
             cursor:pointer;
             color:#707070;
             font-family:Arial;
@@ -535,6 +536,7 @@
             background-color:#77d42a;
             border-radius:6px;
             border:1px solid #268a16;
+            display:inline-block;
             cursor:pointer;
             color:#306108;
             font-family:Arial;
@@ -738,34 +740,6 @@
             width: 20px
         }
 
-        input + .des-tool-tip-text {
-            display: none;
-        }
-        input:hover + .des-tool-tip-text {
-            display: block;
-            position: absolute;
-            text-align:left;
-            padding: 0.3em;
-            width: 150px;
-            bottom: 150%;
-            font-size: 16px;
-            background: #52575e81;
-            color: rgb(238, 238, 238);
-            border-radius: 3px;
-        }
-        input:hover + .des-tool-tip-text:after {
-            content: "";
-            position: absolute;
-            border:1px solid #52575e67;
-            left: 0%;
-            top: 100%;
-            width: 0; 
-            height: 0;
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-top: 10px solid #52575e67;
-        }
-
         /* The container */
         .con {
             display: inline-block;
@@ -931,9 +905,8 @@
                 for (const [key,value] of Object.entries(avCom)){
                     
                     //add checkboxes
-                    html += '<label id = "'+value['label']+'" class="con">'+key;
-                    html += '<input id = "'+value['label']+'" type="checkbox" class="comOptions " name="checkbox" value = "'+value['label']+'" checked="checked">';
-                    html += '<div class="des-tool-tip-text">'+value['Description']+'</div>'
+                    html += '<label id = "'+value['label']+'" class="con">' + key ;
+                    html += '<input id = "'+value['label']+'" type="checkbox" class="comOptions " name="checkbox" value="'+value['URL']+'" unchecked="checked">';
                     html += '<span class="checkmark"></span>';
                     html += '</label>';
 
@@ -1184,6 +1157,7 @@
                             return array.filter(x => typeof x === 'string')
                         };
                     }
+                    
 
                 }
             });
@@ -1194,11 +1168,11 @@
         //function to fetch the single jsonld file
         ///////////////////////////////////////////////////////////
         function getFile(){
-
             
             //loop through the urlList and fetch each url and put the terms in a dictionary
             //check if only one community is selected
-            if(List.lenth != 0 & List.length == 1){
+            if(List.length !== 0 & List.length === 1){
+                console.log()
                 fetch(List[0])
                 .then(function(resp){
                     return resp.json(); 
@@ -1227,34 +1201,13 @@
 
             }
             //if more than one community is selected then fetch each selected url
-            else if(List.lenth != 0 & List.length > 1){
-                var tempList = [];
-                var temp = {};
-                temp['@context'] = 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld';
-                temp['terms'] = [];
-                for(var v = 0; v < List.length; v++){
-                    fetch(List[v])
-                    .then(function(resp){
-                        return resp.json(); 
-                    })
-                    //then save each dict 
-                    .then(function sortOnKeys(dict_data) {
-                        var sorted = [];
+            else if(List.length !== 0 & List.length > 1){
+                
 
-                        dict_data['terms'].sort((a, b) => (a.label > b.label) ? 1 : (a.label === b.label) ? ((a.description > b.size) ? 1 : -1) : -1 );
+                console.log(8899)
 
-                        for (var p in dict_data['terms']) {
-                            sorted[sorted.length] = dict_data.terms[p].label;
-                        }
-
-                        sorted.sort();
-
-                        temp['terms'] = temp['terms'].concat(dict_data['terms']);
-                    })
-                }
-                temp['terms'] = tempList
-                console.log(88, temp)
-                download(temp)
+                //download()    
+                
             }
         }
 
@@ -1415,7 +1368,7 @@
             tempList =[];
 
             mainTemp['@context'] = 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld';
-
+            mainTemp['@type'] = 'nidm:TermsCollection';
 
             for (var l in jsonldData['terms']) {
                 
@@ -1438,51 +1391,10 @@
                             temp[context['@context']['label']] = jsonldData.terms[l].label;
                             temp[context['@context']['associatedWith']] = jsonldData.terms[l].associatedWith;
 
-                            //if(selectedProperties[p] == "candidateTerms"){
-                                if(tempProp in jsonldData.terms[l]){
-                                    temp[context['@context'][tempProp]] = jsonldData.terms[l][tempProp]
-                                }
-                            // }
-                            // if(selectedProperties[p] == "comment"){
-                            //     if('comment' in jsonldData.terms[l]){
-                            //         temp[context['@context']['comment']] = jsonldData.terms[l].comment
-                            //     }
-                            // }
-                            // if(selectedProperties[p] == "description"){
-                            //     if('description' in jsonldData.terms[l]){
-                            //         temp[context['@context']['description']] = jsonldData.terms[l].description
-                            //     }
-                            // }
-                            // if(selectedProperties[p] == "ilxId"){
-                            //     if('ilxId' in jsonldData.terms[l]){
-                            //         temp[context['@context']['ilxId']] = jsonldData.terms[l].ilxId
-                            //     }
-                            // }
-                            // if(selectedProperties[p] == "sameAs"){
-                            //     if('sameAs' in jsonldData.terms[l]){
-                            //         temp[context['@context']['sameAs']['@id']] = jsonldData.terms[l].sameAs
-                            //     }
-                            // }
-                            // if(selectedProperties[p] == "supertypeCDEs"){
-                            //     if('supertypeCDEs' in jsonldData.terms[l]){                             
-                            //         temp[context['@context']['supertypeCDEs']['@id']] = jsonldData.terms[l].supertypeCDEs
-                            //     }
-                            // }
-                            // if(selectedProperties[p] == "unitCode"){
-                            //     if('unitCode' in jsonldData.terms[l]){
-                            //         temp[context['@context']['unitCode']] = jsonldData.terms[l].unitCode
-                            //     }
-                            // }
-                            // if(selectedProperties[p] == "url"){
-                            //     if('url' in jsonldData.terms[l]){
-                            //         temp[context['@context']['url']['@id']] = jsonldData.terms[l].url
-                            //     }
-                            // }
-                            // if(selectedProperties[p] == "wasDerivedFrom"){
-                            //     if('wasDerivedFrom' in jsonldData.terms[l]){
-                            //         temp[context['@context']['wasDerivedFrom']['@id']] = jsonldData.terms[l].wasDerivedFrom
-                            //     }
-                            // }
+                            if(tempProp in jsonldData.terms[l]){
+                                temp[context['@context'][tempProp]] = jsonldData.terms[l][tempProp]
+                            }
+                            
                         };
 
                         tempList.push(temp)
@@ -1492,26 +1404,25 @@
             }
 
             mainTemp[context['@context']['terms']['@id']] = tempList
+            compactDict(mainTemp)
 
             //compact term dictionary
-            const compacted = jsonld.compact(mainTemp, 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld');
+            async function compactDict(mainTemp){
 
-            compacted['terms'] = compacted['prov:hasMember']
-            delete compacted['prov:hasMember']
-            
-            console.log(888, compacted)
+                var compacted = await jsonld.compact(mainTemp, 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld');
+                
+                //Download file
+                downloadObjectAsJson(compacted, 'Terms')
 
-            //Download file
-            downloadObjectAsJson(compacted, 'Terms')
-
-            function downloadObjectAsJson(exportObj, exportName){
-                var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
-                var downloadAnchorNode = document.createElement('a');
-                downloadAnchorNode.setAttribute("href",     dataStr);
-                downloadAnchorNode.setAttribute("download", exportName + ".jsonld");
-                document.body.appendChild(downloadAnchorNode); // required for firefox
-                downloadAnchorNode.click();
-                downloadAnchorNode.remove();
+                function downloadObjectAsJson(exportObj, exportName){
+                    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+                    var downloadAnchorNode = document.createElement('a');
+                    downloadAnchorNode.setAttribute("href",     dataStr);
+                    downloadAnchorNode.setAttribute("download", exportName + ".jsonld");
+                    document.body.appendChild(downloadAnchorNode); // required for firefox
+                    downloadAnchorNode.click();
+                    downloadAnchorNode.remove();
+                }
             }
              
         }
