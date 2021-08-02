@@ -95,68 +95,95 @@
         <div id= TOC>
             <ul>
                 <li><a href="#overview">Overview</a></li>
+                <li><a href="#about">About NIDM-Terms</a></li>
+                <li><a href="#team">Core Project Team</a></li>
+                <li><a href="#start">Getting Started</a></li>
                 <ul>
-                    <li><a href="#about">About NIDM-Terms</a></li>
-                    <li><a href="#useUi">How to use our BIDS Specification Terms UI</a></li>
-                    <ul>
-                        <li><a href="#avTerms">Available Terms</a></li>
-                        <li><a href="#addTerms">Add New Terms</a></li>
-                        <li><a href="#exTerms">Export Terms</a></li>
-                    </ul>
+                    <li><a>How do I search for terms?</a></li>
+                    <li><a>How do I submit new terms and where do they go?</a></li>
+                    <li><a>How do I contribute to NIDM-Terms?</a></li>
+                    <li><a>Term Curation and Governance</a></li>
                 </ul>
+                <li><a>Demos</a></li>
+                <li><a>Concept Use Frequency</a></li>
+                <li><a>Terms and Properties</a></li>
                 <li><a href="#res">Resources</a></li>
             </ul>    
         </div>
         
         <br><br><br><br><br><br>
 
-        <div id = "overview">
+        <div id = "overview" class="textHeader">
             Overview
         </div>
 
         <br><br>
 
         <div id = "Text">
-            Welcome to the Neuroimaging Data Modeling (NIDM) BIDS Specification Terms website. We aim to provide a user 
-            friendly tool that facilitates community engagement in BIDS Specification Terms through providing a simple tree-view 
-            display of the specification terms, allowing new terms submission, as well as allowing terms to be exported in various 
-            formats (e.g. as a Markdown Table). 
+            Welcome to the Neuroimaging Data Modeling (NIDM) term-viewer website. We aim to provide a user friendly 
+            tool that facilitates community engagement in the neuroimaging terminology across neuroimaging communities 
+            through providing a simple tree-view display of the specification terms, allowing new terms and new neuroimaging 
+            community submission, as well as allowing terms to be exported in various formats (e.g. as a Markdown Table, JSON, 
+            JSON-LD, CSV). 
         </div>
 
-        <br><br><br>
+        <br><br><br><br><br>
         
-        <div id = "about">
+        <div id = "about" class="textHeader">
             About NIDM-Terms
         </div>
 
-        <br><br><br>
+        <br><br>
 
-        <div id = "useUi">
-            How to use our BIDS Specification terms UI
-
+        <div id = "Text">
+            <b>THE NEUROIMAGING DATA MODEL: FAIR DESCRIPTORS OF BRAIN INITIATIVE IMAGING EXPERIMENTS NIH RF1 MH120021</b>
             <br><br>
-
-            <div id = "avTerms">
-                Available Terms
-            </div>
-
-            <br>
-
-            <div id = "addTerms">
-                Add New Terms
-            </div>
-
-            <br>
-
-            <div id = "exTerms">
-                Export Terms
-            </div>
+            Reuse of existing neuroscience data relies, in part, on our ability to understand the experimental design 
+            and study data. Historically, a description of the experiment is provided in textual documents, which are 
+            often difficult to search, lack the details necessary for data reuse, and are hampered by differences in 
+            terminologies across related fields of neuroscience. Our vision is to build on existing resources to create 
+            annotation and discovery tools that are based on a metadata standard expressive enough to provide unambiguous 
+            descriptions of the experimental methods and metadata. In this proposal, we develop the Experiment component of 
+            the Neuroimaging Data Model (NIDM-E), a metadata format leveraging techniques from the semantic web, capable of 
+            precisely describing information about the design and intent of an experiment, experimental subject characteristics, 
+            and the acquired data. The deliverables of this project focus on developing the terminologies to support NIDM-E and 
+            description of BRAIN datasets.
 
         </div>
 
-        <br><br><br><br>
+        <br><br><br><br><br>
 
-        <div id = "res">
+
+        <div id = "team" class="textHeader">
+            Core Project Team
+        </div>
+
+        <br><br>
+
+        <div id = "Text">
+            David Keator - UC Irvine <br>
+            Karl Helmer - MGH / Harvard <br>
+            Jeff Grethe - UC San Diego <br>
+            Jean-Baptiste Poline - MCGill <br>
+            Satra Ghosh - MIT <br>
+            Theo G.M. VanErp - UC Irvine <br>
+        </div>
+
+        <br><br><br><br><br>
+
+        <div id = "start" class="textHeader">
+            Getting Started
+        </div>
+
+        <br><br>
+
+        <div id = "Text">
+            
+        </div>
+        
+        <br><br><br><br><br>
+
+        <div id = "res" class="textHeader">
             Resources
         </div>
 
@@ -425,47 +452,8 @@
         a:visited {color: rgb(73, 175, 209);}  
         a:hover {color: rgb(3, 114, 151);}  
 
-        #overview{
-            font-size: 52px;
-            font-weight: bolder;
-            color: rgb(90, 90, 90);
-        }
-
-        #about{
-            font-size: 38px;
-            font-weight: bold;
-            color: rgb(90, 90, 90);
-            
-        }
-
-        #useUi{
-            font-size: 38px;
-            font-weight:bold;
-            color: rgb(90, 90, 90);
-        }
-
-        #avTerms{
-            font-size: 32px;
-            font-weight:bold;
-            color: rgb(121, 120, 120);
-        }
-
-        #addTerms{
-            font-size: 32px;
-            font-weight:bold;
-            color: rgb(121, 120, 120);
-
-        }
-
-        #exTerms{
-            font-size: 32px;
-            font-weight:bold;
-            color: rgb(121, 120, 120);
-
-        }
-
-        #res{
-            font-size: 52px;
+        .textHeader{
+            font-size: 42px;
             font-weight: bolder;
             color: rgb(90, 90, 90);
         }

@@ -114,12 +114,16 @@
             <br>
             <br>
             <div id="termsView"></div>
+            <div id="selectCommunitiesAgain"></div>
+            <div id="needInput"></div>
         </div>
     </center>
     
 
 
-    <style id = "style">.treeview,
+    <style id = "style">
+    
+        .treeview,
         .treeview ul {list-style-type:none;
         overflow:hidden;
         }
@@ -142,6 +146,32 @@
         .treeview>li:hover {cursor:pointer; }
     
         .treeview span:hover {background-color: rgba(246,246,246,0.7
+        
+        ); } 
+
+        .treeview2,
+        .treeview2 ul {list-style-type:none;
+        overflow:hidden;
+        }
+        .treeview2 li {
+            text-indent:1%;
+            margin-top:0.4em;
+            padding:0.15em 0 0.5em 1.5em;
+            line-height:22px;
+            background-repeat:no-repeat;
+            background-size:24px 24px;
+            margin-right: 30px;
+        }
+
+        .treeview2 li.contains-items {background-image:url(
+            'js_lib/icons/arrow-left.png'); }
+    
+        .treeview2 li.items-expanded {background-image:url(
+            'js_lib/icons/arrow-down.png'); }
+    
+        .treeview2>li:hover {cursor:pointer; }
+    
+        .treeview2 span:hover {background-color: rgba(246,246,246,0.7
         
         ); } 
 
@@ -381,6 +411,34 @@
 
         }
 
+        input + .des-tool-tip-text {
+            display: none;
+        }
+        input:hover + .des-tool-tip-text {
+            display: block;
+            position: absolute;
+            text-align:left;
+            padding: 0.3em;
+            width: 150px;
+            bottom: 150%;
+            font-size: 16px;
+            background: #52575e81;
+            color: rgb(238, 238, 238);
+            border-radius: 3px;
+        }
+        input:hover + .des-tool-tip-text:after {
+            content: "";
+            position: absolute;
+            border:1px solid #52575e67;
+            left: 0%;
+            top: 100%;
+            width: 0; 
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 10px solid #52575e67;
+        }
+
         /* The container */
         .con {
             display: inline-block;
@@ -562,9 +620,11 @@
 
         var communityList = [] //Names of communities that are associated with the URLs
         var mainDict = {} //Dictionary with separate lists for each community's terms
-        var selComm = [] //List of objects to contain terms only from the selected communities 
         var data = [] //List to contain terms dictionaries to display
-        /// This function fetches data from the BIDS_Terms jsonld file
+        var labelsDict = [] //List to contain ONLY the labels of terms, used to search through terms for treeview display
+        var mainList = [] //List to contain terms from all communities
+
+        /// This function fetches data from all of the communities' jsonld files
         $(document).ready(function(event) {
             //display the loading screen
             function addLoading(){
@@ -589,16 +649,16 @@
 
             //Create checkboxes with the available communities and create a list of their URLS and pass it
             .then(function(avCom){
-                //create am array containing all the urls to pass to pass, create another array with all the community association properties
-                var urlList = []
+                //create an array containing all the urls to pass to pass, create another array with all the community association properties
+                var urlList = [] //List of urls with the terms of each community
 
                 html = ''
 
                 for (const [key,value] of Object.entries(avCom)){
-                    
                     //add checkboxes
-                    html += '<label id = "'+value['label']+'" class="con">' + key ;
-                    html += '<input id = "'+value['label']+'" type="checkbox" name="checkbox" value="'+value['label']+'" checked="checked">';
+                    html += '<label id = "'+value['label']+'" class="con">'+key;
+                    html += '<input id = "'+value['label']+'" type="checkbox" name="checkbox" value = "'+value['label']+'" checked="checked">';
+                    html += '<div class="des-tool-tip-text">'+value['Description']+'</div>'
                     html += '<span class="checkmark"></span>';
                     html += '</label>';
 
@@ -615,42 +675,37 @@
 
                 $("#options").append(html);
 
-                function fetchAll(url, label){
-                    //NIDMT = 3630, NIDMC = 274, BIDS = 235, CONP = 143
-                    var comms = [] //a new list that used to keep track of which communities the jsonld terms are assigned to
-                    //copy values from communityList to comms
-                    for(var j = 0; j < communityList.length; j++){
-                        comms.push(communityList[j])
-                    }
+                html = '<div id="treeviewsearched"></div>';
+                
+                $("#termsView").append(html);
+                console.log(document.getElementById('treeviewsearched'))
+
+                console.log(551, 'treeview for all communities added')
+
+                function fetchAll(url,commName){
+                    //NIDMT = 3622, NIDMC = 274, BIDS = 235, CONP = 143
                     fetch(url)
                     .then(function(resp){
                         return resp.json(); 
                     })
                     .then(function(data){
-                        mainDict[label] = data['terms'];
-                        console.log(33, mainDict)
-                        delete comms[0]
-                        comms = comms.filter(x => typeof x !== 'undefined')
+                        //add the terms to this community in mainDict
+                        mainDict[commName] = data['terms'];
+                        //add the terms to a singular main list and sort
+                        var temp = mainList.concat(data['terms'])
+                        mainList = temp
+                        var sorted = sortOnKeys(mainList)
+                        //add the labels of the terms to this community in labelsDict
+                        labelsDict[commName] = sortOnKeys(data['terms'])
+
+                        displayTerms(mainList, sorted, labelsDict)
                     })
-                    .then(function(){
-                        var shownTerms = []
-                        for(var key in mainDict){
-                            if(communityList.includes(key)){
-                                var temp = shownTerms.concat(mainDict[key])
-                                console.log(4, key)
-                                shownTerms = temp
-                            }
-                            data = shownTerms
-                        }
-                        sortOnKeys(data)
-                        displayTerms(data)
-                    })      
                 }
             })
             .then(function(){       
                 //Get the values selected in the checkboxes
                 var checkboxElems = document.querySelectorAll("input[type='checkbox']");
-                //create anempty list to add the check box values to it
+                //create an empty list to add the check box values to it
                 let list = [];
                 //loop through the checked elements and call displayCheck
                 for (var i = 0; i < checkboxElems.length; i++) {
@@ -671,9 +726,15 @@
 
                         //if the user unchecks all of the checkboxes then display a message
                         if(communityList.length == 0){
-                            document.getElementById('termsView').innerHTML = ''
+                            //hide all of the communities in the treeview
+                            for(var key in mainDict){
+                                var elements = document.getElementsByClassName('treeview_'+key);
+                                for(var j = 0; j < elements.length; j++){
+                                    elements[j].style.display = "none"
+                                }
+                            }
                             doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;"> Select one or more community </div>'
-                            $('#termsView').append(doc);
+                            $('#selectCommunitiesAgain').append(doc);
                             return;
                             
                         }
@@ -697,23 +758,29 @@
                         return array.filter(x => typeof x !== 'undefined')
                     };
                 }
-                function updateTerms(){
-                    console.log("updateTerms is called")
-                    var shownTerms = []
-                    for(var key in mainDict){
-                        if(communityList.includes(key)){
-                            var temp = shownTerms.concat(mainDict[key])
-                            console.log(4, key)
-                            shownTerms = temp
-                        }
-                        data = shownTerms
-                    }
-                    
-                    console.log(111, data)
-                    sortOnKeys(data)
-                    displayTerms(data)
-                }
+                
             });
+            
+            function updateTerms(){
+                //clear display from last search and/or interactions with checkboxes
+                document.getElementById("searchBar").value = ''     //clear search bar when update terms on display
+                document.getElementById("selectCommunitiesAgain").innerHTML = '' //after box is checked, remove message to select 1+ communities
+                document.getElementById("treeviewsearched").innerHTML = ''
+                document.getElementById('needInput').innerHTML = ''
+                $('.treeview').treeView('collapseAll');
+                for(var key in mainDict){
+                    var elements = document.getElementsByClassName('treeview_'+key);
+                    if(communityList.includes(key)){
+                        for(var j = 0; j < elements.length; j++){
+                            elements[j].style.display = "block"
+                        }
+                    }else{
+                        for(var j = 0; j < elements.length; j++){
+                            elements[j].style.display = "none"
+                        }
+                    }
+                }
+            }
 
             //This function sorts the terms in an alphabetical order
             function sortOnKeys(dict_data) {
@@ -724,6 +791,7 @@
                 for (var p in dict_data) {
                     sorted[sorted.length] = dict_data[p].label;
                 }
+                return sorted
             }
 
             
@@ -731,27 +799,181 @@
             const searchBar = document.getElementById("searchBar");
             //get searched items
             searchBar.addEventListener("keyup", (e) => {
+                //hide all terms when there is user input for search bar
+                for(var key in mainDict){
+                    var elements = document.getElementsByClassName('treeview_'+key);
+                    for(var j = 0; j < elements.length; j++){
+                        elements[j].style.display = "none"
+                    }
+                }
                 console.log(e.target.value)
                 const searchString = e.target.value;
+                
+                //clear the displays from the last search
+                document.getElementById('needInput').innerHTML = ''
+                document.getElementById('treeviewsearched').innerHTML = ''
 
-                const searchedTerms = filterTerms(data, searchString);
+                //since display only hides/unhides instead of adding/deleting terms, need to
+                //create a new array of terms that are from the communities that are checked
+                var dataForSearch = []
+                var shownTerms = []
+                for(var key in mainDict){
+                    if(communityList.includes(key)){
+                        var temp = shownTerms.concat(mainDict[key])
+                        shownTerms = temp
+                    }
+                    dataForSearch = shownTerms
+                }
+
+                //sort the data in the selected communities - in contrast to sortOnKeys, this returns a full list of objects, not just labels
+                var sortedSearch = dataForSearch.sort((a, b) => (a.label > b.label) ? 1 : (a.label === b.label) ? ((a.description > b.size) ? 1 : -1) : -1 )
+
+                const searchedTerms = filterTerms(sortedSearch, searchString);
 
                 if(isEmpty(searchedTerms)){
-                    document.getElementById('termsView').innerHTML = ''
                     doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;"> NO MATCHING TERMS HAVE BEEN FOUND... </div>'
-                    $('#termsView').append(doc);
+                    $('#needInput').append(doc);
                     return;
                 }
-                displayTerms(searchedTerms)
+                displaySearchedTerms(searchedTerms)
             });
 
-
             //Function to display the terms in a treeview
-            function displayTerms(data) {
-                //Clear previous term display
-                document.getElementById('termsView').innerHTML = "";
+            //fullList is alphabetized list of all of the terms, sortedList is labels only from fullList, labelsDict has sorted labels divided into communities
+            function displayTerms(fullList, sortedList, labelsDict) {
+                console.log(552, 'displayTerms called')
 
-                var html = '<ul class= "treeview">';
+                var numCalls = Object.keys(labelsDict).length
+
+                var html = '<div id="treeview"><ul>';
+
+                // only runs after all terms have been added to labelsDict
+                if(numCalls === communityList.length){
+                    for(var i = 0; i < sortedList.length; i++)
+                    {
+                        addAllTerms(i)
+                    }
+                }else{
+                    return;
+                }
+
+                //assigns each individual term to a specific treeview class based on its community in order for the hide/unhide to work for each community
+                function addAllTerms(index){
+                    for(var key in labelsDict){
+                        //find whether the term exists in this community
+                        var placeInDict = labelsDict[key].indexOf(sortedList[index])
+                        if(placeInDict !== -1){
+                            html += '<div class="treeview_'+key+'"' 
+
+                            //color codes the communities' terms to differentiate them
+                            if(key==='NIDM_Terms'){html += 'style="color:darkred"';}   
+                            else if(key==='NIDM_Concepts') {html += 'style="color:darkorange"';}
+                            else if(key==='BIDS_Terms') {html += 'style="color:darkgreen"';}
+                            else if(key==='CONP_DATS_Terms') {html += 'style="color:darkcyan"';}
+                            html += '><ul class= "treeview">'
+
+                            html += '<li>' + sortedList[index] + '<ul>';
+                            var data = fullList[index]
+                            for (const [key,value] of Object.entries(data)){
+                                if (key != 'label'){
+                                    if(typeof(value) === 'object'){
+                                        html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
+                                        for(const [k,v] of Object.entries(value)){
+                                            if(typeof(v) === 'object'){
+                                                for(const [kk,vv] of Object.entries(v)){
+                                                    if(typeof(vv) === 'string'){
+                                                        html += '<li>' + vv + '</li>';
+                                                    }else if(typeof(vv) === 'object'){
+                                                        html += '<li>'  +  '<b>'+ kk +'</b>  ' + '<ul>'
+                                                        for(const [keys,vvv] of Object.entries(vv)){ //for responseOptions
+                                                            if(typeof(vvv) === 'object'){ 
+                                                                for(const [keyss,vvvv] of Object.entries(vvv)){
+                                                                    html += '<li>' + keyss + ': ' + vvvv + '</li>';
+                                                                }
+                                                                
+                                                            }else if(typeof(vvv) === 'string'){
+                                                                html += '<li>' + vvv + '</li>';
+                                                            }
+                                                        }
+                                                        html += '</ul>'
+                                                    }
+                                                }
+                                            }
+                                            else if (typeof(v) === 'array'){
+                                                html += '<li>'  +  '<b>'+ k +'</b>  ' + '<ul>'
+                                                for(var s = 0; v.length; s++){
+                                                    if(typeof(v[s]) === 'string'){
+                                                        html += '<li>'  +  v[s] + '</li>';
+                                                    }
+                                                    else if (typeof(v[s]) === 'object'){
+                                                        html += '<ul>'
+                                                        for(const [ke,val] of Object.entries(v[s])){
+                                                            html += '<li>' + val + '</li>';
+                                                        }
+                                                        html += '</ul>'
+                                                    }
+                                                }
+                                                html += '</ul></li>';
+                                            }
+                                            else {
+                                                html += '<li>' + v + '</li>';
+                                            }
+                                            
+                                        }
+                                        html += '</li></ul>'
+                                    }
+                                    else if (typeof(value) === 'array'){
+                                        html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
+                                        for(const a = 0; a< value.length; a++){
+                                            html += '<li>' + value[a] + '</li>';
+                                        }
+                                        html += '</ul></li>';
+                                    }
+                                    else{
+                                        html += '<li>'  +  '<b>' + key +'</b>  ' + ':  '+ value + '</li>';
+                                    }
+                                }
+                            }
+                            
+                            html += '</ul></li></div>';
+                            
+                            $('#treeview_'+key).append(html);
+
+                            //delete this term in labelsDict; necessary so that all future terms are NOT given the value of the first occurrence of this label
+                            delete labelsDict[key][placeInDict]
+                            return;
+                        }
+                    }
+                }
+                
+                html += '</ul></div>';
+                
+                $('#termsView').append(html);
+                $('.treeview').treeView();
+
+                var style = ".treeview,";
+                style += ".treeview ul {list-style-type:none;overflow:hidden;}";
+                style += ".treeview li {text-indent:1%;margin-top:0.2em;padding:0.15em 0 0.5em 1.5em;line-height:22px;background-repeat:no-repeat;background-size:24px 24px;}";
+                style += ".treeview li.contains-items {background-image:url('js_lib/icons/arrow-left.png');}";
+                style += ".treeview li.contains-items {background-image:url('js_lib/icons/arrow-right.png');}";
+                style += ".treeview>li:hover {cursor:pointer; .add_terms:hover;background-color: #dbe9ee}";
+                style += ".treeview span:hover {background-color: rgba(246,246,246,0.7); }";
+
+                // Expands all the nodes of treeviews
+                //$('.treeview').treeView('expandAll');
+                // Collapses all the nodes of treeviews
+                $('.treeview').treeView('collapseAll');
+            }
+
+            //separate display for individual searched terms, not an entire section of community terms
+            function displaySearchedTerms(data) {
+                console.log(552, 'displayTerms called for searched')
+                console.log(557, data.length)
+                //Clear previous term display
+                // document.getElementById('termsView').innerHTML = "";
+                var html = document.getElementById('treeviewsearched').innerHTML
+
+                html += '<div id="treeviewsearched"><ul class= "treeview2">';
 
                 //loop through the terms objects and display terms
                 for (var d = 0; d < data.length; d++) { // Each sub-entry
@@ -822,27 +1044,24 @@
                 
                 }   
 
-                html += '</ul>';
+                html += '</ul></div>';
+                $('#treeviewsearched').append(html);
+                document.getElementById('treeviewsearched').style.display = "block"
+                $('.treeview2').treeView();
 
-                $('#termsView').append(html);
-
-                $('.treeview').treeView();
-
-                var style = ".treeview,";
-                style += ".treeview ul {list-style-type:none;overflow:hidden;}";
-                style += ".treeview li {text-indent:1%;margin-top:0.2em;padding:0.15em 0 0.5em 1.5em;line-height:22px;background-repeat:no-repeat;background-size:24px 24px;}";
-                style += ".treeview li.contains-items {background-image:url('js_lib/icons/arrow-left.png');}";
-                style += ".treeview li.contains-items {background-image:url('js_lib/icons/arrow-right.png');}";
-                style += ".treeview>li:hover {cursor:pointer; .add_terms:hover;background-color: #dbe9ee}";
-                style += ".treeview span:hover {background-color: rgba(246,246,246,0.7); }";
-
-                //$('#style').append(style);
+                var style = ".treeview2,";
+                style += ".treeview2 ul {list-style-type:none;overflow:hidden;}";
+                style += ".treeview2 li {text-indent:1%;margin-top:0.2em;padding:0.15em 0 0.5em 1.5em;line-height:22px;background-repeat:no-repeat;background-size:24px 24px;}";
+                style += ".treeview2 li.contains-items {background-image:url('js_lib/icons/arrow-left.png');}";
+                style += ".treeview2 li.contains-items {background-image:url('js_lib/icons/arrow-right.png');}";
+                style += ".treeview2>li:hover {cursor:pointer; .add_terms:hover;background-color: #dbe9ee}";
+                style += ".treeview2 span:hover {background-color: rgba(246,246,246,0.7); }";
 
                 // Expands all the nodes of treeviews
                 //$('.treeview').treeView('expandAll');
                 // Collapses all the nodes of treeviews
-                $('.treeview').treeView('collapseAll');
-            }   
+                $('.treeview2').treeView('collapseAll');
+            }
 
             // this function filters the data dictionary based on the input of the search bar
             function filterTerms(data, searchedTerms){
@@ -869,8 +1088,6 @@
                 }
                 return true;
             }
-            
-            console.log("All set")
         });
 
     </script> 
