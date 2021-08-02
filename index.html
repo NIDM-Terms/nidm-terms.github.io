@@ -638,7 +638,7 @@
                 document.getElementById("loadingText").style.display = "none";  
             }
 
-            addLoading()    //show a loading display while the page is loading
+            //addLoading()    //show a loading display while the page is loading
             //Fetch 'https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json' to get a list of the available communities in NIDM-Terms/terms
             fetch('https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json')
             .then(function(res){
@@ -709,7 +709,7 @@
 
                 //This function checks which checkboxes were unchecked and passes a list of urls to the function fetchAll to display
                 function displayCheck(e) {
-                    addLoading()
+                    //addLoading()
                     //the checkbox displays update (check/uncheck shows up right away) while the display asynchronously updates  
                     setTimeout(() => {
                         // create a list of the term categories that were unchecked to filter out
@@ -731,7 +731,7 @@
                                     }
                                 }
                                 doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;"> Select one or more community </div>'
-                                removeLoading()
+                                //removeLoading()
                                 $('#selectCommunitiesAgain').append(doc);
                                 return;
                                 
@@ -746,7 +746,7 @@
                             communityList = removeNull(communityList)
                             updateTerms()
                         }
-                        removeLoading()
+                        //removeLoading()
                     },0);
 
                     console.log(communityList)
@@ -797,7 +797,7 @@
             const searchBar = document.getElementById("searchBar");
             //get searched items
             searchBar.addEventListener("keyup", (e) => {
-                addLoading()
+                //addLoading()
                 console.log(e.target.value)
                 const searchString = e.target.value;
                 
@@ -827,7 +827,7 @@
                     document.getElementById('treeviewsearched').innerHTML = ''
 
                     doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;"> NO MATCHING TERMS HAVE BEEN FOUND... </div>'
-                    removeLoading()
+                    //removeLoading()
                     $('#noMatches').append(doc);
                     return;
                 }
@@ -1006,7 +1006,7 @@
                 //$('.treeview').treeView('expandAll');
                 // Collapses all the nodes of treeviews
                 $('.treeview').treeView('collapseAll');
-                removeLoading()
+                //removeLoading()
             }
 
             //separate display for individual searched terms, not an entire section of community terms
@@ -1105,7 +1105,7 @@
                 //$('.treeview').treeView('expandAll');
                 // Collapses all the nodes of treeviews
                 $('.treeview2').treeView('collapseAll');
-                removeLoading()
+                //removeLoading()
             }
 
             // this function filters the data dictionary based on the input of the search bar
