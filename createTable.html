@@ -1074,7 +1074,7 @@
                         for(var i=0; i<ele.length; i++){  
                             if(ele[i].type=='checkbox')  
                                 ele[i].checked=true;  
-                        } 
+                        }
                     }  
                     function deSelect(){ 
                         //assign an empty list to selectedTerms if all terms are unselected
@@ -1084,7 +1084,16 @@
                             if(ele[i].type=='checkbox')  
                                 ele[i].checked=false;  
                             
-                        }  
+                        }
+                        //Get the values selected in the checkboxes
+                        var checkboxElems = document.querySelectorAll("input[name='termsCheckbox']");
+                        //create anempty list to add the check box values to it
+                        //let tempList = [];
+                        //loop through the checked elements and call displayCheck
+                        for (var i = 0; i < checkboxElems.length; i++) {
+                            checkboxElems[i].addEventListener("click", displayCheck);
+                        } 
+                        
                     } 
 
                     // this function filters the data dictionary based on the input of the search bar
