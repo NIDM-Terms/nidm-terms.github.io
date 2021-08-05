@@ -134,6 +134,7 @@
                                             <option value="json">JSON</option>
                                             <option value="jsonld">JSON-LD</option>
                                             <option value="csv">CSV</option>
+                                            <option value="nq">N-Quads</option>
                                         </select></div> <!-- /.form-group -->
                                 </div> <!-- /.col -->
 
@@ -168,8 +169,8 @@
                                 
                             </div></center>
 
-                            <div>
-                                <button class="btn0" id="startBtn"> Add </button>
+                            <div id="changeBtn">
+                                <button class="btn0" id="startBtn"> Add Terms </button>
                             </div>
                             <br><br><br><br><br><br><br>
 
@@ -1045,9 +1046,7 @@
                         //loop through the terms objects and display terms
                         for (var d = 0; d < data.length; d++) { // Each sub-entry
 
-
                             if(selectedTerms.length > 0){
-                                console.log(999,data[d].label)
                                     if( selectedTerms.includes(data[d].label)){
                                         terms += '<div style= "margin-top: -40px;">'
                                         terms += '<label style= "font-size: 19px; color:#666666;" id = "'+data[d].label+'" class="con"><b>' + data[d].label +'</b>';
@@ -1069,16 +1068,6 @@
                                         terms += '<br>'
                                     }
                             }
-                            else if ( selectedTerms == 1){
-                                terms += '<div style= "margin-top: -40px;">'
-                                terms += '<label style= "font-size: 19px; color:#666666;" id = "'+data[d].label+'" class="con"><b>' + data[d].label +'</b>';
-                                terms += '<h5 style = "color: #7e7e7e; margin-top: 5px; font-size:14px; font-weight: 100;">'+data[d].description+'</h5>'
-                                terms += '<input id = "'+data[d].label+'" type="checkbox" name="termsCheckbox" value="'+data[d].label+'" checked>';
-                                terms += '<span class="checkmark"></span>';
-                                terms += '</label>';
-                                terms += '</div>'   
-                                terms += '<br>'
-                            }
                             else{
                                 terms += '<div style= "margin-top: -40px;">'
                                 terms += '<label style= "font-size: 19px; color:#666666;" id = "'+data[d].label+'" class="con"><b>' + data[d].label +'</b>';
@@ -1095,13 +1084,23 @@
                     }
                     
                     function selects(){
-                        //if the selectedTerms variable equals to 1 then all terms are selected
-                        selectedTerms = 1
+                        //if selected all button was pressed, add all terms to selected terms
+                        for(var u=0; u<data.length; u++){
+                            selectedTerms.push(data[u].label)
+                        }
                         var ele=document.getElementsByName('termsCheckbox');  
                         for(var i=0; i<ele.length; i++){  
                             if(ele[i].type=='checkbox')  
                                 ele[i].checked=true;  
-                        } 
+                        }
+                        //Get the values selected in the checkboxes
+                        var checkboxElems = document.querySelectorAll("input[name='termsCheckbox']");
+                        //create anempty list to add the check box values to it
+                        //let tempList = [];
+                        //loop through the checked elements and call displayCheck
+                        for (var i = 0; i < checkboxElems.length; i++) {
+                            checkboxElems[i].addEventListener("click", displayCheck);
+                        }
                     }  
                     function deSelect(){ 
                         //assign an empty list to selectedTerms if all terms are unselected
@@ -1111,7 +1110,16 @@
                             if(ele[i].type=='checkbox')  
                                 ele[i].checked=false;  
                             
-                        }  
+                        }
+                        //Get the values selected in the checkboxes
+                        var checkboxElems = document.querySelectorAll("input[name='termsCheckbox']");
+                        //create anempty list to add the check box values to it
+                        //let tempList = [];
+                        //loop through the checked elements and call displayCheck
+                        for (var i = 0; i < checkboxElems.length; i++) {
+                            checkboxElems[i].addEventListener("click", displayCheck);
+                        } 
+                        
                     } 
 
                     // this function filters the data dictionary based on the input of the search bar
@@ -1288,7 +1296,7 @@
                     if(selectedFormats[i] == 'jsonld'){
                         getjsonld(jsonldData,selectedProperties,selectedTerms)
                     };
-                    if(selectedFormats[i] == 'rdf'){
+                    if(selectedFormats[i] == 'nq'){
                         rdf(jsonldData,selectedProperties,selectedTerms)
                     };
                     if(selectedFormats[i] == 'csv'){
@@ -1409,12 +1417,13 @@
             
         }
 
-        function getjsonld(jsonldData,selectedProperties,selectedTerms){
+        async function getjsonld(jsonldData,selectedProperties,selectedTerms){
 
             mainTemp = {};
             tempList =[];
 
             mainTemp['@context'] = 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld';
+            mainTemp['@type'] = "nidm:TermsCollection";
 
 
             for (var l in jsonldData['terms']) {
@@ -1423,7 +1432,6 @@
                 selectedTermsLength = selectedTerms.length;
                 for(t = 0; t < selectedTermsLength; t++){
                     if(jsonldData.terms[l].label.toLowerCase() == selectedTerms[t].toLowerCase()){
-                        
                         
                         temp = {};
                         
@@ -1436,53 +1444,11 @@
                             var tempProp = selectedProperties[p]
                             
                             temp[context['@context']['label']] = jsonldData.terms[l].label;
-                            temp[context['@context']['associatedWith']] = jsonldData.terms[l].associatedWith;
+                            temp[context['@context']['associatedWith']['@id']] = jsonldData.terms[l].associatedWith;
 
-                            //if(selectedProperties[p] == "candidateTerms"){
-                                if(tempProp in jsonldData.terms[l]){
-                                    temp[context['@context'][tempProp]] = jsonldData.terms[l][tempProp]
-                                }
-                            // }
-                            // if(selectedProperties[p] == "comment"){
-                            //     if('comment' in jsonldData.terms[l]){
-                            //         temp[context['@context']['comment']] = jsonldData.terms[l].comment
-                            //     }
-                            // }
-                            // if(selectedProperties[p] == "description"){
-                            //     if('description' in jsonldData.terms[l]){
-                            //         temp[context['@context']['description']] = jsonldData.terms[l].description
-                            //     }
-                            // }
-                            // if(selectedProperties[p] == "ilxId"){
-                            //     if('ilxId' in jsonldData.terms[l]){
-                            //         temp[context['@context']['ilxId']] = jsonldData.terms[l].ilxId
-                            //     }
-                            // }
-                            // if(selectedProperties[p] == "sameAs"){
-                            //     if('sameAs' in jsonldData.terms[l]){
-                            //         temp[context['@context']['sameAs']['@id']] = jsonldData.terms[l].sameAs
-                            //     }
-                            // }
-                            // if(selectedProperties[p] == "supertypeCDEs"){
-                            //     if('supertypeCDEs' in jsonldData.terms[l]){                             
-                            //         temp[context['@context']['supertypeCDEs']['@id']] = jsonldData.terms[l].supertypeCDEs
-                            //     }
-                            // }
-                            // if(selectedProperties[p] == "unitCode"){
-                            //     if('unitCode' in jsonldData.terms[l]){
-                            //         temp[context['@context']['unitCode']] = jsonldData.terms[l].unitCode
-                            //     }
-                            // }
-                            // if(selectedProperties[p] == "url"){
-                            //     if('url' in jsonldData.terms[l]){
-                            //         temp[context['@context']['url']['@id']] = jsonldData.terms[l].url
-                            //     }
-                            // }
-                            // if(selectedProperties[p] == "wasDerivedFrom"){
-                            //     if('wasDerivedFrom' in jsonldData.terms[l]){
-                            //         temp[context['@context']['wasDerivedFrom']['@id']] = jsonldData.terms[l].wasDerivedFrom
-                            //     }
-                            // }
+                            if(tempProp in jsonldData.terms[l]){
+                                temp[context['@context'][tempProp]] = jsonldData.terms[l][tempProp]
+                            }
                         };
 
                         tempList.push(temp)
@@ -1490,17 +1456,12 @@
                     }
                 }
             }
-
+    
             mainTemp[context['@context']['terms']['@id']] = tempList
 
             //compact term dictionary
-            const compacted = jsonld.compact(mainTemp, 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld');
-
-            compacted['terms'] = compacted['prov:hasMember']
-            delete compacted['prov:hasMember']
+            const compacted = await jsonld.compact(mainTemp, 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld');
             
-            console.log(888, compacted)
-
             //Download file
             downloadObjectAsJson(compacted, 'Terms')
 
@@ -1512,104 +1473,72 @@
                 document.body.appendChild(downloadAnchorNode); // required for firefox
                 downloadAnchorNode.click();
                 downloadAnchorNode.remove();
-            }
-             
+            }    
         }
 
-        function rdf(jsonldData,selectedProperties,selectedTerms){
+        async function rdf(jsonldData,selectedProperties,selectedTerms){
+            
             console.log('rdf is working')
+            mainTemp = {};
+            tempList =[];
+
+            mainTemp['@context'] = 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld';
+            mainTemp['@type'] = "nidm:TermsCollection";
 
 
-            //get the context file
-            fetch("https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld")
+            for (var l in jsonldData['terms']) {
+                
+                //for every term selected get the selected properties of that term
+                selectedTermsLength = selectedTerms.length;
+                for(t = 0; t < selectedTermsLength; t++){
+                    if(jsonldData.terms[l].label.toLowerCase() == selectedTerms[t].toLowerCase()){
+                        
+                        temp = {};
+                        
+                        temp['@type'] = context['@context']['PersonalDataElement'];
 
-            .then(function(resp){
-                return resp.json(); 
-            })
+                        //get the selected properties
+                        selectedPropertiesLength = selectedProperties.length;
+                        for(p = 0; p < selectedPropertiesLength; p++){
 
-            .then(async function  getDict(context){
+                            var tempProp = selectedProperties[p]
+                            
+                            temp[context['@context']['label']] = jsonldData.terms[l].label;
+                            temp[context['@context']['associatedWith']['@id']] = jsonldData.terms[l].associatedWith;
 
-                for (var l in jsonldData['terms']) {
+                            if(tempProp in jsonldData.terms[l]){
+                                temp[context['@context'][tempProp]] = jsonldData.terms[l][tempProp]
+                            }
+                        };
 
-                    //for every term selected get the selected properties of that term
-                    selectedTermsLength = selectedTerms.length;
-                    for(t = 0; t < selectedTermsLength; t++){
-                        if(selectedTerms[t].toLowerCase() == jsonldData.terms[l].label.toLowerCase()){
-                            temp = {};
+                        tempList.push(temp)
 
-                            temp['@context'] = 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld';
-                            temp['@type'] = 'DataElement';
-                            temp[context['@context']['associatedWith']] = ["NIDM","BIDS"];
-
-                            //get the selected properties
-                            selectedPropertiesLength = selectedProperties.length;
-                            for(p = 0; p < selectedTermsLength; p++){
-                                
-                                temp[context['@context']['label']] = jsonldData.terms[l].label;
-
-                                if('candidateTerms' in jsonldData.terms[l]){
-                                    if(selectedProperties[p] == "Candidate Terms"){
-                                        temp[context['@context']['candidateTerms']] = jsonldData.terms[l].candidateTerms
-                                    }
-                                }
-                                if('comment' in jsonldData.terms[l]){
-                                    if(selectedProperties[p] == "Comment"){
-                                        temp[context['@context']['comment']] = jsonldData.terms[l].comment
-                                    }
-                                }
-                                if('description' in jsonldData.terms[l]){
-                                    if(selectedProperties[p] == "Description"){
-                                        temp[context['@context']['description']] = jsonldData.terms[l].description
-                                    }
-                                }
-                                if('ilxId' in jsonldData.terms[l]){
-                                    if(selectedProperties[p] == "Interlex ID"){
-                                        temp[context['@context']['ilxId']] = jsonldData.terms[l].ilxId
-                                    }
-                                }
-                                if('sameAs' in jsonldData.terms[l]){
-                                    if(selectedProperties[p] == "Same As"){
-                                        temp[context['@context']['sameAs']['@id']] = jsonldData.terms[l].sameAs
-                                    }
-                                }
-                                if('supertypeCDEs' in jsonldData.terms[l]){
-                                    if(selectedProperties[p] == "Super Type CDEs"){
-                                        temp[context['@context']['supertypeCDEs']['@id']] = jsonldData.terms[l].supertypeCDEs
-                                    }
-                                }
-                                if('unitCode' in jsonldData.terms[l]){
-                                    if(selectedProperties[p] == "Unit"){
-                                        temp[context['@context']['unitCode']] = jsonldData.terms[l].unitCode
-                                    }
-                                }
-                                if('url' in jsonldData.terms[l]){
-                                    if(selectedProperties[p] == "URL"){
-                                        temp[context['@context']['url']['@id']] = jsonldData.terms[l].url
-                                    }
-                                }
-                                if('wasDerivedFrom' in jsonldData.terms[l]){
-                                    if(selectedProperties[p] == "Was Derived From"){
-                                        temp[context['@context']['wasDerivedFrom']['@id']] = jsonldData.terms[l].wasDerivedFrom
-                                    }
-                                }
-                            };
-
-                            //console.log(temp)
-                            //compact term dictionary
-                            const compacted = await jsonld.compact(temp, 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld');
-                            console.log(compacted)
-
-
-                            // serialize a document to N-Quads (RDF)
-                            const nquads = await jsonld.toRDF(temp, {format: 'application/n-quads'});
-
-                            console.log(nquads)
-
-
-                        }
                     }
                 }
-            }) 
+            }
+
+            mainTemp[context['@context']['terms']['@id']] = tempList
+            console.log(555, mainTemp)
+
+
+            // serialize a document to N-Quads (RDF)
+            const nquads = await jsonld.toRDF(mainTemp, {format: 'application/n-quads'});
+            
+
+            console.log(22, nquads) 
+            
+            //Download file
+            downloadObjectAsJson(nquads, 'Terms')
+
+            function downloadObjectAsJson(exportObj, exportName){
+                var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+                var downloadAnchorNode = document.createElement('a');
+                downloadAnchorNode.setAttribute("href",     dataStr);
+                downloadAnchorNode.setAttribute("download", exportName + ".nq");
+                document.body.appendChild(downloadAnchorNode); // required for firefox
+                downloadAnchorNode.click();
+                downloadAnchorNode.remove();
+            }
 
         }
 
