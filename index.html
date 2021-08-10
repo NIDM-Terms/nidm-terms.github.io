@@ -392,6 +392,7 @@
                 );
             margin-top: -23px;
             width: 1450px;
+            border: 0 none;
         }
 
         .container{
@@ -579,6 +580,49 @@
             top: 50%;
             z-index: 4;
         }
+
+        .tag-text{
+            display:inline-block;
+            width:9vw;
+            font-size: 14px;
+            margin-left:12px;
+            text-align: left;
+            color: #52575ec9;
+            font-family: sans-serif;
+        }
+        
+        .oval-orange{
+            display:inline-block;
+            width:6vw;
+            height:5%;
+            background: #FDD8B3;
+            color: #F7841E;
+            border-radius:5px;
+            font-size: 14px;
+            margin-left:1%;
+            text-align: center;
+            font-family: sans-serif;
+        }
+
+        .oval-blue{
+            display:inline-block;
+            width:9vw;
+            height:5%;
+            background: #bfebff;
+            color: #45adda;
+            border-radius:5px;
+            font-size: 14px;
+            margin-left:1%;
+            text-align: center;
+            font-family: sans-serif;
+        }
+
+        #dividerLine{
+            height: 0.5px;
+            background: #96969736;
+            border: 0 none;
+            align-content: center;
+        }
         
         #bottomLine{
             height: 3px;
@@ -590,6 +634,7 @@
                 #FFC312
                 );
             width: 100%;
+            border: 0 none;
         }
 
         #footer{
@@ -915,62 +960,114 @@
                             // else if(key==='CONP_DATS_Terms') {html += 'style="color:darkcyan"';}
                             html += '><ul class= "treeview">'
 
-                            html += '<li>' + sortedList[index] + '<ul>';
+                            html += '<li>' + sortedList[index] + '<br>';
+                            // terms in NIDM Concepts are concepts, otherwise they are data elements
+                            // add a tag takes out underscores in key and displays the community name
+                            if(key!=="NIDM_Concepts"){
+                                html += '<div class = "oval-blue">Data Element</div><div class="tag-text">'+key.replace(/_/g,' ')+'</div><ul>';
+                            }else{
+                                html += '<div class = "oval-orange">Concept</div><div class="tag-text">'+key.replace(/_/g,' ')+'</div><ul>';
+                            }
+                            
                             var data = fullList[index]
+                            // using @type property to assign tags
+                            // for (const [key,value] of Object.entries(data)){
+                            //     if (key === '@type'){
+                            //         if(typeof(value) === 'object'){
+                            //             for(const [k,v] of Object.entries(value)){
+                            //                 if(v.includes('CommonDataElement')){
+                            //                     html += '<div class = "oval-blue">Data Element</div><div class="tag-text">'+key.replace(/_/g,' ')+'</div><ul>';
+                            //                 }else if(v.includes('Concept')){
+                            //                     html += '<div class = "oval-orange">Concept</div><div class="tag-text">'+key.replace(/_/g,' ')+'</div><ul>';
+                            //                 }
+                            //             }
+                            //         }
+                            //         else if (typeof(value) === 'array'){
+                            //             if(value.includes('CommonDataElement')){
+                            //                 html += '<div class = "oval-blue">Data Element</div><div class="tag-text">'+key.replace(/_/g,' ')+'</div><ul>';
+                            //             }else{
+                            //                 html += '<div class = "oval-orange">Concept</div><div class="tag-text">'+key.replace(/_/g,' ')+'</div><ul>';
+                            //             }
+                            //         }
+                            //         else{
+                            //             if(value==='CommonDataElement'){
+                            //                 html += '<div class = "oval-blue">Data Element</div><div class="tag-text">'+key.replace(/_/g,' ')+'</div><ul>';
+                            //             }else{
+                            //                 html += '<div class = "oval-orange">Concept</div><div class="tag-text">'+key.replace(/_/g,' ')+'</div><ul>';
+                            //             }
+                            //         }
+                            //     }
+                            // }
                             for (const [key,value] of Object.entries(data)){
                                 if (key != 'label'){
                                     if(typeof(value) === 'object'){
-                                        html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
-                                        for(const [k,v] of Object.entries(value)){
-                                            if(typeof(v) === 'object'){
-                                                for(const [kk,vv] of Object.entries(v)){
-                                                    if(typeof(vv) === 'string'){
-                                                        html += '<li>' + vv + '</li>';
-                                                    }else if(typeof(vv) === 'object'){
-                                                        html += '<li>'  +  '<b>'+ kk +'</b>  ' + '<ul>'
-                                                        for(const [keys,vvv] of Object.entries(vv)){ //for responseOptions
-                                                            if(typeof(vvv) === 'object'){ 
-                                                                for(const [keyss,vvvv] of Object.entries(vvv)){
-                                                                    html += '<li>' + keyss + ': ' + vvvv + '</li>';
+                                        if(key!=='@type'){
+                                            html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
+                                            for(const [k,v] of Object.entries(value)){
+                                                if(typeof(v) === 'object'){
+                                                    for(const [kk,vv] of Object.entries(v)){
+                                                        if(typeof(vv) === 'string'){
+                                                            html += '<li>' + vv + '</li>';
+                                                        }else if(typeof(vv) === 'object'){
+                                                            html += '<li>'  +  '<b>'+ kk +'</b>  ' + '<ul>'
+                                                            for(const [keys,vvv] of Object.entries(vv)){ //for responseOptions
+                                                                if(typeof(vvv) === 'object'){ 
+                                                                    for(const [keyss,vvvv] of Object.entries(vvv)){
+                                                                        html += '<li>' + keyss + ': ' + vvvv + '</li>';
+                                                                    }
+                                                                    
+                                                                }else if(typeof(vvv) === 'string'){
+                                                                    html += '<li>' + vvv + '</li>';
                                                                 }
-                                                                
-                                                            }else if(typeof(vvv) === 'string'){
-                                                                html += '<li>' + vvv + '</li>';
                                                             }
+                                                            html += '</ul>'
                                                         }
-                                                        html += '</ul>'
                                                     }
                                                 }
-                                            }
-                                            else if (typeof(v) === 'array'){
-                                                html += '<li>'  +  '<b>'+ k +'</b>  ' + '<ul>'
-                                                for(var s = 0; v.length; s++){
-                                                    if(typeof(v[s]) === 'string'){
-                                                        html += '<li>'  +  v[s] + '</li>';
-                                                    }
-                                                    else if (typeof(v[s]) === 'object'){
-                                                        html += '<ul>'
-                                                        for(const [ke,val] of Object.entries(v[s])){
-                                                            html += '<li>' + val + '</li>';
+                                                else if (typeof(v) === 'array'){
+                                                    html += '<li>'  +  '<b>'+ k +'</b>  ' + '<ul>'
+                                                    for(var s = 0; v.length; s++){
+                                                        if(typeof(v[s]) === 'string'){
+                                                            html += '<li>'  +  v[s] + '</li>';
                                                         }
-                                                        html += '</ul>'
+                                                        else if (typeof(v[s]) === 'object'){
+                                                            html += '<ul>'
+                                                            for(const [ke,val] of Object.entries(v[s])){
+                                                                html += '<li>' + val + '</li>';
+                                                            }
+                                                            html += '</ul>'
+                                                        }
                                                     }
+                                                    html += '</ul></li>';
                                                 }
-                                                html += '</ul></li>';
+                                                else {
+                                                    html += '<li>' + v + '</li>';
+                                                }
+                                                
                                             }
-                                            else {
-                                                html += '<li>' + v + '</li>';
+                                            html += '</li></ul>'
+                                        }else{  //for the @type property so its display is not collapsed
+                                            html += '<li>'  +  '<b>'+ key +'</b>  '
+                                            for(const [k,v] of Object.entries(value)){
+                                                html += '<li><dd>' + v + '</li>';
                                             }
-                                            
+                                            html += '</li>'
                                         }
-                                        html += '</li></ul>'
                                     }
                                     else if (typeof(value) === 'array'){
-                                        html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
-                                        for(const a = 0; a< value.length; a++){
-                                            html += '<li>' + value[a] + '</li>';
+                                        if(key!=='@type'){
+                                            html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
+                                            for(const a = 0; a< value.length; a++){
+                                                html += '<li>' + value[a] + '</li>';
+                                            }
+                                            html += '</ul></li>';
+                                        }else{  //for the @type property so its display is not collapsed
+                                            html += '<li>'  +  '<b>'+ key +'</b>  ' 
+                                            for(const a = 0; a< value.length; a++){
+                                                html += '<li><dd>' + value[a] + '</li>';
+                                            }
+                                            html += '</li>';
                                         }
-                                        html += '</ul></li>';
                                     }
                                     else{
                                         html += '<li>'  +  '<b>' + key +'</b>  ' + ':  '+ value + '</li>';
@@ -978,7 +1075,7 @@
                                 }
                             }
                             
-                            html += '</ul></li></div>';
+                            html += '</ul></li><hr id= "dividerLine"></div>';
                             
                             $('#treeview_'+key).append(html);
 
@@ -1026,57 +1123,73 @@
                     for (const [key,value] of Object.entries(data[d])){
                         if (key != 'label'){
                             if(typeof(value) === 'object'){
-                                html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
-                                for(const [k,v] of Object.entries(value)){
-                                    if(typeof(v) === 'object'){
-                                        for(const [kk,vv] of Object.entries(v)){
-                                            if(typeof(vv) === 'string'){
-                                                html += '<li>' + vv + '</li>';
-                                            }else if(typeof(vv) === 'object'){
-                                                html += '<li>'  +  '<b>'+ kk +'</b>  ' + '<ul>'
-                                                for(const [keys,vvv] of Object.entries(vv)){ //for responseOptions
-                                                    if(typeof(vvv) === 'object'){ 
-                                                        for(const [keyss,vvvv] of Object.entries(vvv)){
-                                                            html += '<li>' + keyss + ': ' + vvvv + '</li>';
+                                if(key!=='@type'){
+                                    html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
+                                    for(const [k,v] of Object.entries(value)){
+                                        if(typeof(v) === 'object'){
+                                            for(const [kk,vv] of Object.entries(v)){
+                                                if(typeof(vv) === 'string'){
+                                                    html += '<li>' + vv + '</li>';
+                                                }else if(typeof(vv) === 'object'){
+                                                    html += '<li>'  +  '<b>'+ kk +'</b>  ' + '<ul>'
+                                                    for(const [keys,vvv] of Object.entries(vv)){ //for responseOptions
+                                                        if(typeof(vvv) === 'object'){ 
+                                                            for(const [keyss,vvvv] of Object.entries(vvv)){
+                                                                html += '<li>' + keyss + ': ' + vvvv + '</li>';
+                                                            }
+                                                            
+                                                        }else if(typeof(vvv) === 'string'){
+                                                            html += '<li>' + vvv + '</li>';
                                                         }
-                                                        
-                                                    }else if(typeof(vvv) === 'string'){
-                                                        html += '<li>' + vvv + '</li>';
                                                     }
+                                                    html += '</ul>'
                                                 }
-                                                html += '</ul>'
                                             }
                                         }
-                                    }
-                                    else if (typeof(v) === 'array'){
-                                        html += '<li>'  +  '<b>'+ k +'</b>  ' + '<ul>'
-                                        for(var s = 0; v.length; s++){
-                                            if(typeof(v[s]) === 'string'){
-                                                html += '<li>'  +  v[s] + '</li>';
-                                            }
-                                            else if (typeof(v[s]) === 'object'){
-                                                html += '<ul>'
-                                                for(const [ke,val] of Object.entries(v[s])){
-                                                    html += '<li>' + val + '</li>';
+                                        else if (typeof(v) === 'array'){
+                                            html += '<li>'  +  '<b>'+ k +'</b>  ' + '<ul>'
+                                            for(var s = 0; v.length; s++){
+                                                if(typeof(v[s]) === 'string'){
+                                                    html += '<li>'  +  v[s] + '</li>';
                                                 }
-                                                html += '</ul>'
+                                                else if (typeof(v[s]) === 'object'){
+                                                    html += '<ul>'
+                                                    for(const [ke,val] of Object.entries(v[s])){
+                                                        html += '<li>' + val + '</li>';
+                                                    }
+                                                    html += '</ul>'
+                                                }
                                             }
+                                            html += '</ul></li>';
                                         }
-                                        html += '</ul></li>';
+                                        else {
+                                            html += '<li>' + v + '</li>';
+                                        }
+                                        
                                     }
-                                    else {
-                                        html += '<li>' + v + '</li>';
+                                    html += '</li></ul>'
+                                }else{  //for the @type property so its display is not collapsed
+                                    html += '<li>'  +  '<b>'+ key +'</b>  '
+                                    for(const [k,v] of Object.entries(value)){
+                                        html += '<li><dd>' + v + '</li>';
                                     }
-                                    
+                                    html += '</li>'
                                 }
-                                html += '</li></ul>'
                             }
                             else if (typeof(value) === 'array'){
-                                html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
-                                for(const a = 0; a< value.length; a++){
-                                    html += '<li>' + value[a] + '</li>';
+                                if(key!=='@type'){
+                                    html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
+                                    for(const a = 0; a< value.length; a++){
+                                        html += '<li>' + value[a] + '</li>';
+                                    }
+                                    html += '</ul></li>';
+                                }else{  //for the @type property so its display is not collapsed
+                                    html += '<li>'  +  '<b>'+ key +'</b>  ' 
+                                    for(const a = 0; a< value.length; a++){
+                                        html += '<li><dd>' + value[a] + '</li>';
+                                    }
+                                    html += '</li>';
                                 }
-                                html += '</ul></li>';
                             }
                             else{
                                 html += '<li>'  +  '<b>' + key +'</b>  ' + ':  '+ value + '</li>';
