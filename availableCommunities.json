@@ -1,5 +1,5 @@
 {	
-	"NIDM terminology": {
+	"NIDM Terminology": {
 		"label" : "NIDM_Terms",
 		"URL" : "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/NIDM_Terms.jsonld",
 		"Description" : "Neuroimaging Data Modeling Terms"
