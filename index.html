@@ -107,12 +107,13 @@
     
     <center>
         <div class= "container">
-            <div id="selectComunity">
+            <h2 id="stepTitles">Communities<hr style="margin-top: 5px; margin-bottom: 50px;"></h2>
+            <div id="selectCommunity">
                 <h2 id="selectTitle">.</h2>
                 <center><div id="options"></div></center>
             </div>
             <br>
-            <br>
+            <h2 id="stepTitles">Terms<hr style="margin-top: 5px; margin-bottom: 50px;"></h2>
             <div id="termsView"></div>
             <div id="selectCommunitiesAgain"></div>
             <div id="noMatches"></div>
@@ -143,7 +144,7 @@
         .treeview li.items-expanded {background-image:url(
             'js_lib/icons/arrow-down.png'); }
     
-        .treeview>li:hover {cursor:pointer; }
+        .treeview>li:hover {cursor:pointer; background-color:rgba(236, 236, 236, 0.7);transition:0.3s;}
     
         .treeview span:hover {background-color: rgba(246,246,246,0.7
         
@@ -169,7 +170,7 @@
         .treeview2 li.items-expanded {background-image:url(
             'js_lib/icons/arrow-down.png'); }
     
-        .treeview2>li:hover {cursor:pointer; }
+        .treeview2>li:hover {cursor:pointer; background-color:rgba(236, 236, 236, 0.7);transition:0.3s;}
     
         .treeview2 span:hover {background-color: rgba(246,246,246,0.7
         
@@ -280,6 +281,14 @@
 
         header{
             width: 100%;
+        }
+
+        #stepTitles{
+            font-size: 32px;
+            color: #6e6d6d;
+            font-weight: 200;
+            margin-left: 80px;
+            margin-right: 55px;
         }
 
         .bidsTitle{
@@ -521,7 +530,7 @@
             font-size: 20px;
         }
 
-        #selectComunity{
+        #selectCommunity{
             background-color: rgb(240, 240, 240);
             padding-top: 15px;
             padding-bottom: 20px;
@@ -580,24 +589,14 @@
             top: 50%;
             z-index: 4;
         }
-
-        .tag-text{
-            display:inline-block;
-            width:9vw;
-            font-size: 11px;
-            margin-left:12px;
-            text-align: left;
-            color: #52575ec9;
-            font-family: sans-serif;
-        }
         
         .oval-orange{
             display:inline-block;
-            width:5em;
-            height:2%;
+            white-space: nowrap;
+            padding:0.5px 10px;
             background: #FDD8B3;
             color: #ff6600;
-            border-radius:5px;
+            border-radius:15px;
             font-size: 11px;
             margin-left:1%;
             text-align: center;
@@ -606,11 +605,11 @@
 
         .oval-blue{
             display:inline-block;
-            width:7em;
-            height:2%;
+            white-space: nowrap;
+            padding:0.5px 10px;
             background: #bfebff;
             color: #1f91c2;
-            border-radius:5px;
+            border-radius:15px;
             font-size: 11px;
             margin-left:1%;
             text-align: center;
@@ -944,17 +943,17 @@
 
                 //assigns each individual term to a specific treeview class based on its community in order for the hide/unhide to work for each community
                 function addAllTerms(index){
-                    for(var key in labelsDictCopy){
+                    for(var commName in labelsDictCopy){
                         //find whether the term exists in this community
-                        var placeInDict = labelsDictCopy[key].indexOf(sortedList[index])
+                        var placeInDict = labelsDictCopy[commName].indexOf(sortedList[index])
                         var newIndex = placeInDict
-                        //while this key in mainDictCopy contains the term label AND the description doesn't match the correct description, increment newIndex
-                        while(placeInDict !== -1 && mainDictCopy[key][newIndex]!==undefined
-                        && mainDictCopy[key][newIndex].description !== mainList[index].description){
+                        //while this commName in mainDictCopy contains the term label AND the description doesn't match the correct description, increment newIndex
+                        while(placeInDict !== -1 && mainDictCopy[commName][newIndex]!==undefined
+                        && mainDictCopy[commName][newIndex].description !== mainList[index].description){
                             newIndex++
                         }
-                        if(placeInDict !== -1 && newIndex!==mainDictCopy[key].length){
-                            html += '<div class="treeview_'+key+'"' 
+                        if(placeInDict !== -1 && newIndex!==mainDictCopy[commName].length){
+                            html += '<div class="treeview_'+commName+'"' 
                             //color codes the communities' terms to differentiate them
                             // if(key==='NIDM_Terms'){html += 'style="color:darkred"';}   
                             // else if(key==='NIDM_Concepts') {html += 'style="color:darkorange"';}
@@ -963,44 +962,37 @@
                             html += '><ul class= "treeview">'
 
                             html += '<li>' + sortedList[index] + '<br>';
-                            // terms in NIDM Concepts are concepts, terms in all other communities are data elements
-                            // add a tag takes out underscores in key and displays the community name
-                            if(key!=="NIDM_Concepts"){
-                                html += '<div class = "oval-blue">Data Element</div><div class="tag-text">'+key.replace(/_/g,' ')+'</div><ul>';
-                            }else{
-                                html += '<div class = "oval-orange">Concept</div><div class="tag-text">'+key.replace(/_/g,' ')+'</div><ul>';
-                            }
-                            
+
                             var data = mainList[index]
-                            // using @type property to assign tags
-                            // for (const [key,value] of Object.entries(data)){
-                            //     if (key === '@type'){
-                            //         if(typeof(value) === 'object'){
-                            //             for(const [k,v] of Object.entries(value)){
-                            //                 if(v.includes('CommonDataElement')){
-                            //                     html += '<div class = "oval-blue">Data Element</div><div class="tag-text">'+key.replace(/_/g,' ')+'</div><ul>';
-                            //                 }else if(v.includes('Concept')){
-                            //                     html += '<div class = "oval-orange">Concept</div><div class="tag-text">'+key.replace(/_/g,' ')+'</div><ul>';
-                            //                 }
-                            //             }
-                            //         }
-                            //         else if (typeof(value) === 'array'){
-                            //             if(value.includes('CommonDataElement')){
-                            //                 html += '<div class = "oval-blue">Data Element</div><div class="tag-text">'+key.replace(/_/g,' ')+'</div><ul>';
-                            //             }else{
-                            //                 html += '<div class = "oval-orange">Concept</div><div class="tag-text">'+key.replace(/_/g,' ')+'</div><ul>';
-                            //             }
-                            //         }
-                            //         else{
-                            //             if(value==='CommonDataElement'){
-                            //                 html += '<div class = "oval-blue">Data Element</div><div class="tag-text">'+key.replace(/_/g,' ')+'</div><ul>';
-                            //             }else{
-                            //                 html += '<div class = "oval-orange">Concept</div><div class="tag-text">'+key.replace(/_/g,' ')+'</div><ul>';
-                            //             }
-                            //         }
-                            //     }
-                            // }
+                            
                             for (const [key,value] of Object.entries(data)){
+                                if (key === '@type'){
+                                    if(typeof(value) === 'object'){
+                                        for(const [k,v] of Object.entries(value)){
+                                            if(v.includes('Concept')){
+                                                html += '<div class = "oval-orange">Concept</div><ul>';
+                                            }else{
+                                                html += '<div class = "oval-blue">Data Element — '+commName.replace(/_/g,' ')+'</div><ul>';
+                                            }
+                                            break;
+                                        }
+                                    }
+                                    else if (typeof(value) === 'array'){
+                                        if(value.includes('Concept')){
+                                            html += '<div class = "oval-orange">Concept</div><ul>';
+                                        }else{
+                                            html += '<div class = "oval-blue">Data Element — '+commName.replace(/_/g,' ')+'</div><ul>';
+                                        }
+                                    }
+                                    else{
+                                        if(value==='Concept'){
+                                            html += '<div class = "oval-orange">Concept</div><ul>';
+                                        }else{
+                                            html += '<div class = "oval-blue">Data Element — '+commName.replace(/_/g,' ')+'</div><ul>';
+                                        }
+                                    }
+                                }
+
                                 if (key != 'label'){
                                     if(typeof(value) === 'object'){
                                         if(key!=='@type'){
@@ -1079,11 +1071,11 @@
                             
                             html += '</ul></li><hr id= "dividerLine"></div>';
                             
-                            $('#treeview_'+key).append(html);
+                            $('#treeview_'+commName).append(html);
 
                             //delete this term in labelsDictCopy and mainDictCopy; necessary so that all future terms are NOT given the value of the first occurrence of this label
-                            delete labelsDictCopy[key][placeInDict]
-                            delete mainDictCopy[key][newIndex]
+                            delete labelsDictCopy[commName][placeInDict]
+                            delete mainDictCopy[commName][newIndex]
                             return;
                         }
                     }
@@ -1111,7 +1103,7 @@
             //separate display for individual searched terms, not an entire section of community terms
             function displaySearchedTerms(terms) {
                 console.log(552, 'displayTerms called for searched')
-                //find the term in mainDict and display it, along with the key
+
                 //Clear previous term display
                 // document.getElementById('termsView').innerHTML = "";
                 var html = document.getElementById('treeviewsearched').innerHTML
@@ -1149,27 +1141,50 @@
 
                 //assigns each individual term to a specific treeview class based on its community in order for the hide/unhide to work for each community
                 function addAllTerms(index){
-                    for(var key in labelsDictCopy){
+                    for(var commName in labelsDictCopy){
                         //find whether the term exists in this community
-                        var placeInDict = labelsDictCopy[key].indexOf(terms[index].label)
+                        var placeInDict = labelsDictCopy[commName].indexOf(terms[index].label)
                         var newIndex = placeInDict
-                        //while this key in mainDictCopy contains the term label AND the description doesn't match the correct description, increment newIndex
-                        while(placeInDict !== -1 && mainDictCopy[key][newIndex]!==undefined
-                        && mainDictCopy[key][newIndex].description !== terms[index].description){
+                        //while this commName in mainDictCopy contains the term label AND the description doesn't match the correct description, increment newIndex
+                        while(placeInDict !== -1 && mainDictCopy[commName][newIndex]!==undefined
+                        && mainDictCopy[commName][newIndex].description !== terms[index].description){
                             newIndex++
                         }
-                        if(placeInDict !== -1 && newIndex!==mainDictCopy[key].length){
+                        if(placeInDict !== -1 && newIndex!==mainDictCopy[commName].length){
                             html += '<li>' + terms[index].label + '<br>';
-                            // terms in NIDM Concepts are concepts, terms in all other communities are data elements
-                            // add a tag takes out underscores in key and displays the community name
-                            if(key!=="NIDM_Concepts"){
-                                html += '<div class = "oval-blue">Data Element</div><div class="tag-text">'+key.replace(/_/g,' ')+'</div><ul>';
-                            }else{
-                                html += '<div class = "oval-orange">Concept</div><div class="tag-text">'+key.replace(/_/g,' ')+'</div><ul>';
-                            }
                             
                             var data = terms[index]
+
                             for (const [key,value] of Object.entries(data)){
+                                // terms in NIDM Concepts are concepts, terms in all other communities are data elements
+                                // add a tag takes out underscores in commName and displays the community name
+                                if (key === '@type'){
+                                    if(typeof(value) === 'object'){
+                                        for(const [k,v] of Object.entries(value)){
+                                            if(v.includes('Concept')){
+                                                html += '<div class = "oval-orange">Concept</div><ul>';
+                                            }else{
+                                                html += '<div class = "oval-blue">Data Element — '+commName.replace(/_/g,' ')+'</div><ul>';
+                                            }
+                                            break;
+                                        }
+                                    }
+                                    else if (typeof(value) === 'array'){
+                                        if(value.includes('Concept')){
+                                            html += '<div class = "oval-orange">Concept</div><ul>';
+                                        }else{
+                                            html += '<div class = "oval-blue">Data Element — '+commName.replace(/_/g,' ')+'</div><ul>';
+                                        }
+                                    }
+                                    else{
+                                        if(value==='Concept'){
+                                            html += '<div class = "oval-orange">Concept</div><ul>';
+                                        }else{
+                                            html += '<div class = "oval-blue">Data Element — '+commName.replace(/_/g,' ')+'</div><ul>';
+                                        }
+                                    }
+                                }
+
                                 if (key != 'label'){
                                     if(typeof(value) === 'object'){
                                         if(key!=='@type'){
@@ -1249,8 +1264,8 @@
                             html += '</ul></li><hr id= "dividerLine">';
 
                             //delete this term in labelsDictCopy and mainDictCopy; necessary so that all future terms are NOT given the value of the first occurrence of this label
-                            delete labelsDictCopy[key][placeInDict]
-                            delete mainDictCopy[key][newIndex]
+                            delete labelsDictCopy[commName][placeInDict]
+                            delete mainDictCopy[commName][newIndex]
                             return;
                         }
                     }
