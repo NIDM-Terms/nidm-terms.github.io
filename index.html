@@ -584,7 +584,7 @@
         .tag-text{
             display:inline-block;
             width:9vw;
-            font-size: 14px;
+            font-size: 11px;
             margin-left:12px;
             text-align: left;
             color: #52575ec9;
@@ -593,12 +593,12 @@
         
         .oval-orange{
             display:inline-block;
-            width:6vw;
-            height:5%;
+            width:5em;
+            height:2%;
             background: #FDD8B3;
-            color: #F7841E;
+            color: #ff6600;
             border-radius:5px;
-            font-size: 14px;
+            font-size: 11px;
             margin-left:1%;
             text-align: center;
             font-family: sans-serif;
@@ -606,12 +606,12 @@
 
         .oval-blue{
             display:inline-block;
-            width:9vw;
-            height:5%;
+            width:7em;
+            height:2%;
             background: #bfebff;
-            color: #45adda;
+            color: #1f91c2;
             border-radius:5px;
-            font-size: 14px;
+            font-size: 11px;
             margin-left:1%;
             text-align: center;
             font-family: sans-serif;
@@ -740,7 +740,7 @@
                         //add the labels of the terms to this community in labelsDict
                         labelsDict[commName] = sortOnKeys(data['terms'])
 
-                        displayTerms(mainList, sorted, labelsDict, mainDict)
+                        displayTerms()
                     })
                 }
             })
@@ -905,10 +905,11 @@
             });
 
             //Function to display the terms in a treeview
-            //fullList is alphabetized list of all of the terms, sortedList is labels only from fullList
+            //mainList is alphabetized list of all of the terms, sortedList is labels only from mainList
             //labelsDict has sorted labels divided into communities, mainDict has all terms divided into communities
-            function displayTerms(fullList, sortedList, labelsDict, mainDict) {
-                //make a deep copy of mainDict to destructively parse without affecting mainDict
+            function displayTerms() {
+                var sortedList = sortOnKeys(mainList)
+                //make a deep copy of mainDict and labelsDict to destructively parse without affecting the original dictionaries
                 const deepCopy = (origArr) => {
                     let copyArr, value, key
                     if(typeof origArr !== "object" || origArr === null){
@@ -923,6 +924,7 @@
                 }
 
                 var mainDictCopy = deepCopy(mainDict)
+                var labelsDictCopy = deepCopy(labelsDict)
                 
                 console.log(552, 'displayTerms called')
 
@@ -930,7 +932,7 @@
 
                 var html = '<div id="treeview"><ul>';
 
-                // only runs after all terms have been added to labelsDict
+                // only runs after all terms have been added to labelsDictCopy
                 if(numCalls === communityList.length){
                     for(var i = 0; i < sortedList.length; i++)
                     {
@@ -942,13 +944,13 @@
 
                 //assigns each individual term to a specific treeview class based on its community in order for the hide/unhide to work for each community
                 function addAllTerms(index){
-                    for(var key in labelsDict){
+                    for(var key in labelsDictCopy){
                         //find whether the term exists in this community
-                        var placeInDict = labelsDict[key].indexOf(sortedList[index])
+                        var placeInDict = labelsDictCopy[key].indexOf(sortedList[index])
                         var newIndex = placeInDict
                         //while this key in mainDictCopy contains the term label AND the description doesn't match the correct description, increment newIndex
                         while(placeInDict !== -1 && mainDictCopy[key][newIndex]!==undefined
-                        && mainDictCopy[key][newIndex].description !== fullList[index].description){
+                        && mainDictCopy[key][newIndex].description !== mainList[index].description){
                             newIndex++
                         }
                         if(placeInDict !== -1 && newIndex!==mainDictCopy[key].length){
@@ -961,7 +963,7 @@
                             html += '><ul class= "treeview">'
 
                             html += '<li>' + sortedList[index] + '<br>';
-                            // terms in NIDM Concepts are concepts, otherwise they are data elements
+                            // terms in NIDM Concepts are concepts, terms in all other communities are data elements
                             // add a tag takes out underscores in key and displays the community name
                             if(key!=="NIDM_Concepts"){
                                 html += '<div class = "oval-blue">Data Element</div><div class="tag-text">'+key.replace(/_/g,' ')+'</div><ul>';
@@ -969,7 +971,7 @@
                                 html += '<div class = "oval-orange">Concept</div><div class="tag-text">'+key.replace(/_/g,' ')+'</div><ul>';
                             }
                             
-                            var data = fullList[index]
+                            var data = mainList[index]
                             // using @type property to assign tags
                             // for (const [key,value] of Object.entries(data)){
                             //     if (key === '@type'){
@@ -1079,15 +1081,15 @@
                             
                             $('#treeview_'+key).append(html);
 
-                            //delete this term in labelsDict and mainDictCopy; necessary so that all future terms are NOT given the value of the first occurrence of this label
-                            delete labelsDict[key][placeInDict]
+                            //delete this term in labelsDictCopy and mainDictCopy; necessary so that all future terms are NOT given the value of the first occurrence of this label
+                            delete labelsDictCopy[key][placeInDict]
                             delete mainDictCopy[key][newIndex]
                             return;
                         }
                     }
                 }
                 html += '</ul></div>';
-                
+
                 $('#termsView').append(html);
                 $('.treeview').treeView();
 
@@ -1107,99 +1109,152 @@
             }
 
             //separate display for individual searched terms, not an entire section of community terms
-            function displaySearchedTerms(data) {
+            function displaySearchedTerms(terms) {
                 console.log(552, 'displayTerms called for searched')
-                console.log(557, data.length)
+                //find the term in mainDict and display it, along with the key
                 //Clear previous term display
                 // document.getElementById('termsView').innerHTML = "";
                 var html = document.getElementById('treeviewsearched').innerHTML
+                var sorted = sortOnKeys(mainList)
+
+                //make a deep copy of mainDict and labelsDict to destructively parse without affecting the original dictionaries
+                const deepCopy = (origArr) => {
+                    let copyArr, value, key
+                    if(typeof origArr !== "object" || origArr === null){
+                        return origArr
+                    }
+                    copyArr = Array.isArray(origArr) ? [] : {}
+                    for(key in origArr){
+                        value = origArr[key]
+                        copyArr[key] = deepCopy(value)
+                    }
+                    return copyArr
+                }
+                
+                var mainDictCopy = deepCopy(mainDict)
+                var labelsDictCopy = deepCopy(labelsDict)
+                for(var key in labelsDictCopy){
+                    if(!communityList.includes(key)){
+                        delete mainDictCopy[key]
+                        delete labelsDictCopy[key]   
+                    }
+                }
 
                 html += '<div id="treeviewsearched"><ul class= "treeview2">';
 
-                //loop through the terms objects and display terms
-                for (var d = 0; d < data.length; d++) { // Each sub-entry
-                    html += '<li>' + data[d].label + '<ul>';
-                
-                    for (const [key,value] of Object.entries(data[d])){
-                        if (key != 'label'){
-                            if(typeof(value) === 'object'){
-                                if(key!=='@type'){
-                                    html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
-                                    for(const [k,v] of Object.entries(value)){
-                                        if(typeof(v) === 'object'){
-                                            for(const [kk,vv] of Object.entries(v)){
-                                                if(typeof(vv) === 'string'){
-                                                    html += '<li>' + vv + '</li>';
-                                                }else if(typeof(vv) === 'object'){
-                                                    html += '<li>'  +  '<b>'+ kk +'</b>  ' + '<ul>'
-                                                    for(const [keys,vvv] of Object.entries(vv)){ //for responseOptions
-                                                        if(typeof(vvv) === 'object'){ 
-                                                            for(const [keyss,vvvv] of Object.entries(vvv)){
-                                                                html += '<li>' + keyss + ': ' + vvvv + '</li>';
+                for(var i = 0; i < terms.length; i++)
+                {
+                    addAllTerms(i)
+                }
+
+                //assigns each individual term to a specific treeview class based on its community in order for the hide/unhide to work for each community
+                function addAllTerms(index){
+                    for(var key in labelsDictCopy){
+                        //find whether the term exists in this community
+                        var placeInDict = labelsDictCopy[key].indexOf(terms[index].label)
+                        var newIndex = placeInDict
+                        //while this key in mainDictCopy contains the term label AND the description doesn't match the correct description, increment newIndex
+                        while(placeInDict !== -1 && mainDictCopy[key][newIndex]!==undefined
+                        && mainDictCopy[key][newIndex].description !== terms[index].description){
+                            newIndex++
+                        }
+                        if(placeInDict !== -1 && newIndex!==mainDictCopy[key].length){
+                            html += '<li>' + terms[index].label + '<br>';
+                            // terms in NIDM Concepts are concepts, terms in all other communities are data elements
+                            // add a tag takes out underscores in key and displays the community name
+                            if(key!=="NIDM_Concepts"){
+                                html += '<div class = "oval-blue">Data Element</div><div class="tag-text">'+key.replace(/_/g,' ')+'</div><ul>';
+                            }else{
+                                html += '<div class = "oval-orange">Concept</div><div class="tag-text">'+key.replace(/_/g,' ')+'</div><ul>';
+                            }
+                            
+                            var data = terms[index]
+                            for (const [key,value] of Object.entries(data)){
+                                if (key != 'label'){
+                                    if(typeof(value) === 'object'){
+                                        if(key!=='@type'){
+                                            html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
+                                            for(const [k,v] of Object.entries(value)){
+                                                if(typeof(v) === 'object'){
+                                                    for(const [kk,vv] of Object.entries(v)){
+                                                        if(typeof(vv) === 'string'){
+                                                            html += '<li>' + vv + '</li>';
+                                                        }else if(typeof(vv) === 'object'){
+                                                            html += '<li>'  +  '<b>'+ kk +'</b>  ' + '<ul>'
+                                                            for(const [keys,vvv] of Object.entries(vv)){ //for responseOptions
+                                                                if(typeof(vvv) === 'object'){ 
+                                                                    for(const [keyss,vvvv] of Object.entries(vvv)){
+                                                                        html += '<li>' + keyss + ': ' + vvvv + '</li>';
+                                                                    }
+                                                                    
+                                                                }else if(typeof(vvv) === 'string'){
+                                                                    html += '<li>' + vvv + '</li>';
+                                                                }
                                                             }
-                                                            
-                                                        }else if(typeof(vvv) === 'string'){
-                                                            html += '<li>' + vvv + '</li>';
+                                                            html += '</ul>'
                                                         }
                                                     }
-                                                    html += '</ul>'
                                                 }
-                                            }
-                                        }
-                                        else if (typeof(v) === 'array'){
-                                            html += '<li>'  +  '<b>'+ k +'</b>  ' + '<ul>'
-                                            for(var s = 0; v.length; s++){
-                                                if(typeof(v[s]) === 'string'){
-                                                    html += '<li>'  +  v[s] + '</li>';
-                                                }
-                                                else if (typeof(v[s]) === 'object'){
-                                                    html += '<ul>'
-                                                    for(const [ke,val] of Object.entries(v[s])){
-                                                        html += '<li>' + val + '</li>';
+                                                else if (typeof(v) === 'array'){
+                                                    html += '<li>'  +  '<b>'+ k +'</b>  ' + '<ul>'
+                                                    for(var s = 0; v.length; s++){
+                                                        if(typeof(v[s]) === 'string'){
+                                                            html += '<li>'  +  v[s] + '</li>';
+                                                        }
+                                                        else if (typeof(v[s]) === 'object'){
+                                                            html += '<ul>'
+                                                            for(const [ke,val] of Object.entries(v[s])){
+                                                                html += '<li>' + val + '</li>';
+                                                            }
+                                                            html += '</ul>'
+                                                        }
                                                     }
-                                                    html += '</ul>'
+                                                    html += '</ul></li>';
                                                 }
+                                                else {
+                                                    html += '<li>' + v + '</li>';
+                                                }
+                                                
+                                            }
+                                            html += '</li></ul>'
+                                        }else{  //for the @type property so its display is not collapsed
+                                            html += '<li>'  +  '<b>'+ key +'</b>  '
+                                            for(const [k,v] of Object.entries(value)){
+                                                html += '<li><dd>' + v + '</li>';
+                                            }
+                                            html += '</li>'
+                                        }
+                                    }
+                                    else if (typeof(value) === 'array'){
+                                        if(key!=='@type'){
+                                            html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
+                                            for(const a = 0; a< value.length; a++){
+                                                html += '<li>' + value[a] + '</li>';
                                             }
                                             html += '</ul></li>';
+                                        }else{  //for the @type property so its display is not collapsed
+                                            html += '<li>'  +  '<b>'+ key +'</b>  ' 
+                                            for(const a = 0; a< value.length; a++){
+                                                html += '<li><dd>' + value[a] + '</li>';
+                                            }
+                                            html += '</li>';
                                         }
-                                        else {
-                                            html += '<li>' + v + '</li>';
-                                        }
-                                        
                                     }
-                                    html += '</li></ul>'
-                                }else{  //for the @type property so its display is not collapsed
-                                    html += '<li>'  +  '<b>'+ key +'</b>  '
-                                    for(const [k,v] of Object.entries(value)){
-                                        html += '<li><dd>' + v + '</li>';
+                                    else{
+                                        html += '<li>'  +  '<b>' + key +'</b>  ' + ':  '+ value + '</li>';
                                     }
-                                    html += '</li>'
                                 }
                             }
-                            else if (typeof(value) === 'array'){
-                                if(key!=='@type'){
-                                    html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
-                                    for(const a = 0; a< value.length; a++){
-                                        html += '<li>' + value[a] + '</li>';
-                                    }
-                                    html += '</ul></li>';
-                                }else{  //for the @type property so its display is not collapsed
-                                    html += '<li>'  +  '<b>'+ key +'</b>  ' 
-                                    for(const a = 0; a< value.length; a++){
-                                        html += '<li><dd>' + value[a] + '</li>';
-                                    }
-                                    html += '</li>';
-                                }
-                            }
-                            else{
-                                html += '<li>'  +  '<b>' + key +'</b>  ' + ':  '+ value + '</li>';
-                            }
+                            
+                            html += '</ul></li><hr id= "dividerLine">';
+
+                            //delete this term in labelsDictCopy and mainDictCopy; necessary so that all future terms are NOT given the value of the first occurrence of this label
+                            delete labelsDictCopy[key][placeInDict]
+                            delete mainDictCopy[key][newIndex]
+                            return;
                         }
                     }
-
-                    html += '</ul></li>';
-                
-                }   
+                } 
 
                 html += '</ul></div>';
                 $('#treeviewsearched').append(html);
