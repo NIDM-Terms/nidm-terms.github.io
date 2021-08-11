@@ -12,7 +12,7 @@
 	"BIDS Specification Terms": {
 		"label" : "BIDS_Terms",
 		"URL" : "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/BIDS_Terms.jsonld",
-		"Description" : "Brain Imaging Data Structure Specification Terms"
+		"Description" : "Brain Imaging Data Structure Specification Terminology"
 	},
 	"CONP DATS Terms": {
 		"label" : "CONP_DATS_Terms",
