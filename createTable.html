@@ -145,7 +145,7 @@
                                         <select id = "addProperties" class="form-control select2 select2-hidden-accessible" multiple="" data-placeholder="  select or search term properties" style="width: 100%;" tabindex="-1" aria-hidden="true">
                                         </select> </div> <!-- /.form-group -->
                                 </div> <!-- /.col -->
-
+                                <div id = "prop">Click <a id = "here" href="https://github.com/NIDM-Terms/terms/blob/master/terms/README.md" target="_blank">here</a>  to view data element property descriptions</div>
                             </div>
                         </div>
 
@@ -609,6 +609,24 @@
             color:#7e7e7e;
             font-size: 18px;
             padding-bottom: 90px;
+        }
+
+        #prop{
+            font-style: italic;
+            padding-top: 5px;
+            font-size: 14px;
+            margin-left: 10px;
+            color: darkgray;
+        }
+
+        #here{
+            font-style: italic;
+            padding-top: 15px;
+            font-size: 14px;
+            color: rgb(120, 162, 240);
+        }
+        #here:hover{
+            color:rgb(51, 107, 211);
         }
 
         #bottomLine{
@@ -1224,7 +1242,7 @@
                     })
                 }
 
-                 //This function sorts the terms in an alphabetical order
+                //This function sorts the terms in an alphabetical order
                 function sortOnKeys(dict_data) {
                     var sorted = [];
                     //sort terms based on the label of the dictionary
@@ -1279,6 +1297,7 @@
                         }
                     }
                 }
+                //location.reload();
             }
         };
         
@@ -1366,10 +1385,17 @@
 
                             var tempProp = selectedProperties[p]
 
-                            temp['associatedWith'] = ["NIDM","BIDS"]
-    
-                            if(tempProp in jsonldData.terms[l]){
-                                temp[tempProp] = jsonldData.terms[l][tempProp]
+                            temp['associatedWith'] = jsonldData.terms[l]['associatedWith'];
+                            if(selectedProperties.includes('all')){
+                                for(u in jsonldData.terms[l]){
+                                    temp[u] = jsonldData.terms[l][u]
+                                    console.log(jsonldData.terms[l][u])
+                                }
+                            }
+                            else{
+                                if(tempProp in jsonldData.terms[l]){
+                                    temp[tempProp] = jsonldData.terms[l][tempProp]
+                                }
                             }
                         };
 
@@ -1410,8 +1436,6 @@
                     if(jsonldData.terms[l].label.toLowerCase() == selectedTerms[t].toLowerCase()){
                         
                         temp = {};
-                        
-                        temp['@type'] = context['@context']['PersonalDataElement'];
 
                         //get the selected properties
                         selectedPropertiesLength = selectedProperties.length;
@@ -1419,11 +1443,19 @@
 
                             var tempProp = selectedProperties[p]
                             
-                            temp[context['@context']['label']] = jsonldData.terms[l].label;
-                            temp[context['@context']['associatedWith']['@id']] = jsonldData.terms[l].associatedWith;
-
-                            if(tempProp in jsonldData.terms[l]){
-                                temp[context['@context'][tempProp]] = jsonldData.terms[l][tempProp]
+                            if(selectedProperties.includes('all')){
+                                for(u in jsonldData.terms[l]){
+                                    temp[u] = jsonldData.terms[l][u]
+                                    console.log(jsonldData.terms[l][u])
+                                }
+                            }
+                            else{
+                                temp[context['@context']['label']] = jsonldData.terms[l].label;
+                                temp['@type'] = jsonldData.terms[l]['@type'];
+                                temp[context['@context']['associatedWith']['@id']] = jsonldData.terms[l].associatedWith;
+                                if(tempProp in jsonldData.terms[l]){
+                                    temp[context['@context'][tempProp]] = jsonldData.terms[l][tempProp]
+                                }
                             }
                         };
 
@@ -1461,7 +1493,6 @@
             mainTemp['@context'] = 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld';
             mainTemp['@type'] = "nidm:TermsCollection";
 
-
             for (var l in jsonldData['terms']) {
                 
                 //for every term selected get the selected properties of that term
@@ -1478,17 +1509,23 @@
                         for(p = 0; p < selectedPropertiesLength; p++){
 
                             var tempProp = selectedProperties[p]
-                            
-                            temp[context['@context']['label']] = jsonldData.terms[l].label;
-                            temp[context['@context']['associatedWith']['@id']] = jsonldData.terms[l].associatedWith;
 
-                            if(tempProp in jsonldData.terms[l]){
-                                temp[context['@context'][tempProp]] = jsonldData.terms[l][tempProp]
+                            if(selectedProperties.includes('all')){
+                                for(u in jsonldData.terms[l]){
+                                    temp[u] = jsonldData.terms[l][u]
+                                    console.log(jsonldData.terms[l][u])
+                                }
+                            }
+                            else{
+                                temp[context['@context']['label']] = jsonldData.terms[l].label;
+                                temp['@type'] = jsonldData.terms[l]['@type'];
+                                temp[context['@context']['associatedWith']['@id']] = jsonldData.terms[l].associatedWith;
+                                if(tempProp in jsonldData.terms[l]){
+                                    temp[context['@context'][tempProp]] = jsonldData.terms[l][tempProp]
+                                }
                             }
                         };
-
                         tempList.push(temp)
-
                     }
                 }
             }
@@ -1496,11 +1533,9 @@
             mainTemp[context['@context']['terms']['@id']] = tempList
             console.log(555, mainTemp)
 
-
             // serialize a document to N-Quads (RDF)
             const nquads = await jsonld.toRDF(mainTemp, {format: 'application/n-quads'});
             
-
             console.log(22, nquads) 
             
             //Download file
@@ -1515,7 +1550,6 @@
                 downloadAnchorNode.click();
                 downloadAnchorNode.remove();
             }
-
         }
 
         function csv(jsonldData,selectedProperties,selectedTerms){
@@ -1536,79 +1570,22 @@
                         for(p = 0; p < selectedPropertiesLength; p++){
                             temp['label'] = jsonldData.terms[l].label
 
-                            
-                            if (selectedProperties[p] == "associatedWith"){
-                                if('associatedWith' in jsonldData.terms[l]){
-                                    temp['associatedWith'] = jsonldData.terms[l].associatedWith
-                                } else {
-                                temp['associatedWith'] = ''
-                                }
-                            } 
-                            if(selectedProperties[p] == "candidateTerms"){
-                                if('candidateTerms' in jsonldData.terms[l]){
-                                    temp['candidateTerms'] = jsonldData.terms[l].candidateTerms
-                                } else {
-                                temp['candidateTerms'] = ''
-                            }
-                            } 
-                            if(selectedProperties[p] == "comment"){
-                                if('comment' in jsonldData.terms[l]){
-                                    temp['comment'] = jsonldData.terms[l].comment
-                                } else {
-                                    temp['comment'] = ''
-                                }
-                            } 
-                            if(selectedProperties[p] == "description"){
-                                if('description' in jsonldData.terms[l]){
-                                    temp['description'] = jsonldData.terms[l].description
-                                } else {
-                                    temp['description'] = ''
-                                }
-                            } 
-                            if(selectedProperties[p] == "ilxId"){
-                                if('ilxId' in jsonldData.terms[l]){
-                                    temp['ilxId'] = jsonldData.terms[l].ilxId
-                                } else {
-                                    temp['ilxId'] = ''
-                                } 
-                            } 
-                            if(selectedProperties[p] == "sameAs"){
-                                if('sameAs' in jsonldData.terms[l]){
-                                    temp['sameAs'] = jsonldData.terms[l].sameAs
-                                } else {
-                                    temp['sameAs'] = ''
-                                }
-                            } 
-                            if(selectedProperties[p] == "supertypeCDEs"){
-                                if('supertypeCDEs' in jsonldData.terms[l]){
-                                    temp['supertypeCDEs'] = jsonldData.terms[l].supertypeCDEs
-                                } else {
-                                    temp['supertypeCDEs'] = ''
-                                }
-                            } 
-                            if(selectedProperties[p] == "unit"){
-                                if('unit' in jsonldData.terms[l]){
-                                    temp['unit'] = jsonldData.terms[l].unit
-                                } else {
-                                    temp['unit'] = ''
-                                }
-                            } 
-                            if(selectedProperties[p] == "url"){
-                                if('url' in jsonldData.terms[l]){
-                                    temp['url'] = jsonldData.terms[l].url
-                                } else {
-                                    temp['url'] = ''
-                                }
-                            } 
-                            if(selectedProperties[p] == "wasDerivedFrom"){
-                                if('wasDerivedFrom' in jsonldData.terms[l]){
-                                    temp['wasDerivedFrom'] = jsonldData.terms[l].wasDerivedFrom
-                                } else {
-                                    temp['wasDerivedFrom'] = ''
-                                }
-                            } 
-                        };
+                            var tempProp = selectedProperties[p]
 
+                            if(selectedProperties.includes('all')){
+                                for(u in jsonldData.terms[l]){
+                                    temp[u] = jsonldData.terms[l][u]
+                                    console.log(jsonldData.terms[l][u])
+                                }
+                            }
+                            else{
+                                if(tempProp in jsonldData.terms[l]){
+                                    temp[tempProp] = jsonldData.terms[l][tempProp]
+                                }else {
+                                temp[tempProp] = ''
+                                }
+                            }
+                        };
                         //add temp dictionary to table to build the dataframe
                         table.push(temp);
                     }
