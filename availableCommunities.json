@@ -7,7 +7,7 @@
 	"NIDM Concepts": {
 		"label" : "NIDM_Concepts",
 		"URL" : "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/NIDM_Concepts.jsonld",
-		"Description" : "Neuroimaging Data Modeling Concepts"
+		"Description" : "Concepts used to annotate publicly available neuroimaging datasets (e.g., OpenNeuro, ABID)"
 	},
 	"BIDS Specification Terms": {
 		"label" : "BIDS_Terms",
