@@ -970,7 +970,7 @@
 
                 // fetch selected communities
                 $("#startBtn").click(function(){
-                    $("#startBtn").text("Update Terms");
+                    $("#startBtn").text("Refresh Term List");
                     var urlList = [];
                     $.each($("input[type='checkbox']:checked"), function(){
                         urlList.push($(this).val());
@@ -1296,8 +1296,8 @@
                             csv(jsonldData,selectedProperties,selectedTerms)
                         }
                     }
+                    // location.reload();
                 }
-                //location.reload();
             }
         };
         
@@ -1622,6 +1622,7 @@
             };
 
         }
+
 
     </script>      
      
