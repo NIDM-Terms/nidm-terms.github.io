@@ -99,14 +99,12 @@
                 <li><a href="#team">Core Project Team</a></li>
                 <li><a href="#start">Getting Started</a></li>
                 <ul>
-                    <li><a>How do I search for terms?</a></li>
-                    <li><a>How do I submit new terms and where do they go?</a></li>
-                    <li><a>How do I contribute to NIDM-Terms?</a></li>
-                    <li><a>Term Curation and Governance</a></li>
+                    <li><a href="#submitTerms">How do I submit new terms and where do they go?</a></li>
+                    <li><a href="#contribute">How do I contribute to NIDM-Terms?</a></li>
+                    <li><a href="#curation">Term Curation and Governance</a></li>
                 </ul>
-                <li><a>Demos</a></li>
-                <li><a>Concept Use Frequency</a></li>
-                <li><a>Terms and Properties</a></li>
+                <li><a href="#concepts">Concept Use Frequency</a></li>
+                <li><a href="#properties">Terms and Properties</a></li>
                 <li><a href="#res">Resources</a></li>
             </ul>    
         </div>
@@ -179,6 +177,108 @@
 
         <div id = "Text">
             
+        </div>
+
+        <br><br>
+
+        <div id = "submitTerms" class="textSubHeader">
+            How do I submit new terms and where do they go?
+        </div>
+
+        <br><br>
+
+        <div id = "Text">
+            NIDM-Terms is a community-driven vocabulary seeded with terms from prior neuroimaging-based data annotations and existing project.
+            Because it is a community-driven vocabulary, we are developing step-by-step procedures for submitting new terms, community discussion 
+            around submitted terms, curration of new terms which connect them (when possible) to existing, related terms, or broader concepts 
+            putting new terms in context of other known entities.
+
+            Options for submitting new terms:
+
+            <ul>
+                <li>
+                    Using <a href="addNewTerm.html">suggest terms</a> section
+                </li>
+                <ul>
+                    <li>
+                        When submitting a new term through <a href="addNewTerm.html">suggest terms</a>, a JSON-LD representation of the new term and its properties will be 
+                        sent as a GitHub pull request to the NIDM-Terms GitHub repository.
+                    </li>
+                    <li>
+                        Discussion / edits to the submitted term will ensue in the typical way social coding is done in GitHub.  
+                    </li>
+                    <li>
+                        Once discussion has ended and the participating community has decided the term is appropriately well-defined for the NIDM-Terms vocabulary, 
+                        it will be merged with the NIDM-Terms GitHub repository.
+                    </li>
+                </ul>
+                <li>
+                    Using the <a href="https://github.com/NIDM-Terms/terms/blob/master/terms/README.md">NIDM-Terms GitHub repository</a>
+                </li>
+                <li>
+                    Submit via our website <a href="https://scicrunch.org/nidm-terms">NIDM-Terms SciCrunch</a>
+                </li>
+            </ul>
+        </div>
+
+        <br><br>
+
+        <div id = "contribute" class="textSubHeader">
+            How do I contribute to NIDM-Terms?
+        </div>
+
+        <br><br>
+
+        <div id = "Text">
+            <ul>
+                <li>
+                    We are firm supporters of open science and inclusivity. We are always happy to have interested people involved. Below are some steps to get involved.
+                </li>
+                <li>
+                    Create a free account on our <a href="https://scicrunch.org/nidm-terms">NIDM-Terms SciCrunch site</a> and click "Join the NIDM Terminology Community" link
+                </li>
+                <li>
+                    Fork our <a href="https://github.com/NIDM-Terms/terms/blob/master/terms/README.md">NIDM-Terms</a> GitHub repository
+                </li>
+            </ul>
+            
+        </div>
+
+        <br><br>
+
+        <div id = "curation" class="textSubHeader">
+            Term Curation and Governance
+        </div>
+
+        <br><br>
+
+        <div id = "Text">
+            We are currently working on a governance structure for this work. We are basing it on other open science projects. Please stay tuned for more information.
+
+        </div>
+
+        <br><br>
+
+        <div id = "concepts" class="textHeader">
+            WIP: Concept Use Frequency
+        </div>
+
+        <br><br>
+
+        <div id = "Text">
+            WIP
+        </div>
+
+        <br><br><br>
+
+        <div id = "properties" class="textHeader">
+            WIP: Terms and Properties
+        </div>
+
+        <br><br>
+
+        <div id = "Text">
+            WIP
         </div>
         
         <br><br><br><br><br>
@@ -457,6 +557,13 @@
             font-size: 42px;
             font-weight: bolder;
             color: rgb(90, 90, 90);
+        }
+
+        .textSubHeader{
+            font-size: 28px;
+            font-weight: bolder;
+            color: rgb(102, 102, 102);
+            text-indent: 50px;
         }
 
         #Text{
