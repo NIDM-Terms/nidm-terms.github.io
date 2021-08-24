@@ -107,10 +107,9 @@
     
     <center>
         <div class= "container">
-            <h2 id="stepTitles">Communities<hr style=" margin-top: 5px; margin-bottom: 30px;"></h2>
+            <h2 id="stepTitles">Communities<hr style="margin-top: 5px; margin-bottom: 50px;"></h2>
             <div id="selectCommunity">
-                <h2 id="selectTitle">.</h2>
-                <center><div id="options"></div></center>
+                <center><table id="table"></table></center>
             </div>
             <br>
             <h2 id="stepTitles">Terms<hr style="margin-top: 5px; margin-bottom: 50px;"></h2>
@@ -125,9 +124,9 @@
     <style id = "style">
     
         .treeview,
-        .treeview ul {
-            list-style-type:none;
-            overflow:hidden;
+        .treeview ul {list-style-type:none;
+        overflow:hidden;
+        margin-right: 30px;
         }
         .treeview li {
             text-indent:1%;
@@ -151,7 +150,6 @@
         .treeview>li:hover {
             cursor:pointer; 
             background-color:rgba(236, 236, 236, 0.7);
-            transition:0.3s;
         }
     
         .treeview span:hover {
@@ -435,7 +433,7 @@
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 
         }
-
+        /* pop-up display for community descriptions when hover over checkbox label */
         input + .des-tool-tip-text {
             display: none;
         }
@@ -451,6 +449,7 @@
             color: rgb(238, 238, 238);
             border-radius: 3px;
         }
+        /* the triangular point of the pop-up box */
         input:hover + .des-tool-tip-text:after {
             content: "";
             position: absolute;
@@ -462,6 +461,7 @@
             border-left: 5px solid transparent;
             border-right: 5px solid transparent;
             border-top: 10px solid #52575e67;
+            border-bottom: 5px solid transparent;
         }
 
         /* The container */
@@ -469,8 +469,6 @@
             display: inline-block;
             position: relative;
             padding-left: 35px;
-            margin-bottom: 12px;
-            margin-left: 75px;
             cursor: pointer;
             font-size: 16px;
             -webkit-user-select: none;
@@ -538,18 +536,26 @@
             color: rgb(85, 85, 85);
         }
 
-        #selectTitle{
-            text-indent: 10px;
-            font-weight: normal;
-            color:   rgb(240, 240, 240);
-            font-size: 20px;
+        table{
+            background-color: rgb(240, 240, 240);
+            border: 20px solid rgb(240, 240, 240);
+            border-collapse: collapse;
+            width: 90%;
+            margin-left:20px;
+            vertical-align: middle;
+            word-wrap: break-word;
+            color: rgb(85, 85, 85);
         }
 
-        #selectCommunity{
-            background-color: rgb(240, 240, 240);
-            padding-top: 15px;
-            padding-bottom: 20px;
-            width: 100%;
+        td, tr {
+            padding:10px; 
+            /* width:150px; */
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        td {
+            padding: 15px;
         }
 
         .loader {
@@ -716,13 +722,27 @@
 
                 html = ''
 
+                var tbl = document.getElementById("table")
+                var body = document.body
+                var elementNum = 0      // keeps track of how many elements are in a row, goes to a new row after certain # of elements
                 for (const [key,value] of Object.entries(avCom)){
+                    // go to a new row after filling every four columns
+                    if(elementNum%4===0)
+                    {
+                        html += '</tr>'
+                        html += '<tr>'
+                    }
+                    
+                    html += '<td>'
+
                     //add checkboxes
                     html += '<label id = "'+value['label']+'" class="con">'+key;
                     html += '<input id = "'+value['label']+'" type="checkbox" name="checkbox" value = "'+value['label']+'" checked="checked">';
                     html += '<div class="des-tool-tip-text">'+value['Description']+'</div>'
-                    html += '<span class="checkmark"></span>';
+                    html += '<span class="checkmark"></span>'
                     html += '</label>';
+                    
+                    html += '</td>'
 
                     //add urls to urlList
                     urlList.push(value['URL']);
@@ -733,9 +753,11 @@
                     var url = value['URL']
                     var label = value['label']
                     fetchAll(url,label)
+
+                    elementNum++
                 }
 
-                $("#options").append(html);
+                $("#table").append(html);
 
                 html = '<div id="treeviewsearched"></div>';
                 
@@ -794,7 +816,7 @@
                                         elements[j].style.display = "none"
                                     }
                                 }
-                                doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;"> Select one or more community </div>'
+                                doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;margin-left:80px;"> Select one or more community </div>'
                                 removeLoading()
                                 $('#selectCommunitiesAgain').append(doc);
                                 return;
@@ -890,7 +912,7 @@
                     document.getElementById('noMatches').innerHTML = ''
                     document.getElementById('treeviewsearched').innerHTML = ''
 
-                    doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;"> NO MATCHING TERMS HAVE BEEN FOUND... </div>'
+                    doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;margin-left:80px;"> NO MATCHING TERMS HAVE BEEN FOUND... </div>'
                     removeLoading()
                     $('#noMatches').append(doc);
                     return;
@@ -1229,6 +1251,7 @@
                                                             html += '</ul>'
                                                         }
                                                     }
+                                                    html += '</ul></li>';
                                                 }
                                                 else if (typeof(v) === 'array'){
                                                     html += '<li>'  +  '<b>'+ k +'</b>  ' + '<ul>'

@@ -115,12 +115,6 @@
                 
 
                 <div class="container mt-5">
-
-                    <div>
-                        <button class="btn" id="downloadBtn" onclick="getFile()"> Export </button>
-                    </div>
-                    <br><br>
-
                     <div id= "stepTwo">
                         <h2 id="stepTitles">Build Your File(s) <hr style="margin-top: 5px;"></h2>
                         <br><br>
@@ -155,20 +149,18 @@
 
                             <div class="headerBrdr"><center>
                             </center></div>
-                            <br><br>
 
                             <div class="headerBrdr"><center>
                                 
                             </center></div>
 
-                            <center><div id = "selection">
-                                <div id="selectComunity">
-                                    <h2 id="selectTitle">.</h2>
-                                    <div id = "options"></div>
-                                </div>
-                                
+                            <center><div id = "container">
+                                <center><table id="table"></table></center>
                             </div></center>
 
+                            <div>
+                                <button class="btn" id="downloadBtn" onclick="getFile()"> Export </button>
+                            </div>
                             <div id="changeBtn">
                                 <button class="btn0" id="startBtn"> Add Terms </button>
                             </div>
@@ -435,8 +427,8 @@
             font-size: 32px;
             color: #6e6d6d;
             font-weight: 200;
-            margin-left: 55px;
-            margin-right: 55px;
+            margin-left: 5px;
+            margin-right: 5px;
         }
 
         .bidsTitle{
@@ -515,11 +507,11 @@
             padding:2px 13px;
             text-decoration:none;
             text-shadow:0px 1px 0px #ffffff;
-            float: right;
+            float: left;
+            margin-left:63px;
             height: 50px;
-            width: 235px;
+            width: 200px;
             margin-top: 30px;
-            margin-right: 55px;
         }
         #startBtn:hover {
             background:linear-gradient(to bottom, #e9e9e9 5%, #f9f9f9 100%);
@@ -532,7 +524,13 @@
 
         .btn{
             box-shadow:inset 0px 1px 0px 0px #caefab;
-            background:linear-gradient(to bottom, #77d42a 5%, #5cb811 100%);
+            /* background:linear-gradient(to bottom, #77d42a 5%, #5cb811 100%); */
+            /* CHANGED COLOR SCHEME: */
+            /* background:linear-gradient(to bottom, #C5EDA4 5%, #94DE58 100%); */
+            /* USE AS LIGHTER GRADIENT COLOR: #A8E476; */
+
+            background:linear-gradient(to bottom, #76d42a71 5%, #5cb8116e 100%);
+
             background-color:#77d42a;
             border-radius:6px;
             border:1px solid #268a16;
@@ -541,14 +539,14 @@
             font-family:Arial;
             font-size:18px;
             font-weight:bold;
-            padding:12px 40px;
+            padding:2px 13px;
             text-decoration:none;
             text-shadow:0px 1px 0px #aade7c;
             float: right;
+            margin-right: 42px;
             width: 180px;
-            height: 54px;
-            margin-right: 55px;
-            margin-top: 0px;
+            height: 50px;
+            margin-top: 30px;
         }
         .btn:hover {
             background:linear-gradient(to bottom, #5cb811 5%, #77d42a 100%);
@@ -756,7 +754,7 @@
             right: 1px;
             width: 20px
         }
-
+        /* pop-up display for community descriptions when hover over checkbox label */
         input + .des-tool-tip-text {
             display: none;
         }
@@ -772,6 +770,7 @@
             color: rgb(238, 238, 238);
             border-radius: 3px;
         }
+        /* the triangular point of the pop-up box */
         input:hover + .des-tool-tip-text:after {
             content: "";
             position: absolute;
@@ -783,6 +782,7 @@
             border-left: 5px solid transparent;
             border-right: 5px solid transparent;
             border-top: 10px solid #52575e67;
+            border-bottom: 5px solid transparent;
         }
 
         /* The container */
@@ -790,8 +790,6 @@
             display: inline-block;
             position: relative;
             padding-left: 35px;
-            margin-bottom: 22px;
-            margin-left: 45px;
             cursor: pointer;
             font-size: 16px;
             -webkit-user-select: none;
@@ -859,18 +857,26 @@
             color: rgb(85, 85, 85);
         }
 
-        #selectTitle{
-            text-indent: 10px;
-            font-weight: normal;
-            color:   rgb(240, 240, 240);
-            font-size: 20px;
+        table{
+            background-color: rgb(240, 240, 240);
+            border: 20px solid rgb(240, 240, 240);
+            border-collapse: collapse;
+            width: 90%;
+            margin-left:20px;
+            vertical-align: middle;
+            word-wrap: break-word;
+            color: rgb(85, 85, 85);
         }
 
-        #selectComunity{
-            background-color: rgb(240, 240, 240);
-            padding-top: 15px;
-            padding-bottom: 20px;
-            width: 90%;
+        td, tr {
+            padding:10px; 
+            /* width:150px; */
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        td {
+            padding: 15px;
         }
 
 
@@ -947,23 +953,32 @@
 
                 html = ''
 
+                var tbl = document.getElementById("table")
+                var body = document.body
+                var elementNum = 0      // keeps track of how many elements are in a row, goes to a new row after certain # of elements
                 for (const [key,value] of Object.entries(avCom)){
+                    // go to a new row after filling every four columns
+                    if(elementNum%4===0)
+                    {
+                        html += '</tr>'
+                        html += '<tr>'
+                    }
                     
+                    html += '<td>'
+
                     //add checkboxes
                     html += '<label id = "'+value['label']+'" class="con">'+key;
-                    html += '<input id = "'+value['label']+'" type="checkbox" class="comOptions " name="checkbox" value = "'+value['URL']+'" unchecked="checked">';
+                    html += '<input id = "'+value['label']+'" type="checkbox" name="checkbox" value = "'+value['label']+'" checked="checked">';
                     html += '<div class="des-tool-tip-text">'+value['Description']+'</div>'
-                    html += '<span class="checkmark"></span>';
+                    html += '<span class="checkmark"></span>'
                     html += '</label>';
+                    
+                    html += '</td>'
 
-                    //add urls to urlList
-                    //urlList.push(value['URL']);
-
+                    elementNum++
                 }
 
-                $("#options").append(html);
-
-                //return urlList
+                $("#table").append(html);
 
             })
             .then(function(){
