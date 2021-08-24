@@ -107,12 +107,13 @@
     
     <center>
         <div class= "container">
-            <div id="selectComunity">
+            <h2 id="stepTitles">Communities<hr style=" margin-top: 5px; margin-bottom: 30px;"></h2>
+            <div id="selectCommunity">
                 <h2 id="selectTitle">.</h2>
                 <center><div id="options"></div></center>
             </div>
             <br>
-            <br>
+            <h2 id="stepTitles">Terms<hr style="margin-top: 5px; margin-bottom: 50px;"></h2>
             <div id="termsView"></div>
             <div id="selectCommunitiesAgain"></div>
             <div id="noMatches"></div>
@@ -124,8 +125,9 @@
     <style id = "style">
     
         .treeview,
-        .treeview ul {list-style-type:none;
-        overflow:hidden;
+        .treeview ul {
+            list-style-type:none;
+            overflow:hidden;
         }
         .treeview li {
             text-indent:1%;
@@ -135,23 +137,32 @@
             background-repeat:no-repeat;
             background-size:24px 24px;
             margin-right: 30px;
+            margin-bottom: -10px;
+            padding-bottom: 20px;
         }
 
         .treeview li.contains-items {background-image:url(
-            'js_lib/icons/arrow-left.png'); }
+            'js_lib/icons/arrow-left.png'); 
+        }
     
         .treeview li.items-expanded {background-image:url(
             'js_lib/icons/arrow-down.png'); }
     
-        .treeview>li:hover {cursor:pointer; }
+        .treeview>li:hover {
+            cursor:pointer; 
+            background-color:rgba(236, 236, 236, 0.7);
+            transition:0.3s;
+        }
     
-        .treeview span:hover {background-color: rgba(246,246,246,0.7
-        
-        ); } 
+        .treeview span:hover {
+            background-color: rgba(246,246,246,0.7); 
+        } 
 
         .treeview2,
-        .treeview2 ul {list-style-type:none;
-        overflow:hidden;
+        .treeview2 ul {
+            padding-top: 20px;
+            list-style-type:none;
+            overflow:hidden;
         }
         .treeview2 li {
             text-indent:1%;
@@ -161,15 +172,20 @@
             background-repeat:no-repeat;
             background-size:24px 24px;
             margin-right: 30px;
+            margin-bottom: -10px;
+            padding-bottom: 20px;
+            margin-top: -7.5px;
         }
 
-        .treeview2 li.contains-items {background-image:url(
-            'js_lib/icons/arrow-left.png'); }
+        .treeview2 li.contains-items {
+            background-image:url(
+            'js_lib/icons/arrow-left.png'); 
+        }
     
         .treeview2 li.items-expanded {background-image:url(
             'js_lib/icons/arrow-down.png'); }
     
-        .treeview2>li:hover {cursor:pointer; }
+        .treeview2>li:hover {cursor:pointer; background-color:rgba(236, 236, 236, 0.7);transition:0.3s;}
     
         .treeview2 span:hover {background-color: rgba(246,246,246,0.7
         
@@ -282,6 +298,14 @@
             width: 100%;
         }
 
+        #stepTitles{
+            font-size: 32px;
+            color: #6e6d6d;
+            font-weight: 200;
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+
         .bidsTitle{
             color: white;
             background-size: 100px;
@@ -392,6 +416,7 @@
                 );
             margin-top: -23px;
             width: 1450px;
+            border: 0 none;
         }
 
         .container{
@@ -520,7 +545,7 @@
             font-size: 20px;
         }
 
-        #selectComunity{
+        #selectCommunity{
             background-color: rgb(240, 240, 240);
             padding-top: 15px;
             padding-bottom: 20px;
@@ -580,6 +605,44 @@
             z-index: 4;
         }
         
+        .oval-orange{
+            display:inline-block;
+            white-space: nowrap;
+            padding:0.1px 10px;
+            background: #FDD8B3;
+            color: #ff6600;
+            border-radius:15px;
+            font-size: 11px;
+            margin-left:1%;
+            text-align: center;
+            font-family: sans-serif;
+        }
+
+        .oval-blue{
+            display:inline-block;
+            white-space: nowrap;
+            padding:0.1px 10px;
+            background: #bfebff;
+            color: #1f91c2;
+            border-radius:15px;
+            font-size: 11px;
+            margin-left:1%;
+            text-align: center;
+            font-family: sans-serif;
+        }
+
+        #commID{
+            font-size: 11.5px;
+            color:rgb(138, 137, 137);
+        }
+
+        #dividerLine{
+            height: 0.5px;
+            background: #96969736;
+            border: 0 none;
+            align-content: center;
+        }
+        
         #bottomLine{
             height: 3px;
             background-image: linear-gradient(
@@ -590,6 +653,7 @@
                 #FFC312
                 );
             width: 100%;
+            border: 0 none;
         }
 
         #footer{
@@ -695,7 +759,7 @@
                         //add the labels of the terms to this community in labelsDict
                         labelsDict[commName] = sortOnKeys(data['terms'])
 
-                        displayTerms(mainList, sorted, labelsDict, mainDict)
+                        displayTerms()
                     })
                 }
             })
@@ -860,10 +924,11 @@
             });
 
             //Function to display the terms in a treeview
-            //fullList is alphabetized list of all of the terms, sortedList is labels only from fullList
+            //mainList is alphabetized list of all of the terms, sortedList is labels only from mainList
             //labelsDict has sorted labels divided into communities, mainDict has all terms divided into communities
-            function displayTerms(fullList, sortedList, labelsDict, mainDict) {
-                //make a deep copy of mainDict to destructively parse without affecting mainDict
+            function displayTerms() {
+                var sortedList = sortOnKeys(mainList)
+                //make a deep copy of mainDict and labelsDict to destructively parse without affecting the original dictionaries
                 const deepCopy = (origArr) => {
                     let copyArr, value, key
                     if(typeof origArr !== "object" || origArr === null){
@@ -878,6 +943,7 @@
                 }
 
                 var mainDictCopy = deepCopy(mainDict)
+                var labelsDictCopy = deepCopy(labelsDict)
                 
                 console.log(552, 'displayTerms called')
 
@@ -885,7 +951,7 @@
 
                 var html = '<div id="treeview"><ul>';
 
-                // only runs after all terms have been added to labelsDict
+                // only runs after all terms have been added to labelsDictCopy
                 if(numCalls === communityList.length){
                     for(var i = 0; i < sortedList.length; i++)
                     {
@@ -897,80 +963,125 @@
 
                 //assigns each individual term to a specific treeview class based on its community in order for the hide/unhide to work for each community
                 function addAllTerms(index){
-                    for(var key in labelsDict){
+                    for(var commName in labelsDictCopy){
                         //find whether the term exists in this community
-                        var placeInDict = labelsDict[key].indexOf(sortedList[index])
+                        var placeInDict = labelsDictCopy[commName].indexOf(sortedList[index])
                         var newIndex = placeInDict
-                        //while this key in mainDictCopy contains the term label AND the description doesn't match the correct description, increment newIndex
-                        while(placeInDict !== -1 && mainDictCopy[key][newIndex]!==undefined
-                        && mainDictCopy[key][newIndex].description !== fullList[index].description){
+                        //while this commName in mainDictCopy contains the term label AND the description doesn't match the correct description, increment newIndex
+                        while(placeInDict !== -1 && mainDictCopy[commName][newIndex]!==undefined
+                        && mainDictCopy[commName][newIndex].description !== mainList[index].description){
                             newIndex++
                         }
-                        if(placeInDict !== -1 && newIndex!==mainDictCopy[key].length){
-                            html += '<div class="treeview_'+key+'"' 
+                        if(placeInDict !== -1 && newIndex!==mainDictCopy[commName].length){
+                            html += '<div class="treeview_'+commName+'"' 
                             //color codes the communities' terms to differentiate them
                             // if(key==='NIDM_Terms'){html += 'style="color:darkred"';}   
                             // else if(key==='NIDM_Concepts') {html += 'style="color:darkorange"';}
                             // else if(key==='BIDS_Terms') {html += 'style="color:darkgreen"';}
                             // else if(key==='CONP_DATS_Terms') {html += 'style="color:darkcyan"';}
-                            html += '><ul class= "treeview">'
+                            html += '><ul class= "treeview" style="margin-left:-45px;margin-top:-13px;">'
 
-                            html += '<li>' + sortedList[index] + '<ul>';
-                            var data = fullList[index]
+                            html += '<li style="color:#4d4d4d;"><span style="font-size:21px;margin-bottom:2px;">' + sortedList[index] + '<br></span>';
+
+                            var data = mainList[index]
+                            
                             for (const [key,value] of Object.entries(data)){
-                                if (key != 'label'){
+                                if (key === '@type'){
                                     if(typeof(value) === 'object'){
-                                        html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
                                         for(const [k,v] of Object.entries(value)){
-                                            if(typeof(v) === 'object'){
-                                                for(const [kk,vv] of Object.entries(v)){
-                                                    if(typeof(vv) === 'string'){
-                                                        html += '<li>' + vv + '</li>';
-                                                    }else if(typeof(vv) === 'object'){
-                                                        html += '<li>'  +  '<b>'+ kk +'</b>  ' + '<ul>'
-                                                        for(const [keys,vvv] of Object.entries(vv)){ //for responseOptions
-                                                            if(typeof(vvv) === 'object'){ 
-                                                                for(const [keyss,vvvv] of Object.entries(vvv)){
-                                                                    html += '<li>' + keyss + ': ' + vvvv + '</li>';
-                                                                }
-                                                                
-                                                            }else if(typeof(vvv) === 'string'){
-                                                                html += '<li>' + vvv + '</li>';
-                                                            }
-                                                        }
-                                                        html += '</ul>'
-                                                    }
-                                                }
+                                            if(v.includes('Concept')){
+                                                html += '<div class = "oval-orange">Concept</div><ul>';
+                                            }else{
+                                                html += '<div class = "oval-blue">Data Element </div><span id="commID"> - '+ commName.replace(/_/g,' ')+'</span><ul>';
                                             }
-                                            else if (typeof(v) === 'array'){
-                                                html += '<li>'  +  '<b>'+ k +'</b>  ' + '<ul>'
-                                                for(var s = 0; v.length; s++){
-                                                    if(typeof(v[s]) === 'string'){
-                                                        html += '<li>'  +  v[s] + '</li>';
-                                                    }
-                                                    else if (typeof(v[s]) === 'object'){
-                                                        html += '<ul>'
-                                                        for(const [ke,val] of Object.entries(v[s])){
-                                                            html += '<li>' + val + '</li>';
-                                                        }
-                                                        html += '</ul>'
-                                                    }
-                                                }
-                                                html += '</ul></li>';
-                                            }
-                                            else {
-                                                html += '<li>' + v + '</li>';
-                                            }
-                                            
+                                            break;
                                         }
-                                        html += '</li></ul>'
                                     }
                                     else if (typeof(value) === 'array'){
-                                        html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
-                                        for(const a = 0; a< value.length; a++){
-                                            html += '<li>' + value[a] + '</li>';
+                                        if(value.includes('Concept')){
+                                            html += '<div class = "oval-orange">Concept</div><ul>';
+                                        }else{
+                                            html += '<div class = "oval-blue">Data Element </div><span id="commID"> - '+ commName.replace(/_/g,' ')+'</span><ul>';
                                         }
-                                        html += '</ul></li>';
+                                    }
+                                    else{
+                                        if(value==='Concept'){
+                                            html += '<div class = "oval-orange">Concept</div><ul>';
+                                        }else{
+                                            html += '<div class = "oval-blue">Data Element </div><span id="commID"> - '+ commName.replace(/_/g,' ')+'</span><ul>';
+                                        }
+                                    }
+                                }
+
+                                if (key != 'label'){
+                                    if(typeof(value) === 'object'){
+                                        if(key!=='@type'){
+                                            html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
+                                            for(const [k,v] of Object.entries(value)){
+                                                if(typeof(v) === 'object'){
+                                                    for(const [kk,vv] of Object.entries(v)){
+                                                        if(typeof(vv) === 'string'){
+                                                            html += '<li>' + vv + '</li>';
+                                                        }else if(typeof(vv) === 'object'){
+                                                            html += '<li>'  +  '<b>'+ kk +'</b>  ' + '<ul>'
+                                                            for(const [keys,vvv] of Object.entries(vv)){ //for responseOptions
+                                                                if(typeof(vvv) === 'object'){ 
+                                                                    for(const [keyss,vvvv] of Object.entries(vvv)){
+                                                                        html += '<li>' + keyss + ': ' + vvvv + '</li>';
+                                                                    }
+                                                                    
+                                                                }else if(typeof(vvv) === 'string'){
+                                                                    html += '<li>' + vvv + '</li>';
+                                                                }
+                                                            }
+                                                            html += '</ul>'
+                                                        }
+                                                    }
+                                                }
+                                                else if (typeof(v) === 'array'){
+                                                    html += '<li>'  +  '<b>'+ k +'</b>  ' + '<ul>'
+                                                    for(var s = 0; v.length; s++){
+                                                        if(typeof(v[s]) === 'string'){
+                                                            html += '<li>'  +  v[s] + '</li>';
+                                                        }
+                                                        else if (typeof(v[s]) === 'object'){
+                                                            html += '<ul>'
+                                                            for(const [ke,val] of Object.entries(v[s])){
+                                                                html += '<li>' + val + '</li>';
+                                                            }
+                                                            html += '</ul>'
+                                                        }
+                                                    }
+                                                    html += '</ul></li>';
+                                                }
+                                                else {
+                                                    html += '<li>' + v + '</li>';
+                                                }
+                                                
+                                            }
+                                            html += '</li></ul>'
+                                        }else{  //for the @type property so its display is not collapsed
+                                            html += '<li>'  +  '<b>'+ key +'</b>  '
+                                            for(const [k,v] of Object.entries(value)){
+                                                html += '<li><dd>' + v + '</li>';
+                                            }
+                                            html += '</li>'
+                                        }
+                                    }
+                                    else if (typeof(value) === 'array'){
+                                        if(key!=='@type'){
+                                            html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
+                                            for(const a = 0; a< value.length; a++){
+                                                html += '<li>' + value[a] + '</li>';
+                                            }
+                                            html += '</ul></li>';
+                                        }else{  //for the @type property so its display is not collapsed
+                                            html += '<li>'  +  '<b>'+ key +'</b>  ' 
+                                            for(const a = 0; a< value.length; a++){
+                                                html += '<li><dd>' + value[a] + '</li>';
+                                            }
+                                            html += '</li>';
+                                        }
                                     }
                                     else{
                                         html += '<li>'  +  '<b>' + key +'</b>  ' + ':  '+ value + '</li>';
@@ -978,19 +1089,19 @@
                                 }
                             }
                             
-                            html += '</ul></li></div>';
+                            html += '</ul></li><hr id= "dividerLine" style="margin-right:30px;"></div>';
                             
-                            $('#treeview_'+key).append(html);
+                            $('#treeview_'+commName).append(html);
 
-                            //delete this term in labelsDict and mainDictCopy; necessary so that all future terms are NOT given the value of the first occurrence of this label
-                            delete labelsDict[key][placeInDict]
-                            delete mainDictCopy[key][newIndex]
+                            //delete this term in labelsDictCopy and mainDictCopy; necessary so that all future terms are NOT given the value of the first occurrence of this label
+                            delete labelsDictCopy[commName][placeInDict]
+                            delete mainDictCopy[commName][newIndex]
                             return;
                         }
                     }
                 }
                 html += '</ul></div>';
-                
+
                 $('#termsView').append(html);
                 $('.treeview').treeView();
 
@@ -1010,83 +1121,175 @@
             }
 
             //separate display for individual searched terms, not an entire section of community terms
-            function displaySearchedTerms(data) {
+            function displaySearchedTerms(terms) {
                 console.log(552, 'displayTerms called for searched')
-                console.log(557, data.length)
+
                 //Clear previous term display
                 // document.getElementById('termsView').innerHTML = "";
                 var html = document.getElementById('treeviewsearched').innerHTML
+                var sorted = sortOnKeys(mainList)
+
+                //make a deep copy of mainDict and labelsDict to destructively parse without affecting the original dictionaries
+                const deepCopy = (origArr) => {
+                    let copyArr, value, key
+                    if(typeof origArr !== "object" || origArr === null){
+                        return origArr
+                    }
+                    copyArr = Array.isArray(origArr) ? [] : {}
+                    for(key in origArr){
+                        value = origArr[key]
+                        copyArr[key] = deepCopy(value)
+                    }
+                    return copyArr
+                }
+                
+                var mainDictCopy = deepCopy(mainDict)
+                var labelsDictCopy = deepCopy(labelsDict)
+                for(var key in labelsDictCopy){
+                    if(!communityList.includes(key)){
+                        delete mainDictCopy[key]
+                        delete labelsDictCopy[key]   
+                    }
+                }
 
                 html += '<div id="treeviewsearched"><ul class= "treeview2">';
 
-                //loop through the terms objects and display terms
-                for (var d = 0; d < data.length; d++) { // Each sub-entry
-                    html += '<li>' + data[d].label + '<ul>';
-                
-                    for (const [key,value] of Object.entries(data[d])){
-                        if (key != 'label'){
-                            if(typeof(value) === 'object'){
-                                html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
-                                for(const [k,v] of Object.entries(value)){
-                                    if(typeof(v) === 'object'){
-                                        for(const [kk,vv] of Object.entries(v)){
-                                            if(typeof(vv) === 'string'){
-                                                html += '<li>' + vv + '</li>';
-                                            }else if(typeof(vv) === 'object'){
-                                                html += '<li>'  +  '<b>'+ kk +'</b>  ' + '<ul>'
-                                                for(const [keys,vvv] of Object.entries(vv)){ //for responseOptions
-                                                    if(typeof(vvv) === 'object'){ 
-                                                        for(const [keyss,vvvv] of Object.entries(vvv)){
-                                                            html += '<li>' + keyss + ': ' + vvvv + '</li>';
+                for(var i = 0; i < terms.length; i++)
+                {
+                    addAllTerms(i)
+                }
+
+                //assigns each individual term to a specific treeview class based on its community in order for the hide/unhide to work for each community
+                function addAllTerms(index){
+                    for(var commName in labelsDictCopy){
+                        //find whether the term exists in this community
+                        var placeInDict = labelsDictCopy[commName].indexOf(terms[index].label)
+                        var newIndex = placeInDict
+                        //while this commName in mainDictCopy contains the term label AND the description doesn't match the correct description, increment newIndex
+                        while(placeInDict !== -1 && mainDictCopy[commName][newIndex]!==undefined
+                        && mainDictCopy[commName][newIndex].description !== terms[index].description){
+                            newIndex++
+                        }
+                        if(placeInDict !== -1 && newIndex!==mainDictCopy[commName].length){
+                            html += '<li style="color:#4d4d4d;"><span style="font-size:21px;margin-bottom:2px;">' + terms[index].label + '</span>';
+                            
+                            var data = terms[index]
+
+                            for (const [key,value] of Object.entries(data)){
+                                // terms in NIDM Concepts are concepts, terms in all other communities are data elements
+                                // add a tag takes out underscores in commName and displays the community name
+                                if (key === '@type'){
+                                    if(typeof(value) === 'object'){
+                                        for(const [k,v] of Object.entries(value)){
+                                            if(v.includes('Concept')){
+                                                html += '<div class = "oval-orange">Concept</div><ul>';
+                                            }else{
+                                                html += '<div class = "oval-blue">Data Element </div><span id="commID"> - '+ commName.replace(/_/g,' ')+'</span><ul>';
+                                            }
+                                            break;
+                                        }
+                                    }
+                                    else if (typeof(value) === 'array'){
+                                        if(value.includes('Concept')){
+                                            html += '<div class = "oval-orange">Concept</div><ul>';
+                                        }else{
+                                            html += '<div class = "oval-blue">Data Element </div><span id="commID"> - '+ commName.replace(/_/g,' ')+'</span><ul>';
+                                        }
+                                    }
+                                    else{
+                                        if(value==='Concept'){
+                                            html += '<div class = "oval-orange">Concept</div><ul>';
+                                        }else{
+                                            html += '<div class = "oval-blue">Data Element </div><span id="commID"> - '+ commName.replace(/_/g,' ')+'</span><ul>';
+                                        }
+                                    }
+                                }
+
+                                if (key != 'label'){
+                                    if(typeof(value) === 'object'){
+                                        if(key!=='@type'){
+                                            html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
+                                            for(const [k,v] of Object.entries(value)){
+                                                if(typeof(v) === 'object'){
+                                                    for(const [kk,vv] of Object.entries(v)){
+                                                        if(typeof(vv) === 'string'){
+                                                            html += '<li>' + vv + '</li>';
+                                                        }else if(typeof(vv) === 'object'){
+                                                            html += '<li>'  +  '<b>'+ kk +'</b>  ' + '<ul>'
+                                                            for(const [keys,vvv] of Object.entries(vv)){ //for responseOptions
+                                                                if(typeof(vvv) === 'object'){ 
+                                                                    for(const [keyss,vvvv] of Object.entries(vvv)){
+                                                                        html += '<li>' + keyss + ': ' + vvvv + '</li>';
+                                                                    }
+                                                                    
+                                                                }else if(typeof(vvv) === 'string'){
+                                                                    html += '<li>' + vvv + '</li>';
+                                                                }
+                                                            }
+                                                            html += '</ul>'
                                                         }
-                                                        
-                                                    }else if(typeof(vvv) === 'string'){
-                                                        html += '<li>' + vvv + '</li>';
                                                     }
                                                 }
-                                                html += '</ul>'
-                                            }
-                                        }
-                                    }
-                                    else if (typeof(v) === 'array'){
-                                        html += '<li>'  +  '<b>'+ k +'</b>  ' + '<ul>'
-                                        for(var s = 0; v.length; s++){
-                                            if(typeof(v[s]) === 'string'){
-                                                html += '<li>'  +  v[s] + '</li>';
-                                            }
-                                            else if (typeof(v[s]) === 'object'){
-                                                html += '<ul>'
-                                                for(const [ke,val] of Object.entries(v[s])){
-                                                    html += '<li>' + val + '</li>';
+                                                else if (typeof(v) === 'array'){
+                                                    html += '<li>'  +  '<b>'+ k +'</b>  ' + '<ul>'
+                                                    for(var s = 0; v.length; s++){
+                                                        if(typeof(v[s]) === 'string'){
+                                                            html += '<li>'  +  v[s] + '</li>';
+                                                        }
+                                                        else if (typeof(v[s]) === 'object'){
+                                                            html += '<ul>'
+                                                            for(const [ke,val] of Object.entries(v[s])){
+                                                                html += '<li>' + val + '</li>';
+                                                            }
+                                                            html += '</ul>'
+                                                        }
+                                                    }
+                                                    html += '</ul></li>';
                                                 }
-                                                html += '</ul>'
+                                                else {
+                                                    html += '<li>' + v + '</li>';
+                                                }
+                                                
                                             }
+                                            html += '</li></ul>'
+                                        }else{  //for the @type property so its display is not collapsed
+                                            html += '<li>'  +  '<b>'+ key +'</b>  '
+                                            for(const [k,v] of Object.entries(value)){
+                                                html += '<li><dd>' + v + '</li>';
+                                            }
+                                            html += '</li>'
                                         }
-                                        html += '</ul></li>';
                                     }
-                                    else {
-                                        html += '<li>' + v + '</li>';
+                                    else if (typeof(value) === 'array'){
+                                        if(key!=='@type'){
+                                            html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
+                                            for(const a = 0; a< value.length; a++){
+                                                html += '<li>' + value[a] + '</li>';
+                                            }
+                                            html += '</ul></li>';
+                                        }else{  //for the @type property so its display is not collapsed
+                                            html += '<li>'  +  '<b>'+ key +'</b>  ' 
+                                            for(const a = 0; a< value.length; a++){
+                                                html += '<li><dd>' + value[a] + '</li>';
+                                            }
+                                            html += '</li>';
+                                        }
                                     }
-                                    
+                                    else{
+                                        html += '<li>'  +  '<b>' + key +'</b>  ' + ':  '+ value + '</li>';
+                                    }
                                 }
-                                html += '</li></ul>'
                             }
-                            else if (typeof(value) === 'array'){
-                                html += '<li>'  +  '<b>'+ key +'</b>  ' + '<ul>'
-                                for(const a = 0; a< value.length; a++){
-                                    html += '<li>' + value[a] + '</li>';
-                                }
-                                html += '</ul></li>';
-                            }
-                            else{
-                                html += '<li>'  +  '<b>' + key +'</b>  ' + ':  '+ value + '</li>';
-                            }
+                            
+                            html += '</ul></li><hr id= "dividerLine" style="margin-right:30px;">';
+
+                            //delete this term in labelsDictCopy and mainDictCopy; necessary so that all future terms are NOT given the value of the first occurrence of this label
+                            delete labelsDictCopy[commName][placeInDict]
+                            delete mainDictCopy[commName][newIndex]
+                            return;
                         }
                     }
-
-                    html += '</ul></li>';
-                
-                }   
+                } 
 
                 html += '</ul></div>';
                 $('#treeviewsearched').append(html);
