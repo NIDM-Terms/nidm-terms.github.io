@@ -92,7 +92,7 @@
 
         <center><div class="container">
 
-            <div id = "rmv">
+            <divid id = "rmv">
 
                 <h2 id="stepTitles">GitHub Access Token<hr style="margin-top: 5px;"></h2>
 
@@ -121,16 +121,17 @@
 
                 <br><br><br><br><br>
                 
-                <h2 id="stepTitles">Communities<hr style="margin-top: 5px;"></h2>
+                <h2 id="stepTitles">Neuroimaging Communities <hr style="margin-top: 5px;"></h2>
 
 
                 <div class="headerBrdr"><center>
                     
                 </center></div>
 
-                <center><div id = "container">
+                <center><div id = "selection">
                     <div id="selectCommunity">
-                        <center><table id="table"></table></center>
+                        <h2 id="selectTitle">.</h2>
+                        <div id = "options"></div>
                     </div>
                     
                 </div></center>
@@ -297,32 +298,18 @@
 
                             var html = '';
 
-                            var tbl = document.getElementById("table")
-                            var body = document.body
-                            var elementNum = 0      // keeps track of how many elements are in a row, goes to a new row after certain # of elements
                             for (const [key,value] of Object.entries(avCom)){
-                                // go to a new row after filling every four columns
-                                if(elementNum%4===0)
-                                {
-                                    html += '</tr>'
-                                    html += '<tr>'
-                                }
                                 
-                                html += '<td>'
-
                                 //add checkboxes
-                                html += '<label id = "'+value['label']+'" class="con">'+key;
-                                html += '<input id = "'+value['label']+'" type="checkbox" name="checkbox" value = "'+value['label']+'" checked="checked">';
+                                html += '<label class="con">'+key;
+                                html += '<input id="community" type="radio" name="radio" value = "'+value['label']+'">';
                                 html += '<div class="des-tool-tip-text">'+value['Description']+'</div>'
-                                html += '<span class="checkmark"></span>'
+                                html += '<span class="checkmark"></span>';
                                 html += '</label>';
-                                
-                                html += '</td>'
 
-                                elementNum++
                             }
 
-                            $("#table").append(html);
+                            $("#options").append(html);
 
                         })
                     })
@@ -1001,7 +988,6 @@
                 );
             margin-top: -23px;
             width: 1410px;
-            border: 0 none;
         }
 
         .container{
@@ -1063,8 +1049,8 @@
             font-size: 32px;
             color: #6e6d6d;
             font-weight: 200;
-            margin-left: 5px;
-            margin-right: 5px;
+            margin-left: 80px;
+            margin-right: 55px;
         }
     
         .TermInput{
@@ -1461,7 +1447,6 @@
                 #FFC312
                 );
             width: 100%;
-            border: 0 none;
         }
 
         #footer{
@@ -1534,7 +1519,7 @@
         a:focus + .tool-tip .tool-tip__info {
             display: inline-block;
         }
-        /* pop-up display for community descriptions when hover over checkbox label */
+
         input + .des-tool-tip-text {
             display: none;
         }
@@ -1550,7 +1535,6 @@
             color: rgb(238, 238, 238);
             border-radius: 3px;
         }
-        /* the triangular point of the pop-up box */
         input:hover + .des-tool-tip-text:after {
             content: "";
             position: absolute;
@@ -1562,7 +1546,6 @@
             border-left: 5px solid transparent;
             border-right: 5px solid transparent;
             border-top: 10px solid #52575e67;
-            border-bottom: 5px solid transparent;
         }
 
         .step2_tool-tip {
@@ -1630,7 +1613,9 @@
         .con {
         display: inline-block;
         position: relative;
-        padding-left: 35px;
+        padding-left: 30px;
+        margin-left: 30px;
+        margin-bottom: 12px;
         cursor: pointer;
         font-size: 16px;
         -webkit-user-select: none;
@@ -1644,8 +1629,6 @@
         position: absolute;
         opacity: 0;
         cursor: pointer;
-        height: 0;
-        width: 0;
         }
 
         /* Create a custom radio button */
@@ -1653,9 +1636,10 @@
         position: absolute; 
         top: 0;
         left: 0;
-        height: 22px;
-        width: 22px;
+        height: 20px;
+        width: 20px;
         background-color: rgb(219, 219, 219);
+        border-radius: 50%;
         }
 
         /* On mouse-over, add a grey background color */
@@ -1682,15 +1666,12 @@
 
         /* Style the indicator (dot/circle) */
         .con .checkmark:after {
-            left: 8px;
-            top: 3px;
-            width: 4px;
-            height: 10px;
-            border: solid white;
-            border-width: 0 3px 3px 0;
-            -webkit-transform: rotate(45deg);
-            -ms-transform: rotate(45deg);
-            transform: rotate(45deg);
+            top: 6px;
+            left: 6px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: white;
         }  
 
         #options{
@@ -1698,27 +1679,23 @@
             color: rgb(85, 85, 85);
         }
 
-        table{
-            background-color: rgb(240, 240, 240);
-            border: 20px solid rgb(240, 240, 240);
-            border-collapse: collapse;
-            width: 90%;
-            margin-left:20px;
-            vertical-align: middle;
-            word-wrap: break-word;
-            color: rgb(85, 85, 85);
+        #selectTitle{
+            text-indent: 10px;
+            font-weight: normal;
+            color:   rgb(240, 240, 240);
+            font-size: 20px;
         }
 
-        td, tr {
-            padding:10px; 
-            /* width:150px; */
-            text-align: left;
-            vertical-align: middle;
+        #selectCommunity{
+            border: 1px solid rgb(175, 175, 175);
+            border-radius: 3px;
+            background-color: rgb(250, 250, 250);
+            padding-top: 15px;
+            padding-bottom: 20px;
+            margin-left: 60px;
+            margin-right: 75px;
         }
-
-        td {
-            padding: 15px;
-        }
+        
 
         #selection{
             padding-top: 15px;
