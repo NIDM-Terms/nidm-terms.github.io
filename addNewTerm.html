@@ -128,12 +128,7 @@
                     
                 </center></div>
 
-                <center><div id = "container">
-                    <div id="selectCommunity">
-                        <center><table id="table"></table></center>
-                    </div>
-                    
-                </div></center>
+                <center><table id="table"></table></center>
 
                 <br><br><br>
 
@@ -310,11 +305,11 @@
                                 
                                 html += '<td>'
 
-                                //add checkboxes
-                                html += '<label id = "'+value['label']+'" class="con">'+key;
-                                html += '<input id = "'+value['label']+'" type="checkbox" name="checkbox" value = "'+value['label']+'" checked="checked">';
+                                // add checkboxes
+                                html += '<label class="con">'+key;
+                                html += '<input id="community" type="radio" name="radio" value = "'+value['label']+'">';
                                 html += '<div class="des-tool-tip-text">'+value['Description']+'</div>'
-                                html += '<span class="checkmark"></span>'
+                                html += '<span class="checkmark"></span>';
                                 html += '</label>';
                                 
                                 html += '</td>'
@@ -1630,7 +1625,9 @@
         .con {
         display: inline-block;
         position: relative;
-        padding-left: 35px;
+        padding-left: 30px;
+        margin-left: 30px;
+        margin-bottom: 12px;
         cursor: pointer;
         font-size: 16px;
         -webkit-user-select: none;
@@ -1644,8 +1641,6 @@
         position: absolute;
         opacity: 0;
         cursor: pointer;
-        height: 0;
-        width: 0;
         }
 
         /* Create a custom radio button */
@@ -1653,9 +1648,10 @@
         position: absolute; 
         top: 0;
         left: 0;
-        height: 22px;
-        width: 22px;
+        height: 20px;
+        width: 20px;
         background-color: rgb(219, 219, 219);
+        border-radius: 50%;
         }
 
         /* On mouse-over, add a grey background color */
@@ -1682,15 +1678,12 @@
 
         /* Style the indicator (dot/circle) */
         .con .checkmark:after {
-            left: 8px;
-            top: 3px;
-            width: 4px;
-            height: 10px;
-            border: solid white;
-            border-width: 0 3px 3px 0;
-            -webkit-transform: rotate(45deg);
-            -ms-transform: rotate(45deg);
-            transform: rotate(45deg);
+            top: 6px;
+            left: 6px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: white;
         }  
 
         #options{
@@ -1700,10 +1693,9 @@
 
         table{
             background-color: rgb(240, 240, 240);
-            border: 20px solid rgb(240, 240, 240);
+            border: 10px solid rgb(240, 240, 240);
             border-collapse: collapse;
             width: 90%;
-            margin-left:20px;
             vertical-align: middle;
             word-wrap: break-word;
             color: rgb(85, 85, 85);
@@ -1711,7 +1703,6 @@
 
         td, tr {
             padding:10px; 
-            /* width:150px; */
             text-align: left;
             vertical-align: middle;
         }
@@ -1720,12 +1711,21 @@
             padding: 15px;
         }
 
-        #selection{
+        #selectTitle{
+            text-indent: 10px;
+            font-weight: normal;
+            color:   rgb(240, 240, 240);
+            font-size: 20px;
+        }
+
+        #selectCommunity{
+            border: 1px solid rgb(175, 175, 175);
+            border-radius: 3px;
+            background-color: rgb(250, 250, 250);
             padding-top: 15px;
             padding-bottom: 20px;
-            padding-left: 20px;
-            width: 100%;
-            margin-top: 50px;
+            margin-left: 60px;
+            margin-right: 75px;
         }
 
     </style>

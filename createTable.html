@@ -154,9 +154,7 @@
                                 
                             </center></div>
 
-                            <center><div id = "container">
-                                <center><table id="table"></table></center>
-                            </div></center>
+                            <center><table id="table"></table></center>
 
                             <div>
                                 <button class="btn" id="downloadBtn" onclick="getFile()"> Export </button>
@@ -178,7 +176,9 @@
                             </div>
                             
                             <div id="buttons"></div>
-                            <br><br><br><br><br>
+                            <br><br><br>
+                            <div id="noMatches"></div>
+                            <br><br>
 
                             <div id="termsView"></div>
 
@@ -404,6 +404,7 @@
                 );
             margin-top: -23px;
             width: 1450px;
+            border: 0px none;
         }
 
         .container{
@@ -524,18 +525,14 @@
 
         .btn{
             box-shadow:inset 0px 1px 0px 0px #caefab;
-            /* background:linear-gradient(to bottom, #77d42a 5%, #5cb811 100%); */
-            /* CHANGED COLOR SCHEME: */
-            /* background:linear-gradient(to bottom, #C5EDA4 5%, #94DE58 100%); */
-            /* USE AS LIGHTER GRADIENT COLOR: #A8E476; */
 
-            background:linear-gradient(to bottom, #76d42a71 5%, #5cb8116e 100%);
-
+            background:linear-gradient(to bottom, #77d42a 5%, #5cb811 100%);
             background-color:#77d42a;
-            border-radius:6px;
-            border:1px solid #268a16;
-            cursor:pointer;
             color:#306108;
+            
+            border-radius:6px;
+            border:1px solid #258a1679;
+            cursor:pointer;
             font-family:Arial;
             font-size:18px;
             font-weight:bold;
@@ -548,7 +545,13 @@
             height: 50px;
             margin-top: 30px;
         }
-        .btn:hover {
+        .btn:disabled{
+            background:linear-gradient(to bottom, #76d42a3a 5%, #5cb81136 100%);
+            background-color:#76d42a3a;
+            color:#30610857;
+            cursor:default;
+        }
+        .btn:hover .btn:active{
             background:linear-gradient(to bottom, #5cb811 5%, #77d42a 100%);
             background-color:#5cb811;
         }
@@ -637,6 +640,7 @@
                 #FFC312
                 );
             width: 100%;
+            border: 0px none;
         }
 
         #footer{
@@ -889,6 +893,8 @@
         var List = [];
         // List that contains all selected terms
         var selectedTerms = [];
+        // List of all properties except those in dontDisplay
+        var availableProperties = [];
         //variable to state is used to check whether all terms were selected given the value 1 
         //or if all terms were unselected giving it the value 0
         var state = "";
@@ -915,6 +921,7 @@
                 if(dontDisplay.includes(property)){
                     console.log()
                 }else{
+                    availableProperties.push(property)
                     options += '<option value = "'+property+'">'+property+'</option>';
                 }
             }
@@ -947,7 +954,7 @@
 
             //Create chackboxes with the available communities and create a list of their URLS and pass it
             .then(function(avCom){
-
+                document.getElementById("downloadBtn").disabled = true;
                 //create am array containing all the urls to pass to pass
                 //var urlList = []
 
@@ -968,9 +975,9 @@
 
                     //add checkboxes
                     html += '<label id = "'+value['label']+'" class="con">'+key;
-                    html += '<input id = "'+value['label']+'" type="checkbox" name="checkbox" value = "'+value['label']+'" checked="checked">';
+                    html += '<input id = "'+value['label']+'" type="checkbox" class="comOptions " name="checkbox" value = "'+value['URL']+'" unchecked="checked">';
                     html += '<div class="des-tool-tip-text">'+value['Description']+'</div>'
-                    html += '<span class="checkmark"></span>'
+                    html += '<span class="checkmark"></span>';
                     html += '</label>';
                     
                     html += '</td>'
@@ -1032,9 +1039,9 @@
                     display(dict_data)
                 }
 
-                function display(data){
+              function display(data){
 
-                    //add search bar for select terms and add buttons for term slecetion
+                    //add search bar for select terms and add buttons for term selection
                     $('.selectionReq').html("")
                     $('.search-box').html("")
                     $('#buttons').html("")
@@ -1046,61 +1053,61 @@
                     buttons += '<a href= "https://nidm-terms.github.io/index.html?" target = "_blank"><button class="btn2" id="unselectAll"> View Terms Properties </button></a>'
                     $('.search-box').append(search);
                     $('#buttons').append(buttons);
+                    console.log(331,selectedTerms)
 
                     //Get search input and pass the search
                     const searchBar = document.getElementById("searchBar");
 
                     searchBar.addEventListener("keyup", (e) => {
                         console.log(e.target.value)
+                        
                         const searchString = e.target.value;
 
                         const searchedTerms = filterTerms(data, searchString);
 
                         if(isEmpty(searchedTerms)){
                             document.getElementById('termsView').innerHTML = ''
-                            doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;"> NO MATCHING TERMS HAVE BEEN FOUND... </div>'
-                            $('#termsView').append(doc);
+                            doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;margin-left:20px;"> NO MATCHING TERMS HAVE BEEN FOUND... </div>'
+                            $('#noMatches').append(doc);
                             return;
                         }
 
                         displayTerms(searchedTerms)
-
                     });
-
 
                     displayTerms(data) 
 
                     //Function to display the terms in a treeview
                     function displayTerms(data) {
-
                         //Clear previous term display
                         document.getElementById('termsView').innerHTML = "";
-
+                        document.getElementById('noMatches').innerHTML = "";
+                        console.log(7,selectedTerms)
                         var terms = '<br>'
                         //loop through the terms objects and display terms
                         for (var d = 0; d < data.length; d++) { // Each sub-entry
 
                             if(selectedTerms.length > 0){
-                                    if( selectedTerms.includes(data[d].label)){
-                                        terms += '<div style= "margin-top: -40px;">'
-                                        terms += '<label style= "font-size: 19px; color:#666666;" id = "'+data[d].label+'" class="con"><b>' + data[d].label +'</b>';
-                                        terms += '<h5 style = "color: #7e7e7e; margin-top: 5px; font-size:14px; font-weight: 100;">'+data[d].description+'</h5>'
-                                        terms += '<input id = "'+data[d].label+'" type="checkbox" name="termsCheckbox" value="'+data[d].label+'" checked>';
-                                        terms += '<span class="checkmark"></span>';
-                                        terms += '</label>';
-                                        terms += '</div>'   
-                                        terms += '<br>'
-                                    }
-                                    else{
-                                        terms += '<div style= "margin-top: -40px;">'
-                                        terms += '<label style= "font-size: 19px; color:#666666;" id = "'+data[d].label+'" class="con"><b>' + data[d].label +'</b>';
-                                        terms += '<h5 style = "color: #7e7e7e; margin-top: 5px; font-size:14px; font-weight: 100;">'+data[d].description+'</h5>'
-                                        terms += '<input id = "'+data[d].label+'" type="checkbox" name="termsCheckbox" value="'+data[d].label+'">';
-                                        terms += '<span class="checkmark"></span>';
-                                        terms += '</label>';
-                                        terms += '</div>'   
-                                        terms += '<br>'
-                                    }
+                                if( selectedTerms.includes(data[d].label)){
+                                    terms += '<div style= "margin-top: -40px;">'
+                                    terms += '<label style= "font-size: 19px; color:#666666;" id = "'+data[d].label+'" class="con"><b>' + data[d].label +'</b>';
+                                    terms += '<h5 style = "color: #7e7e7e; margin-top: 5px; font-size:14px; font-weight: 100;">'+data[d].description+'</h5>'
+                                    terms += '<input id = "'+data[d].label+'" type="checkbox" name="termsCheckbox" value="'+data[d].label+'" checked>';
+                                    terms += '<span class="checkmark"></span>';
+                                    terms += '</label>';
+                                    terms += '</div>' 
+                                    terms += '<br><br>'
+                                }
+                                else{
+                                    terms += '<div style= "margin-top: -40px;">'
+                                    terms += '<label style= "font-size: 19px; color:#666666;" id = "'+data[d].label+'" class="con"><b>' + data[d].label +'</b>';
+                                    terms += '<h5 style = "color: #7e7e7e; margin-top: 5px; font-size:14px; font-weight: 100;">'+data[d].description+'</h5>'
+                                    terms += '<input id = "'+data[d].label+'" type="checkbox" name="termsCheckbox" value="'+data[d].label+'">';
+                                    terms += '<span class="checkmark"></span>';
+                                    terms += '</label>';
+                                    terms += '</div>'   
+                                    terms += '<br><br>'
+                                }
                             }
                             else{
                                 terms += '<div style= "margin-top: -40px;">'
@@ -1110,13 +1117,13 @@
                                 terms += '<span class="checkmark"></span>';
                                 terms += '</label>';
                                 terms += '</div>'   
-                                terms += '<br>'
+                                terms += '<br><br>'
                             }
                             
                         }   
                         $('#termsView').append(terms);
                     }
-                    
+
                     function selects(){
                         //if selected all button was pressed, add all terms to selected terms
                         for(var u=0; u<data.length; u++){
@@ -1129,8 +1136,7 @@
                         }
                         //Get the values selected in the checkboxes
                         var checkboxElems = document.querySelectorAll("input[name='termsCheckbox']");
-                        //create anempty list to add the check box values to it
-                        //let tempList = [];
+
                         //loop through the checked elements and call displayCheck
                         for (var i = 0; i < checkboxElems.length; i++) {
                             checkboxElems[i].addEventListener("click", displayCheck);
@@ -1143,12 +1149,10 @@
                         for(var i=0; i<ele.length; i++){  
                             if(ele[i].type=='checkbox')  
                                 ele[i].checked=false;  
-                            
                         }
                         //Get the values selected in the checkboxes
                         var checkboxElems = document.querySelectorAll("input[name='termsCheckbox']");
-                        //create anempty list to add the check box values to it
-                        //let tempList = [];
+
                         //loop through the checked elements and call displayCheck
                         for (var i = 0; i < checkboxElems.length; i++) {
                             checkboxElems[i].addEventListener("click", displayCheck);
@@ -1195,8 +1199,7 @@
 
                     //Get the values selected in the checkboxes
                     var checkboxElems = document.querySelectorAll("input[name='termsCheckbox']");
-                    //create anempty list to add the check box values to it
-                    //let tempList = [];
+
                     //loop through the checked elements and call displayCheck
                     for (var i = 0; i < checkboxElems.length; i++) {
                         checkboxElems[i].addEventListener("click", displayCheck);
@@ -1212,14 +1215,22 @@
                                 }
                             }
                             selectedTerms = removeNull(selectedTerms)
-                            console.log(selectedTerms.length)
-                            
+                            console.log(selectedTerms)
+
+                            //gray out the button if no terms are selected
+                            if(selectedTerms.length===0){
+                                document.getElementById("downloadBtn").disabled = true;
+                            }else{
+                                document.getElementById("downloadBtn").disabled = false;
+                            }
                             //list.push(e.target.value)
                         } else if (e.target.checked) {
+                            console.log('checked')
                             //recheck after uncheck
                             selectedTerms.push(e.target.value)
                             selectedTerms = removeNull(selectedTerms)
                             console.log(13, selectedTerms)
+                            document.getElementById("downloadBtn").disabled = false;
                         }
                         //filters out
                         function removeNull(array) {
@@ -1318,10 +1329,29 @@
         
         //This function exports a Mark down Table of the choosen terms
         function mdTable(jsonldData,selectedProperties,selectedTerms){
-
             rowDiv = '--------------';
             colDiv = '|'
             buildRows = "|          ";
+
+            if(selectedProperties.includes('all')){
+                // list to contain all available properties in this set of terms 
+                propertyList = []
+                
+                //get all of the properties
+                for (var l in jsonldData['terms']) {
+                    selectedTermsLength = selectedTerms.length;
+                    for(t = 0; t < selectedTermsLength; t++){
+                        if(jsonldData.terms[l].label.toLowerCase() == selectedTerms[t].toLowerCase()){
+                            for(var a in availableProperties){
+                                if(availableProperties[a] in jsonldData.terms[l] && !propertyList.includes(availableProperties[a])){
+                                    propertyList.push(availableProperties[a])
+                                }
+                            }
+                        }
+                    }
+                }
+                selectedProperties = propertyList
+            }
 
             //get the selected properties
             selectedPropertiesLength = selectedProperties.length;
@@ -1362,11 +1392,8 @@
                         }
 
                         buildRows += "\n"
-
                     }
                 }
-                
-
             }      
             //Download file
             downloadObjectAsJson(buildRows, "Terms_MD_Table")
@@ -1571,6 +1598,26 @@
             console.log('csv is working')
             table = [];
 
+            if(selectedProperties.includes('all')){
+                // list to contain all available properties in this set of terms 
+                propertyList = []
+                
+                //get all of the properties
+                for (var l in jsonldData['terms']) {
+                    selectedTermsLength = selectedTerms.length;
+                    for(t = 0; t < selectedTermsLength; t++){
+                        if(jsonldData.terms[l].label.toLowerCase() == selectedTerms[t].toLowerCase()){
+                            for(var a in availableProperties){
+                                if(availableProperties[a] in jsonldData.terms[l] && !propertyList.includes(availableProperties[a])){
+                                    propertyList.push(availableProperties[a])
+                                }
+                            }
+                        }
+                    }
+                }
+                selectedProperties = propertyList
+            }
+
             //get terms and properties
             for (var l in jsonldData['terms']) {
 
@@ -1587,18 +1634,10 @@
 
                             var tempProp = selectedProperties[p]
 
-                            if(selectedProperties.includes('all')){
-                                for(u in jsonldData.terms[l]){
-                                    temp[u] = jsonldData.terms[l][u]
-                                    console.log(jsonldData.terms[l][u])
-                                }
-                            }
-                            else{
-                                if(tempProp in jsonldData.terms[l]){
-                                    temp[tempProp] = jsonldData.terms[l][tempProp]
-                                }else {
-                                temp[tempProp] = ''
-                                }
+                            if(tempProp in jsonldData.terms[l]){
+                                temp[tempProp] = jsonldData.terms[l][tempProp]
+                            }else {
+                            temp[tempProp] = ''
                             }
                         };
                         //add temp dictionary to table to build the dataframe
