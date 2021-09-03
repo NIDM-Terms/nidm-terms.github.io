@@ -92,7 +92,7 @@
 
         <center><div class="container">
 
-            <divid id = "rmv">
+            <div id = "rmv">
 
                 <h2 id="stepTitles">GitHub Access Token<hr style="margin-top: 5px;"></h2>
 
@@ -121,20 +121,14 @@
 
                 <br><br><br><br><br>
                 
-                <h2 id="stepTitles">Neuroimaging Communities <hr style="margin-top: 5px;"></h2>
+                <h2 id="stepTitles">Communities<hr style="margin-top: 5px;"></h2>
 
 
                 <div class="headerBrdr"><center>
                     
                 </center></div>
 
-                <center><div id = "selection">
-                    <div id="selectCommunity">
-                        <h2 id="selectTitle">.</h2>
-                        <div id = "options"></div>
-                    </div>
-                    
-                </div></center>
+                <center><table id="table"></table></center>
 
                 <br><br><br>
 
@@ -298,18 +292,32 @@
 
                             var html = '';
 
+                            var tbl = document.getElementById("table")
+                            var body = document.body
+                            var elementNum = 0      // keeps track of how many elements are in a row, goes to a new row after certain # of elements
                             for (const [key,value] of Object.entries(avCom)){
+                                // go to a new row after filling every four columns
+                                if(elementNum%4===0)
+                                {
+                                    html += '</tr>'
+                                    html += '<tr>'
+                                }
                                 
-                                //add checkboxes
+                                html += '<td>'
+
+                                // add checkboxes
                                 html += '<label class="con">'+key;
                                 html += '<input id="community" type="radio" name="radio" value = "'+value['label']+'">';
                                 html += '<div class="des-tool-tip-text">'+value['Description']+'</div>'
                                 html += '<span class="checkmark"></span>';
                                 html += '</label>';
+                                
+                                html += '</td>'
 
+                                elementNum++
                             }
 
-                            $("#options").append(html);
+                            $("#table").append(html);
 
                         })
                     })
@@ -988,6 +996,7 @@
                 );
             margin-top: -23px;
             width: 1410px;
+            border: 0 none;
         }
 
         .container{
@@ -1049,8 +1058,8 @@
             font-size: 32px;
             color: #6e6d6d;
             font-weight: 200;
-            margin-left: 80px;
-            margin-right: 55px;
+            margin-left: 5px;
+            margin-right: 5px;
         }
     
         .TermInput{
@@ -1447,6 +1456,7 @@
                 #FFC312
                 );
             width: 100%;
+            border: 0 none;
         }
 
         #footer{
@@ -1519,7 +1529,7 @@
         a:focus + .tool-tip .tool-tip__info {
             display: inline-block;
         }
-
+        /* pop-up display for community descriptions when hover over checkbox label */
         input + .des-tool-tip-text {
             display: none;
         }
@@ -1535,6 +1545,7 @@
             color: rgb(238, 238, 238);
             border-radius: 3px;
         }
+        /* the triangular point of the pop-up box */
         input:hover + .des-tool-tip-text:after {
             content: "";
             position: absolute;
@@ -1546,6 +1557,7 @@
             border-left: 5px solid transparent;
             border-right: 5px solid transparent;
             border-top: 10px solid #52575e67;
+            border-bottom: 5px solid transparent;
         }
 
         .step2_tool-tip {
@@ -1679,6 +1691,26 @@
             color: rgb(85, 85, 85);
         }
 
+        table{
+            background-color: rgb(240, 240, 240);
+            border: 10px solid rgb(240, 240, 240);
+            border-collapse: collapse;
+            width: 90%;
+            vertical-align: middle;
+            word-wrap: break-word;
+            color: rgb(85, 85, 85);
+        }
+
+        td, tr {
+            padding:10px; 
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        td {
+            padding: 15px;
+        }
+
         #selectTitle{
             text-indent: 10px;
             font-weight: normal;
@@ -1694,15 +1726,6 @@
             padding-bottom: 20px;
             margin-left: 60px;
             margin-right: 75px;
-        }
-        
-
-        #selection{
-            padding-top: 15px;
-            padding-bottom: 20px;
-            padding-left: 20px;
-            width: 100%;
-            margin-top: 50px;
         }
 
     </style>
