@@ -126,7 +126,8 @@
         .treeview,
         .treeview ul {list-style-type:none;
         overflow:hidden;
-        margin-right: 30px;
+        padding-top: 20px;
+        /* margin-right: 30px; */
         }
         .treeview li {
             text-indent:1%;
@@ -138,6 +139,7 @@
             margin-right: 30px;
             margin-bottom: -10px;
             padding-bottom: 20px;
+            margin-top: -7.5px;
         }
 
         .treeview li.contains-items {background-image:url(
@@ -151,10 +153,6 @@
             cursor:pointer; 
             background-color:rgba(236, 236, 236, 0.7);
         }
-    
-        .treeview span:hover {
-            background-color: rgba(246,246,246,0.7); 
-        } 
 
         .treeview2,
         .treeview2 ul {
@@ -184,10 +182,6 @@
             'js_lib/icons/arrow-down.png'); }
     
         .treeview2>li:hover {cursor:pointer; background-color:rgba(236, 236, 236, 0.7);transition:0.3s;}
-    
-        .treeview2 span:hover {background-color: rgba(246,246,246,0.7
-        
-        ); } 
 
         /*#headerFixed{
             position: fixed; 
@@ -971,7 +965,7 @@
 
                 var numCalls = Object.keys(labelsDict).length
 
-                var html = '<div id="treeview"><ul>';
+                var html = '<div id="treeview"><p style="line-height:5px;visibility:hidden;">space</p><ul>';
 
                 // only runs after all terms have been added to labelsDictCopy
                 if(numCalls === communityList.length){
@@ -1001,9 +995,13 @@
                             // else if(key==='NIDM_Concepts') {html += 'style="color:darkorange"';}
                             // else if(key==='BIDS_Terms') {html += 'style="color:darkgreen"';}
                             // else if(key==='CONP_DATS_Terms') {html += 'style="color:darkcyan"';}
-                            html += '><ul class= "treeview" style="margin-left:-45px;margin-top:-13px;">'
+                            html += 'style="margin-left:-40px;"><ul class= "treeview" style="margin-top:-20px;">'
+                            // html += 'style="margin-top:50px;margin-left:-40px;"><ul class= "treeview" style="margin-top:-20px;">'
+                            
+                                // style="margin-left:-39px;margin-top:12px;"
+                            // html += '><ul class= "treeview" style="margin-left:-45px;margin-top:-13px;">'
 
-                            html += '<li style="color:#4d4d4d;"><span style="font-size:21px;margin-bottom:2px;">' + sortedList[index] + '<br></span>';
+                            html += '<li style="color:#4d4d4d;"><span style="font-size:21px;margin-bottom:2px;">' + sortedList[index] + '</span><br>';
 
                             var data = mainList[index]
                             
@@ -1193,7 +1191,7 @@
                             newIndex++
                         }
                         if(placeInDict !== -1 && newIndex!==mainDictCopy[commName].length){
-                            html += '<li style="color:#4d4d4d;"><span style="font-size:21px;margin-bottom:2px;">' + terms[index].label + '<br></span>';
+                            html += '<li style="color:#4d4d4d;"><span style="font-size:21px;margin-bottom:2px;">' + terms[index].label + '</span><br>';
                             
                             var data = terms[index]
 
@@ -1251,7 +1249,6 @@
                                                             html += '</ul>'
                                                         }
                                                     }
-                                                    html += '</ul></li>';
                                                 }
                                                 else if (typeof(v) === 'array'){
                                                     html += '<li>'  +  '<b>'+ k +'</b>  ' + '<ul>'
@@ -1304,7 +1301,7 @@
                                 }
                             }
                             
-                            html += '</ul></li><hr id= "dividerLine" style="margin-right:30px;">';
+                            html += '</ul></li><hr id= "dividerLine">';
 
                             //delete this term in labelsDictCopy and mainDictCopy; necessary so that all future terms are NOT given the value of the first occurrence of this label
                             delete labelsDictCopy[commName][placeInDict]
