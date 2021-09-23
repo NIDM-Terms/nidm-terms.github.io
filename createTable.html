@@ -38,41 +38,45 @@
     <body>
 
         <add key="webpages:Enabled" value="true" />
-
-
-        <div class="about">
-            <form action = "https://github.com/NIDM-Terms/terms" target="_blank">
-                <button class= "github">Github <i class="fa fa-github" style="font-size:17px"></i>
-                </button>
-            </form>
-            <form action = "https://scicrunch.org/nidm-terms/about/project" target="_blank">
-               <button  class= "website">NIDM Website</button>
-            </form>
-            <form action = "http://nidm.nidash.org/" target="_blank">
-                <button class = "nidmSpecs"> NIDM Specs</button>
-            </form>
-            <form action ="https://github.com/incf-nidash/PyNIDM" target= "_blank" >
-                <button class= "pyNidm"> PyNIDM</a>
-            </form>
-        </div>
-
+        
         <header>
-            <div class= "logo">
-                <img src="img/nidm-terms_576163.png" width= "70" height="70">
+            <div class="about">
+                <form action = "https://github.com/NIDM-Terms/terms" target="_blank">
+                    <button class= "github">Github <i class="fa fa-github" style="font-size:17px"></i>
+                    </button>
+                </form>
+                <form action = "https://scicrunch.org/nidm-terms/about/project" target="_blank">
+                <button  class= "website">NIDM Website</button>
+                </form>
+                <form action = "http://nidm.nidash.org/" target="_blank">
+                    <button class = "nidmSpecs"> NIDM Specs</button>
+                </form>
+                <form action ="https://github.com/incf-nidash/PyNIDM" target= "_blank" >
+                    <button class= "pyNidm"> PyNIDM</a>
+                </form>
             </div>
-            <div class="inner">
-                <h>NIDM-Terms</h>
+
+            <div class="logo-items">
+                <div class= "logo">
+                    <img src="img/nidm-terms_576163.png" width= "70" height="70">
+                </div>
+                <div class="inner">
+                    <h>NIDM-Terms</h>
+                </div>
+                <div class= "search-box" id="searchDiv" style="display:none;">
+                    <input id= "searchBar" class="search_bar" type="text" name="box" placeholder = "Search Terms"><i id= "searchIcon" class="fa fa-search" style="font-size:24px"></i>
+                </div>
             </div>
         </header>
 
 
 
         <div>
-            <nav>
+            <nav style="margin-top:175px;">
                 <ul class= "menuUl"><center>
                     <li class= "menuLi">
                         <form action= "index.html">
-                            <button class = "available_terms" type="submit">Available Terms</button>
+                            <button class = "browse_terms" type="submit">Browse Terms</button>
                         </form>
                     </li>
                     <li class= "menuLi">
@@ -153,9 +157,27 @@
                             <div class="headerBrdr"><center>
                                 
                             </center></div>
-
-                            <center><table id="table"></table></center>
-
+                            
+                            <div id="instruct-bar">
+                                <div class="stepNum">1</div>
+                                <span>Select the community or communities of terms you would like to see.</span>
+                                <br><br>
+                                <div class="stepNum">2</div>
+                                <span>Click "Add Terms".</span>
+                                <br><br>
+                                <div class="stepNum">3</div>
+                                <span>Select the terms you would like to export. Please use the search bar to find specific terms.</span>
+                                <br><br>
+                                <div class="stepNum">4</div>
+                                <span>Once you have completed your selection, click "Export".</span>
+                                <br><br><br><br><br><br>
+                                <span>If you would like to edit your community selection, please change the selected checkboxes and click "Refresh Term List".</span>
+                                <br><br><br><br>
+                                <span>If you would like to view the terms and their properties, please click "View Terms Properties".</span>
+                            </div>
+                            
+                            <center><table id="selectTable"></table></center>
+                            
                             <div>
                                 <button class="btn" id="downloadBtn" onclick="getFile()"> Export </button>
                             </div>
@@ -167,13 +189,6 @@
                         <div class= "cont">
 
                             <br><br><br>
-
-                            <div class="bidsTitle">
-                                <div class= "search-box">
-                                    
-                                </div>
-                                
-                            </div>
                             
                             <div id="buttons"></div>
                             <br><br><br>
@@ -229,23 +244,46 @@
         }
 
         header{
-            background-color: #52575e;
-            height: 100px;
+            overflow:hidden;
+            position:fixed;
+            top:0;
+            width:100%;
+            z-index:2;
         }
     
         .about{
             color: #52575e;
+            background-color: white;
+            height: 45px;
+            width:100%;
             font-size: 12px;
             cursor: pointer;
             outline: none;
             font-weight: lighter;
         }
 
+        #instruct-bar {
+            margin-left:65px;
+            margin-bottom: 40px;
+            color: darkgray;
+            line-height: 5px;
+            font-size:15px;
+            font-style: italic;
+        }
+        .stepNum {
+            border-radius: 50%;
+            width:15px;
+            line-height:15px;
+            border: 1px solid darkgray;
+            /* border: 1px solid #94c0a6;
+            color: #94c0a6; */
+            text-align:center;
+            display: inline-block;
+        }
+
         .github{
             float: right;
-            padding: 20px;
             margin-right: -10px;
-            margin-top: -48px;
             color: #646464;
             font-size: 13px;
             width: 130px;
@@ -261,7 +299,6 @@
         .website{
             float: right;
             margin-right: -30px;
-            margin-top: -43px;
             color:#646464;
             font-size: 13px;
             width: 130px;
@@ -277,7 +314,6 @@
         .nidmSpecs{
             float: right;
             margin-right: -20px;
-            margin-top: -43px;
             color: #646464;
             font-size: 13px;
             width: 130px;
@@ -293,7 +329,6 @@
         .pyNidm{
             float: right;
             margin-right: -30px;
-            margin-top: -43px;
             color: #646464;
             font-size: 13px;
             width: 130px;
@@ -307,9 +342,7 @@
         }
 
         .inner{
-            margin: 40px;
-            padding-top: 25px;
-            padding-bottom: -10px;
+            margin-top:-60px;
             padding-left: 124px;
             font-weight:lighter;
             font-size: 40px;
@@ -318,13 +351,38 @@
             color: white;
         }
         .logo{
-            position: absolute;
-            top: 55px;
-            left: 60px;
+            display: inline-block;
+            margin-left:20px;
+            margin-top:15px;
         }
 
-        header{
-            width: 100%;
+        .logo-items{
+            margin-top:0;
+            background-color: #52575e;
+            height: 100px;
+            width:100%;
+        }
+
+        .search_bar{
+            float: right;
+            margin-top: -47px;
+            margin-right: 50px;
+            border: 2px solid #32e17c;
+            height: 45px;
+            width: 325px;
+            border-radius: 3px;
+            background-color: #fefcfb;
+            font-size: 18px;
+            text-indent: 65px;
+            outline: none;
+            color: #52575e;
+        } 
+
+        #searchIcon{
+            color: #828486;
+            float: right;
+            margin-top: -35px;
+            margin-right: -48px;
         }
 
         body {
@@ -353,11 +411,11 @@
             outline: none;
         }
 
-        .available_terms{
+        .browse_terms{
             color: #EA2027;
             
         }
-        .available_terms:hover{
+        .browse_terms:hover{
             border: 2px solid #EA2027;
             border-radius: 5px;
         }
@@ -441,29 +499,6 @@
             text-indent: 150px;
             margin-top: -17.10px;
             padding-left: 60px;
-        }
-
-        .search_bar{
-            float: right;
-            margin-top: 18px;
-            margin-right: 35px;
-            border: 1px solid #a5a4a4;
-            height: 36px;
-            width: 840px;
-            border-radius: 4px;
-            background-color: #ffffff;
-            font-size: 18px;
-            text-indent: 45px;
-            outline: none;
-            color: #52575e;
-        } 
-
-        #searchIcon{
-            color: #909091;
-            float: right;
-            margin-top: 23px;
-            margin-left: -260px;
-            font-size: 0px;
         }
 
         .cont{
@@ -861,7 +896,7 @@
             color: rgb(85, 85, 85);
         }
 
-        table{
+        #selectTable{
             background-color: rgb(240, 240, 240);
             border: 20px solid rgb(240, 240, 240);
             border-collapse: collapse;
@@ -872,14 +907,14 @@
             color: rgb(85, 85, 85);
         }
 
-        td, tr {
+        #selectTable td, #selectTable tr {
             padding:10px; 
             /* width:150px; */
             text-align: left;
             vertical-align: middle;
         }
 
-        td {
+        #selectTable td {
             padding: 15px;
         }
 
@@ -960,7 +995,7 @@
 
                 html = ''
 
-                var tbl = document.getElementById("table")
+                var tbl = document.getElementById("selectTable")
                 var body = document.body
                 var elementNum = 0      // keeps track of how many elements are in a row, goes to a new row after certain # of elements
                 for (const [key,value] of Object.entries(avCom)){
@@ -985,7 +1020,7 @@
                     elementNum++
                 }
 
-                $("#table").append(html);
+                $("#selectTable").append(html);
 
             })
             .then(function(){
@@ -1043,15 +1078,16 @@
 
                     //add search bar for select terms and add buttons for term selection
                     $('.selectionReq').html("")
-                    $('.search-box').html("")
+                    // $('.search-box').html("")
                     $('#buttons').html("")
-                    var search = '';
+                    // var search = '';
                     var buttons = '';
-                    search += '<input id= "searchBar" class="search_bar" type="text" name="box" placeholder = "Search Terms"><i id= "searchIcon" class="fa fa-search" style="font-size:24px"></i>';
+                    // search += '<input id= "searchBar" class="search_bar" type="text" name="box" placeholder = "Search Terms"><i id= "searchIcon" class="fa fa-search" style="font-size:24px"></i>';
                     buttons += '<button class="btn2" id="selectAll"> Select All Terms </button>'
                     buttons += '<button class="btn2" id="unselectAll"> Unselect All Terms </button>'
                     buttons += '<a href= "https://nidm-terms.github.io/index.html?" target = "_blank"><button class="btn2" id="unselectAll"> View Terms Properties </button></a>'
-                    $('.search-box').append(search);
+                    // $('.search-box').append(search);
+                    document.getElementById('searchDiv').style.display = "block"
                     $('#buttons').append(buttons);
                     console.log(331,selectedTerms)
 
@@ -1067,6 +1103,7 @@
 
                         if(isEmpty(searchedTerms)){
                             document.getElementById('termsView').innerHTML = ''
+                            document.getElementById('noMatches').innerHTML = ''
                             doc = '<div style= "color:rgb(85, 85, 85);font-size:24px;font-weight:bold;margin-left:20px;"> NO MATCHING TERMS HAVE BEEN FOUND... </div>'
                             $('#noMatches').append(doc);
                             return;
@@ -1325,6 +1362,7 @@
                     // location.reload();
                 }
             }
+            // location.reload() - reloads even when alert of one property comes up, need to differentiate between the two
         };
         
         //This function exports a Mark down Table of the choosen terms

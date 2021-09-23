@@ -23,15 +23,14 @@
 
 <body>
 
-    
-    <div id="headerFixed">
+    <header>
         <div class="about">
             <form action = "https://github.com/NIDM-Terms/terms" target="_blank">
                 <button class= "github">Github <i class="fa fa-github" style="font-size:17px"></i>
                 </button>
             </form>
             <form action = "https://scicrunch.org/nidm-terms/about/project" target="_blank">
-            <button class= "website">NIDM Website</button>
+                <button class= "website">NIDM Website</button>
             </form>
             <form action = "http://nidm.nidash.org/" target="_blank">
                 <button class = "nidmSpecs"> NIDM Specs</button>
@@ -41,65 +40,62 @@
             </form>
         </div>
 
-
-        <header>
+        <div class="logo-items">
             <div class= "logo">
                 <img src="img/nidm-terms_576163.png" width= "70" height="70">
             </div>
             <div class="inner">
                 <h>NIDM-Terms</h>
             </div>
-            <div class="bidsTitle">
-                <div class= "search-box">
-                    <input id= "searchBar" class="search_bar" type="text" name="box" placeholder = "Search Terms"><i id= "searchIcon" class="fa fa-search" style="font-size:24px"></i>
-                </div>
+            <div class= "search-box">
+                <input id= "searchBar" class="search_bar" type="text" name="box" placeholder = "Search Terms"><i id= "searchIcon" class="fa fa-search" style="font-size:24px"></i>
             </div>
-        </header>
-        
-        <div id = "loader" class="loader"> </div>
-        <div id = "grayScreen" class="grayScreen"></div>
-        <div id = "loadingText" class="loadingText">Loading Terms...</div>
-
-        <div>
-            <nav>
-                <ul class= "menuUl"><center>
-
-                    <li class= "menuLi">
-                        <form action= "index.html">
-                            <button class = "available_terms" type="submit">Available Terms</button>
-                        </form>
-                    </li>
-                
-                    <li class= "menuLi">
-                        <form action= "addNewTerm.html">
-                            <button class = "add_terms" type="submit">Suggest Terms</button>
-                        </form>
-                    </li>
-
-                    <li class= "menuLi">
-                        <form action="createTable.html">
-                            <button class = "createTable">Export Terms</button>
-                        </form>
-                    </li>
-
-                    <li class= "menuLi">
-                        <form action= "addCommunity.html">
-                            <button class = "add_community" type="submit">Add New Community</button>
-                        </form>
-                    </li>
-
-                    <li class= "menuLi">
-                        <form action="info.html">
-                            <button class = "resources">About</button>
-                        </form> 
-                    </li>
-
-                    <center><hr id="menuLine"></center>
-
-                </center></ul>
-
-            </nav>
         </div>
+    </header>
+        
+    <div id = "loader" class="loader"> </div>
+    <div id = "grayScreen" class="grayScreen"></div>
+    <div id = "loadingText" class="loadingText">Loading Terms...</div>
+
+    <div>
+        <nav style="margin-top:175px;">
+            <ul class= "menuUl"><center>
+
+                <li class= "menuLi">
+                    <form action= "index.html">
+                        <button class = "browse_terms" type="submit">Browse Terms</button>
+                    </form>
+                </li>
+            
+                <li class= "menuLi">
+                    <form action= "addNewTerm.html">
+                        <button class = "add_terms" type="submit">Suggest Terms</button>
+                    </form>
+                </li>
+
+                <li class= "menuLi">
+                    <form action="createTable.html">
+                        <button class = "createTable">Export Terms</button>
+                    </form>
+                </li>
+
+                <li class= "menuLi">
+                    <form action= "addCommunity.html">
+                        <button class = "add_community" type="submit">Add New Community</button>
+                    </form>
+                </li>
+
+                <li class= "menuLi">
+                    <form action="info.html">
+                        <button class = "resources">About</button>
+                    </form> 
+                </li>
+
+                <center><hr id="menuLine"></center>
+
+            </center></ul>
+
+        </nav>
     </div>
     
     
@@ -190,14 +186,19 @@
             height: 269px; 
             background-color: white;
         }*/
-
         header{
-            background-color: #52575e;
-            height: 100px;
+            overflow:hidden;
+            position:fixed;
+            top:0;
+            width:100%;
+            z-index:2;
         }
     
         .about{
             color: #52575e;
+            background-color: white;
+            height: 45px;
+            width:100%;
             font-size: 12px;
             cursor: pointer;
             outline: none;
@@ -206,9 +207,7 @@
 
         .github{
             float: right;
-            padding: 20px;
             margin-right: -10px;
-            margin-top: -48px;
             color: #646464;
             font-size: 13px;
             width: 130px;
@@ -224,7 +223,6 @@
         .website{
             float: right;
             margin-right: -30px;
-            margin-top: -43px;
             color:#646464;
             font-size: 13px;
             width: 130px;
@@ -240,7 +238,6 @@
         .nidmSpecs{
             float: right;
             margin-right: -20px;
-            margin-top: -43px;
             color: #646464;
             font-size: 13px;
             width: 130px;
@@ -256,7 +253,6 @@
         .pyNidm{
             float: right;
             margin-right: -30px;
-            margin-top: -43px;
             color: #646464;
             font-size: 13px;
             width: 130px;
@@ -270,9 +266,7 @@
         }
 
         .inner{
-            margin: 40px;
-            padding-top: 25px;
-            padding-bottom: -10px;
+            margin-top:-60px;
             padding-left: 124px;
             font-weight:lighter;
             font-size: 40px;
@@ -280,14 +274,18 @@
             text-transform: uppercase;
             color: white;
         }
+
         .logo{
-            position: absolute;
-            top: 55px;
-            left: 60px;
+            display: inline-block;
+            margin-left:20px;
+            margin-top:15px;
         }
 
-        header{
-            width: 100%;
+        .logo-items{
+            margin-top:0;
+            background-color: #52575e;
+            height: 100px;
+            width:100%;
         }
 
         #stepTitles{
@@ -296,17 +294,6 @@
             font-weight: 200;
             margin-left: 5px;
             margin-right: 5px;
-        }
-
-        .bidsTitle{
-            color: white;
-            background-size: 100px;
-            background-color: white;
-            font-size: 30px;
-            font-weight: normal;
-            text-indent: 100px;
-            margin-top: -38px;
-            padding-left: 60px;
         }
 
         .search_bar{
@@ -357,7 +344,7 @@
             outline: none;
         }
 
-        .available_terms{
+        .browse_terms{
             color: #EA2027;
             border: 2px solid #EA2027;
             border-radius: 5px;
