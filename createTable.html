@@ -171,9 +171,9 @@
                                 <div class="stepNum">4</div>
                                 <span>Once you have completed your selection, click "Export".</span>
                                 <br><br><br><br><br><br>
-                                <span>If you would like to edit your community selection, please change the selected checkboxes and click "Refresh Term List".</span>
+                                <span>To edit your community selection, please change the selected checkboxes and click "Refresh Term List".</span>
                                 <br><br><br><br>
-                                <span>If you would like to view the terms and their properties, please click "View Terms Properties".</span>
+                                <span>To view the terms and their properties, please click "View Terms Properties".</span>
                             </div>
                             
                             <center><table id="selectTable"></table></center>
@@ -184,7 +184,7 @@
                             <div id="changeBtn">
                                 <button class="btn0" id="startBtn"> Add Terms </button>
                             </div>
-                            <br><br><br><br><br><br><br>
+                            <br><br><br>
 
                         <div class= "cont">
 
@@ -935,6 +935,8 @@
         var state = "";
         //a list of properties that don't need to be displayed
         var dontDisplay = ['rdfs','xsd','nidm','skos','owl','prov','terms','responseOptions','@version','label','reproschema','DataElement','PersonalDataElement','CommonDataElement']
+        // List that contains all of terms currently on display
+        var displayedTerms = [];
 
         //////////////////////////////////////////////////////////////////////////////////////////
         //fetch the NIDM-Terms Context file and save into a variable
@@ -976,6 +978,19 @@
                 closeOnSelect: false
             });
 
+            // if there have been changes to the dropdown menu selection, check if the export terms button can be activated
+            $('.select2').change(function activate(){
+                //get selected properties
+                var selectedProperties = $('#properties :selected').map((_,e) => e.value).get();
+                //get selected formats
+                var selectedFormats = $('#format :selected').map((_,e) => e.value).get();
+
+                if(selectedProperties.length > 0 && selectedFormats.length > 0 && selectedTerms.length > 0){
+                    document.getElementById("downloadBtn").disabled = false;
+                }else{
+                    document.getElementById("downloadBtn").disabled = true;
+                }
+            })
             
             //create a list that contains checked terms
             var checkedTerms = [];
@@ -987,10 +1002,10 @@
                 return res.json(); 
             })
 
-            //Create chackboxes with the available communities and create a list of their URLS and pass it
+            //Create checkboxes with the available communities and create a list of their URLS and pass it
             .then(function(avCom){
                 document.getElementById("downloadBtn").disabled = true;
-                //create am array containing all the urls to pass to pass
+                //create an array containing all the urls to pass to pass
                 //var urlList = []
 
                 html = ''
@@ -1074,7 +1089,21 @@
                     display(dict_data)
                 }
 
-              function display(data){
+                // if properties, formats, and terms have been selected, then activate button
+                function checkExport(){
+                    //get selected properties
+                    var selectedProperties = $('#properties :selected').map((_,e) => e.value).get();
+                    //get selected formats
+                    var selectedFormats = $('#format :selected').map((_,e) => e.value).get();
+
+                    if(selectedProperties.length > 0 && selectedFormats.length > 0 && selectedTerms.length > 0){
+                        document.getElementById("downloadBtn").disabled = false;
+                    }else{
+                        document.getElementById("downloadBtn").disabled = true;
+                    }
+                }
+
+                function display(data){
 
                     //add search bar for select terms and add buttons for term selection
                     $('.selectionReq').html("")
@@ -1109,9 +1138,11 @@
                             return;
                         }
 
+                        displayedTerms = searchedTerms
                         displayTerms(searchedTerms)
                     });
 
+                    displayedTerms = data
                     displayTerms(data) 
 
                     //Function to display the terms in a treeview
@@ -1159,12 +1190,20 @@
                             
                         }   
                         $('#termsView').append(terms);
+
+                        //Get the values selected in the checkboxes
+                        var checkboxElems = document.querySelectorAll("input[name='termsCheckbox']");
+
+                        //loop through the checked elements and call displayCheck
+                        for (var i = 0; i < checkboxElems.length; i++) {
+                            checkboxElems[i].addEventListener("click", displayCheck);
+                        }
                     }
 
                     function selects(){
-                        //if selected all button was pressed, add all terms to selected terms
-                        for(var u=0; u<data.length; u++){
-                            selectedTerms.push(data[u].label)
+                        //if selected all button was pressed, add all terms in current display to selected terms
+                        for(var u=0; u<displayedTerms.length; u++){
+                            selectedTerms.push(displayedTerms[u].label)
                         }
                         var ele=document.getElementsByName('termsCheckbox');  
                         for(var i=0; i<ele.length; i++){  
@@ -1178,10 +1217,18 @@
                         for (var i = 0; i < checkboxElems.length; i++) {
                             checkboxElems[i].addEventListener("click", displayCheck);
                         }
+                        checkExport()
                     }  
                     function deSelect(){ 
-                        //assign an empty list to selectedTerms if all terms are unselected
-                        selectedTerms = [] 
+                        // when user clicks unselect all, delete any terms that are both in the display list and the selected list
+                        for(var i = 0; i < displayedTerms.length; i++){
+                            var index = selectedTerms.indexOf(displayedTerms[i].label)
+                            if(index != -1){
+                                delete selectedTerms[index]
+                                selectedTerms = selectedTerms.filter(x => x !== '')
+                            }
+                        }
+
                         var ele=document.getElementsByName('termsCheckbox');  
                         for(var i=0; i<ele.length; i++){  
                             if(ele[i].type=='checkbox')  
@@ -1194,7 +1241,8 @@
                         for (var i = 0; i < checkboxElems.length; i++) {
                             checkboxElems[i].addEventListener("click", displayCheck);
                         } 
-                        
+                        // see if export button should be activated
+                        checkExport()
                     } 
 
                     // this function filters the data dictionary based on the input of the search bar
@@ -1233,15 +1281,6 @@
                     //put all selected terms in a list
                     console.log("test checked items", state)
 
-
-                    //Get the values selected in the checkboxes
-                    var checkboxElems = document.querySelectorAll("input[name='termsCheckbox']");
-
-                    //loop through the checked elements and call displayCheck
-                    for (var i = 0; i < checkboxElems.length; i++) {
-                        checkboxElems[i].addEventListener("click", displayCheck);
-                    }
-
                     //This function checks which checkboxes were unchecked and passes a list of urls to the function fetchAll to display
                     function displayCheck(e) {
                         //create a list of the term catagories that were unchecked to filter out
@@ -1254,20 +1293,17 @@
                             selectedTerms = removeNull(selectedTerms)
                             console.log(selectedTerms)
 
-                            //gray out the button if no terms are selected
-                            if(selectedTerms.length===0){
-                                document.getElementById("downloadBtn").disabled = true;
-                            }else{
-                                document.getElementById("downloadBtn").disabled = false;
-                            }
-                            //list.push(e.target.value)
+                            // see if export button should be activated
+                            checkExport()
                         } else if (e.target.checked) {
                             console.log('checked')
                             //recheck after uncheck
                             selectedTerms.push(e.target.value)
                             selectedTerms = removeNull(selectedTerms)
                             console.log(13, selectedTerms)
-                            document.getElementById("downloadBtn").disabled = false;
+
+                            // see if export button should be activated
+                            checkExport()
                         }
                         //filters out
                         function removeNull(array) {
@@ -1359,10 +1395,9 @@
                             csv(jsonldData,selectedProperties,selectedTerms)
                         }
                     }
-                    // location.reload();
+                    location.reload();
                 }
             }
-            // location.reload() - reloads even when alert of one property comes up, need to differentiate between the two
         };
         
         //This function exports a Mark down Table of the choosen terms
@@ -1445,7 +1480,6 @@
                 downloadAnchorNode.click();
                 downloadAnchorNode.remove();
             }
-
         }
 
         //This function exports json formatted file 
@@ -1496,7 +1530,6 @@
                 downloadAnchorNode.click();
                 downloadAnchorNode.remove();
             }
-            
         }
 
         async function getjsonld(jsonldData,selectedProperties,selectedTerms){
@@ -1561,7 +1594,7 @@
                 document.body.appendChild(downloadAnchorNode); // required for firefox
                 downloadAnchorNode.click();
                 downloadAnchorNode.remove();
-            }    
+            }   
         }
 
         async function rdf(jsonldData,selectedProperties,selectedTerms){
@@ -1712,7 +1745,6 @@
                 document.body.removeChild(link);
 
             };
-
         }
 
 
