@@ -1355,47 +1355,35 @@
             }
         }
 
-        var numCalls = 0;
+        var downloaded = 0;
         //This function gets the form of download the user chooses
         function download(jsonldData){
-            numCalls++
-            //only run if all communities' terms have been loaded
-            if(numCalls===List.length){
-                //get selected properties
-                selectedProperties = $('#properties :selected').map((_,e) => e.value).get();
-                console.log(55, selectedProperties)
-                if(selectedProperties.length == 0){
-                    alert('You must select at least one term property')
-                }
+            //get selected properties
+            selectedProperties = $('#properties :selected').map((_,e) => e.value).get();
+            console.log(55, selectedProperties)
 
-                //get selected formats
-                selectedFormats = $('#format :selected').map((_,e) => e.value).get();
-                console.log(66, selectedFormats)
-                arrayLength = selectedFormats.length;
-                if(selectedFormats == 0){
-                    alert('You must select at least one format')
-                }
+            //get selected formats
+            selectedFormats = $('#format :selected').map((_,e) => e.value).get();
+            console.log(66, selectedFormats)
 
-                else{
-                    //call formats functions
-                    for(var i = 0; i < arrayLength; i++){
-                        if(selectedFormats[i] == 'md'){
-                            mdTable(jsonldData,selectedProperties,selectedTerms)
-                        };
-                        if(selectedFormats[i] == 'json'){
-                            getJson(jsonldData,selectedProperties,selectedTerms)
-                        };
-                        if(selectedFormats[i] == 'jsonld'){
-                            getjsonld(jsonldData,selectedProperties,selectedTerms)
-                        };
-                        if(selectedFormats[i] == 'nq'){
-                            rdf(jsonldData,selectedProperties,selectedTerms)
-                        };
-                        if(selectedFormats[i] == 'csv'){
-                            csv(jsonldData,selectedProperties,selectedTerms)
-                        }
-                    }
-                    location.reload();
+            arrayLength = selectedFormats.length;
+            console.log(14, 'selectedFormats.length: '+selectedFormats.length)
+            //call formats functions
+            for(var i = 0; i < arrayLength; i++){
+                if(selectedFormats[i] == 'md'){
+                    mdTable(jsonldData,selectedProperties,selectedTerms)
+                };
+                if(selectedFormats[i] == 'json'){
+                    getJson(jsonldData,selectedProperties,selectedTerms)
+                };
+                if(selectedFormats[i] == 'jsonld'){
+                    getjsonld(jsonldData,selectedProperties,selectedTerms)
+                };
+                if(selectedFormats[i] == 'nq'){
+                    rdf(jsonldData,selectedProperties,selectedTerms)
+                };
+                if(selectedFormats[i] == 'csv'){
+                    csv(jsonldData,selectedProperties,selectedTerms)
                 }
             }
         };
@@ -1480,6 +1468,7 @@
                 downloadAnchorNode.click();
                 downloadAnchorNode.remove();
             }
+            checkDownload()
         }
 
         //This function exports json formatted file 
@@ -1530,6 +1519,7 @@
                 downloadAnchorNode.click();
                 downloadAnchorNode.remove();
             }
+            checkDownload()
         }
 
         async function getjsonld(jsonldData,selectedProperties,selectedTerms){
@@ -1594,7 +1584,8 @@
                 document.body.appendChild(downloadAnchorNode); // required for firefox
                 downloadAnchorNode.click();
                 downloadAnchorNode.remove();
-            }   
+            }
+            checkDownload()
         }
 
         async function rdf(jsonldData,selectedProperties,selectedTerms){
@@ -1663,6 +1654,7 @@
                 downloadAnchorNode.click();
                 downloadAnchorNode.remove();
             }
+            checkDownload()
         }
 
         function csv(jsonldData,selectedProperties,selectedTerms){
@@ -1745,8 +1737,17 @@
                 document.body.removeChild(link);
 
             };
+            checkDownload()
         }
 
+        function checkDownload(){
+            downloaded++
+            selectedFormats = $('#format :selected').map((_,e) => e.value).get();
+            // only reload page if all file formats have been downloaded
+            if(downloaded===selectedFormats.length){
+                location.reload()
+            }
+        }
 
     </script>      
      
