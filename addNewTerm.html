@@ -22,43 +22,43 @@
 
     <body>
 
-        <div class="about">
-            <form action = "https://github.com/NIDM-Terms/terms" target="_blank">
-                <button class= "github">Github <i class="fa fa-github" style="font-size:17px"></i>
-                </button>
-            </form>
-            <form action = "https://scicrunch.org/nidm-terms/about/project" target="_blank">
-               <button  class= "website">NIDM Website</button>
-            </form>
-            <form action = "http://nidm.nidash.org/" target="_blank">
-                <button class = "nidmSpecs"> NIDM Specs</button>
-            </form>
-            <form action ="https://github.com/incf-nidash/PyNIDM" target= "_blank" >
-                <button class= "pyNidm"> PyNIDM</a>
-            </form>
-            <form action ="https://sanuann.github.io/nidmterms-ui/#/annotate" target= "_blank" >
-                <button class= "annoTool"> Annotation Tool</a>
-            </form>
-        </div>
-    
-    
         <header>
-            <div class= "logo">
-                <img src="img/nidm-terms_576163.png" width= "70" height="70">
+            <div class="about">
+                <form action = "https://github.com/NIDM-Terms/terms" target="_blank">
+                    <button class= "github">Github <i class="fa fa-github" style="font-size:17px"></i>
+                    </button>
+                </form>
+                <form action = "https://scicrunch.org/nidm-terms/about/project" target="_blank">
+                    <button class= "website">NIDM Website</button>
+                </form>
+                <form action = "http://nidm.nidash.org/" target="_blank">
+                    <button class = "nidmSpecs"> NIDM Specs</button>
+                </form>
+                <form action ="https://github.com/incf-nidash/PyNIDM" target= "_blank" >
+                    <button class= "pyNidm"> PyNIDM</a>
+                </form>
+	            <form action ="https://sanuann.github.io/nidmterms-ui/#/annotate" target= "_blank" >
+	                <button class= "annoTool"> Annotation Tool</a>
+	            </form>
             </div>
-            <div class="inner">
-                <h>NIDM-Terms</h>
+    
+            <div class="logo-items">
+                <div class= "logo">
+                    <img src="img/nidm-terms_576163.png" width= "70" height="70">
+                </div>
+                <div class="inner">
+                    <h>NIDM-Terms</h>
+                </div>
             </div>
-            
         </header>
     
         <div>
-            <nav>
+            <nav style="margin-top:175px;">
                 <ul class= "menuUl"><center>
     
                     <li class= "menuLi">
                         <form action= "index.html">
-                            <button class = "available_terms" type="submit">Available Terms</button>
+                            <button class = "browse_terms" type="submit">Browse Terms</button>
                         </form>
                     </li>
                 
@@ -95,7 +95,7 @@
 
         <center><div class="container">
 
-            <divid id = "rmv">
+            <div id = "rmv">
 
                 <h2 id="stepTitles">GitHub Access Token<hr style="margin-top: 5px;"></h2>
 
@@ -124,20 +124,14 @@
 
                 <br><br><br><br><br>
                 
-                <h2 id="stepTitles">Neuroimaging Communities <hr style="margin-top: 5px;"></h2>
+                <h2 id="stepTitles">Communities<hr style="margin-top: 5px;"></h2>
 
 
                 <div class="headerBrdr"><center>
                     
                 </center></div>
 
-                <center><div id = "selection">
-                    <div id="selectCommunity">
-                        <h2 id="selectTitle">.</h2>
-                        <div id = "options"></div>
-                    </div>
-                    
-                </div></center>
+                <center><table id="table"></table></center>
 
                 <br><br><br>
 
@@ -239,9 +233,7 @@
                         </div>
                     </h4>
 
-                    
-
-                        
+                            
 
                     <form>
                         <input id="numOfValues" class="numOfValues" type="text" placeholder="Enter the number of choices">
@@ -301,18 +293,32 @@
 
                             var html = '';
 
+                            var tbl = document.getElementById("table")
+                            var body = document.body
+                            var elementNum = 0      // keeps track of how many elements are in a row, goes to a new row after certain # of elements
                             for (const [key,value] of Object.entries(avCom)){
+                                // go to a new row after filling every four columns
+                                if(elementNum%4===0)
+                                {
+                                    html += '</tr>'
+                                    html += '<tr>'
+                                }
                                 
-                                //add checkboxes
+                                html += '<td>'
+
+                                // add checkboxes
                                 html += '<label class="con">'+key;
                                 html += '<input id="community" type="radio" name="radio" value = "'+value['label']+'">';
                                 html += '<div class="des-tool-tip-text">'+value['Description']+'</div>'
                                 html += '<span class="checkmark"></span>';
                                 html += '</label>';
+                                
+                                html += '</td>'
 
+                                elementNum++
                             }
 
-                            $("#options").append(html);
+                            $("#table").append(html);
 
                         })
                     })
@@ -816,24 +822,27 @@
 
     <style>
         header{
-            background-color: #52575e;
-            height: 100px;
+            overflow:hidden;
+            position:fixed;
+            top:0;
+            width:100%;
+            z-index:2;
         }
     
         .about{
             color: #52575e;
+            background-color: white;
+            height: 45px;
+            width:100%;
             font-size: 12px;
             cursor: pointer;
             outline: none;
             font-weight: lighter;
-            
         }
 
         .github{
             float: right;
-            padding: 20px;
             margin-right: -10px;
-            margin-top: -48px;
             color: #646464;
             font-size: 13px;
             width: 130px;
@@ -849,7 +858,6 @@
         .website{
             float: right;
             margin-right: -30px;
-            margin-top: -43px;
             color:#646464;
             font-size: 13px;
             width: 130px;
@@ -865,7 +873,6 @@
         .nidmSpecs{
             float: right;
             margin-right: -20px;
-            margin-top: -43px;
             color: #646464;
             font-size: 13px;
             width: 130px;
@@ -881,7 +888,6 @@
         .pyNidm{
             float: right;
             margin-right: -30px;
-            margin-top: -43px;
             color: #646464;
             font-size: 13px;
             width: 130px;
@@ -910,9 +916,7 @@
         }
 
         .inner{
-            margin: 40px;
-            padding-top: 25px;
-            padding-bottom: -10px;
+            margin-top:-60px;
             padding-left: 124px;
             font-weight:lighter;
             font-size: 40px;
@@ -921,13 +925,16 @@
             color: white;
         }
         .logo{
-            position: absolute;
-            top: 55px;
-            left: 60px;
+            display: inline-block;
+            margin-left:20px;
+            margin-top:15px;
         }
 
-        header{
-            width: 100%;
+        .logo-items{
+            margin-top:0;
+            background-color: #52575e;
+            height: 100px;
+            width:100%;
         }
 
         body {
@@ -956,10 +963,10 @@
             outline: none;
         }
 
-        .available_terms{
+        .browse_terms{
             color: #EA2027;    
         }
-        .available_terms:hover{
+        .browse_terms:hover{
             border: 2px solid #EA2027;
             border-radius: 5px;
         }
@@ -1006,6 +1013,7 @@
                 );
             margin-top: -23px;
             width: 1410px;
+            border: 0 none;
         }
 
         .container{
@@ -1067,8 +1075,8 @@
             font-size: 32px;
             color: #6e6d6d;
             font-weight: 200;
-            margin-left: 80px;
-            margin-right: 55px;
+            margin-left: 5px;
+            margin-right: 5px;
         }
     
         .TermInput{
@@ -1465,6 +1473,7 @@
                 #FFC312
                 );
             width: 100%;
+            border: 0 none;
         }
 
         #footer{
@@ -1537,7 +1546,7 @@
         a:focus + .tool-tip .tool-tip__info {
             display: inline-block;
         }
-
+        /* pop-up display for community descriptions when hover over checkbox label */
         input + .des-tool-tip-text {
             display: none;
         }
@@ -1553,6 +1562,7 @@
             color: rgb(238, 238, 238);
             border-radius: 3px;
         }
+        /* the triangular point of the pop-up box */
         input:hover + .des-tool-tip-text:after {
             content: "";
             position: absolute;
@@ -1564,6 +1574,7 @@
             border-left: 5px solid transparent;
             border-right: 5px solid transparent;
             border-top: 10px solid #52575e67;
+            border-bottom: 5px solid transparent;
         }
 
         .step2_tool-tip {
@@ -1697,6 +1708,26 @@
             color: rgb(85, 85, 85);
         }
 
+        table{
+            background-color: rgb(240, 240, 240);
+            border: 10px solid rgb(240, 240, 240);
+            border-collapse: collapse;
+            width: 90%;
+            vertical-align: middle;
+            word-wrap: break-word;
+            color: rgb(85, 85, 85);
+        }
+
+        td, tr {
+            padding:5px; 
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        td {
+            padding: 10px;
+        }
+
         #selectTitle{
             text-indent: 10px;
             font-weight: normal;
@@ -1712,15 +1743,6 @@
             padding-bottom: 20px;
             margin-left: 60px;
             margin-right: 75px;
-        }
-        
-
-        #selection{
-            padding-top: 15px;
-            padding-bottom: 20px;
-            padding-left: 20px;
-            width: 100%;
-            margin-top: 50px;
         }
 
     </style>

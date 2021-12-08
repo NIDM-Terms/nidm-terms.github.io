@@ -1,22 +1,30 @@
-{	
-	"NIDM Terms": {
-		"label" : "NIDM_Terms",
-		"URL" : "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/NIDM_Terms.jsonld",
-		"Description" : "Neuroimaging Data Modeling Terms"
-	},
-	"NIDM Concepts": {
-		"label" : "NIDM_Concepts",
-		"URL" : "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/NIDM_Concepts.jsonld",
-		"Description" : "Concepts used to annotate publicly available neuroimaging datasets (e.g., OpenNeuro, ABID)"
-	},
-	"BIDS Specification Terms": {
-		"label" : "BIDS_Terms",
-		"URL" : "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/BIDS_Terms.jsonld",
-		"Description" : "Brain Imaging Data Structure Specification Terms"
-	},
-	"CONP DATS Terms": {
-		"label" : "CONP_DATS_Terms",
-		"URL" : "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/CONP_DATS.jsonld",
-		"Description" : "The Canadian Open Neuroscience Platform combines access to dataset meta-data with computational tools for preprocessing and analysis to provide an ecosystem for reproducible neuroscience. "
-	} 
+{
+  "NIDM Terms": {
+    "label": "NIDM_Terms",
+    "URL": "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/NIDM_Terms.jsonld",
+    "Description": "Neuroimaging Data Modeling Terms"
+  },
+  "NIDM Concepts": {
+    "label": "NIDM_Concepts",
+    "URL": "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/NIDM_Concepts.jsonld",
+    "Description": "Concepts used to annotate publicly available neuroimaging datasets (e.g., OpenNeuro, ABID)"
+  },
+  "BIDS Specification Terms": {
+    "label": "BIDS_Terms",
+    "URL": "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/BIDS_Terms.jsonld",
+    "Description": "Brain Imaging Data Structure Specification Terms"
+  },
+  "CONP DATS Terms": {
+    "label": "CONP_DATS_Terms",
+    "URL": "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/CONP_DATS.jsonld",
+    "Description": "The Canadian Open Neuroscience Platform combines access to dataset meta-data with computational tools for preprocessing and analysis to provide an ecosystem for reproducible neuroscience. "
+  },
+  "NeuroBridge Terms": {
+    "label": "NeuroBridge_Terms",
+    "URL": "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/NeuroBridge_Terms.jsonld",
+    "Description": "The NeuroBridge community focuses on increasing accessibility and reuse of Neuroscience datasets.",
+    "association": [
+      "NeuroBridge"
+    ]
+  }
 }
