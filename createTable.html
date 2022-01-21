@@ -1,7 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<script>
+    //////////////////////////////////////////////////////////////////////////////////////////
+    // IN ORDER TO HOST YOUR OWN COMMUNITY, EDIT THE VARIABLES BELOW
+    var githubLink = "https://github.com/NIDM-Terms/terms" //Link to GitHub terms repository
 
+    var websiteLink = "https://scicrunch.org/nidm-terms/about/project" //Link to project website
+    var websiteLinkName = "NIDM Website" //Hypertext displayed for websiteLink
+
+    var specLink = "http://nidm.nidash.org/" //Link to project specifications
+    var specLinkName = "NIDM Specs" //Hypertext displayed for specLink
+
+    var pyNIDMLink = "https://github.com/incf-nidash/PyNIDM" //Link to GitHub PyNIDM repository
+    var pyNIDMLinkName = "PyNIDM" //Hypertext displayed for pyNIDMLink
+
+    var pageTitle = "NIDM-Terms" //Text displayed beside the logo at the top of the page
+    
+    // TO INSERT YOUR OWN LOGO, PLEASE UPLOAD AN IMAGE TO THE 'img' FOLDER AND UPDATE logoFileName
+    var logoFileName = "nidm-terms_576163.png" //name of the file containing the logo inside the 'img' folder
+
+    var contextLink = "https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld" //Link to context file
+
+    var communityLink = 'https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json' //Link to list of available communities
+    
+    var footerText = "This project was supported by the National Institutes of Mental Health (NIMH) grant 1RF1MH120021"
+    //////////////////////////////////////////////////////////////////////////////////////////
+</script>
 
     <head>
 
@@ -41,35 +66,50 @@
         
         <header>
             <div class="about">
-                <form action = "https://github.com/NIDM-Terms/terms" target="_blank">
-                    <button class= "github">Github <i class="fa fa-github" style="font-size:17px"></i>
-                    </button>
+                <form target="_blank">
+                    <button class= "github" id="github">Github <i class="fa fa-github" style="font-size:17px"></i></button>
                 </form>
-                <form action = "https://scicrunch.org/nidm-terms/about/project" target="_blank">
-                <button  class= "website">NIDM Website</button>
+                <form target="_blank">
+                    <button class= "website" id = "website"></button>
                 </form>
-                <form action = "http://nidm.nidash.org/" target="_blank">
-                    <button class = "nidmSpecs"> NIDM Specs</button>
+                <form target="_blank">
+                    <button class = "specs" id = "specs"></button>
                 </form>
-                <form action ="https://github.com/incf-nidash/PyNIDM" target= "_blank" >
-                    <button class= "pyNidm"> PyNIDM</a>
-                </form>
-                <form action ="https://sanuann.github.io/nidmterms-ui/#/annotate" target= "_blank" >
-                    <button class= "annoTool"> Annotation Tool</a>
+                <form target= "_blank" >
+                    <button class= "pyNidm" id = "pyNidm"></a>
                 </form>
             </div>
-
+    
             <div class="logo-items">
                 <div class= "logo">
-                    <img src="img/nidm-terms_576163.png" width= "70" height="70">
+                    <img width= "70" height="70" id = "image">
                 </div>
                 <div class="inner">
-                    <h>NIDM-Terms</h>
+                    <h id="pageTitle"></h>
                 </div>
                 <div class= "search-box" id="searchDiv" style="display:none;">
                     <input id= "searchBar" class="search_bar" type="text" name="box" placeholder = "Search Terms"><i id= "searchIcon" class="fa fa-search" style="font-size:24px"></i>
                 </div>
             </div>
+    
+            <script>
+                //link the buttons to the specified pages and insert information (button labels, titles, etc.) specific to the project
+                document.getElementById("github").addEventListener('click', function(){location.href=githubLink})
+    
+                document.getElementById("website").addEventListener('click', function(){location.href=websiteLink})
+                $("#website").text(websiteLinkName)
+    
+                document.getElementById("specs").addEventListener('click', function(){location.href=specLink})
+                $("#specs").text(specLinkName)
+    
+                document.getElementById("pyNidm").addEventListener('click', function(){location.href=pyNIDMLink})
+                $("#pyNidm").text(pyNIDMLinkName)
+    
+                $("#pageTitle").text(pageTitle)
+    
+                //add the logo image to the page
+                document.getElementById('image').src=("img/"+logoFileName)
+            </script>
         </header>
 
 
@@ -213,7 +253,12 @@
     <footer>
         <div id="footer">
             <hr id= "bottomLine">
-            <p><center>This project was supported by the National Institutes of Mental Health (NIMH) grant 1RF1MH120021</center></p>
+            <p id="footerText"><center></center></p>
+    
+            <script>
+                //add a message to the footer
+                $("#footerText").text(footerText)
+            </script>
         <div>
     </footer>
 
@@ -314,7 +359,7 @@
             transition: 0.1s;
         }
 
-        .nidmSpecs{
+        .specs{
             float: right;
             margin-right: -20px;
             color: #646464;
@@ -324,7 +369,7 @@
             font-weight: lighter;
         }
 
-        .nidmSpecs:hover{
+        .specs:hover{
             color: #32e17c;
             transition: 0.1s;
         }
@@ -340,21 +385,6 @@
         }
 
         .pyNidm:hover{
-            color: #32e17c;
-            transition: 0.1s;
-        }
-
-        .annoTool{
-            float: right;
-            margin-right: -20px;
-            color: #646464;
-            font-size: 13px;
-            width: 130px;
-            height:50px;
-            font-weight: lighter;
-        }
-
-        .annoTool:hover{
             color: #32e17c;
             transition: 0.1s;
         }
@@ -957,10 +987,10 @@
         var displayedTerms = [];
 
         //////////////////////////////////////////////////////////////////////////////////////////
-        //fetch the NIDM-Terms Context file and save into a variable
+        //fetch the Context file and save into a variable
         //////////////////////////////////////////////////////////////////////////////////////////
         var context = {};
-        fetch('https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld')
+        fetch(contextLink)
         .then(function(res){
             return res.json(); 
         })
@@ -1014,8 +1044,8 @@
             var checkedTerms = [];
 
             //Add options
-            //Fetch 'https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json' to get a list of the available communities in NIDM-Terms/terms
-            fetch('https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json')
+            //Fetch communityLink to get a list of the available communities in NIDM-Terms/terms
+            fetch(communityLink)
             .then(function(res){
                 return res.json(); 
             })
@@ -1350,7 +1380,7 @@
                     })
                     .then(function(data){
                         //add the terms to a singular main list and sort
-                        temp['@context'] = 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld';
+                        temp['@context'] = contextLink;
                         var currData = tempList.concat(data['terms'])
                         tempList = currData
                         temp['terms'] = sortOnKeys(tempList)
@@ -1373,35 +1403,47 @@
             }
         }
 
-        var downloaded = 0;
+        var numCalls = 0;
         //This function gets the form of download the user chooses
         function download(jsonldData){
-            //get selected properties
-            selectedProperties = $('#properties :selected').map((_,e) => e.value).get();
-            console.log(55, selectedProperties)
+            numCalls++
+            //only run if all communities' terms have been loaded
+            if(numCalls===List.length){
+                //get selected properties
+                selectedProperties = $('#properties :selected').map((_,e) => e.value).get();
+                console.log(55, selectedProperties)
+                if(selectedProperties.length == 0){
+                    alert('You must select at least one term property')
+                }
 
-            //get selected formats
-            selectedFormats = $('#format :selected').map((_,e) => e.value).get();
-            console.log(66, selectedFormats)
+                //get selected formats
+                selectedFormats = $('#format :selected').map((_,e) => e.value).get();
+                console.log(66, selectedFormats)
+                arrayLength = selectedFormats.length;
+                if(selectedFormats == 0){
+                    alert('You must select at least one format')
+                }
 
-            arrayLength = selectedFormats.length;
-            console.log(14, 'selectedFormats.length: '+selectedFormats.length)
-            //call formats functions
-            for(var i = 0; i < arrayLength; i++){
-                if(selectedFormats[i] == 'md'){
-                    mdTable(jsonldData,selectedProperties,selectedTerms)
-                };
-                if(selectedFormats[i] == 'json'){
-                    getJson(jsonldData,selectedProperties,selectedTerms)
-                };
-                if(selectedFormats[i] == 'jsonld'){
-                    getjsonld(jsonldData,selectedProperties,selectedTerms)
-                };
-                if(selectedFormats[i] == 'nq'){
-                    rdf(jsonldData,selectedProperties,selectedTerms)
-                };
-                if(selectedFormats[i] == 'csv'){
-                    csv(jsonldData,selectedProperties,selectedTerms)
+                else{
+                    //call formats functions
+                    for(var i = 0; i < arrayLength; i++){
+                        if(selectedFormats[i] == 'md'){
+                            mdTable(jsonldData,selectedProperties,selectedTerms)
+                        };
+                        if(selectedFormats[i] == 'json'){
+                            getJson(jsonldData,selectedProperties,selectedTerms)
+                        };
+                        if(selectedFormats[i] == 'jsonld'){
+                            getjsonld(jsonldData,selectedProperties,selectedTerms)
+                        };
+                        if(selectedFormats[i] == 'nq'){
+                            rdf(jsonldData,selectedProperties,selectedTerms)
+                        };
+                        if(selectedFormats[i] == 'csv'){
+                            csv(jsonldData,selectedProperties,selectedTerms)
+                        }
+                    }
+                    location.reload();
                 }
             }
         };
@@ -1486,7 +1528,6 @@
                 downloadAnchorNode.click();
                 downloadAnchorNode.remove();
             }
-            checkDownload()
         }
 
         //This function exports json formatted file 
@@ -1537,7 +1578,6 @@
                 downloadAnchorNode.click();
                 downloadAnchorNode.remove();
             }
-            checkDownload()
         }
 
         async function getjsonld(jsonldData,selectedProperties,selectedTerms){
@@ -1545,7 +1585,7 @@
             mainTemp = {};
             tempList =[];
 
-            mainTemp['@context'] = 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld';
+            mainTemp['@context'] = contextLink;
             mainTemp['@type'] = "nidm:TermsCollection";
 
 
@@ -1589,7 +1629,7 @@
             mainTemp[context['@context']['terms']['@id']] = tempList
 
             //compact term dictionary
-            const compacted = await jsonld.compact(mainTemp, 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld');
+            const compacted = await jsonld.compact(mainTemp, contextLink);
             
             //Download file
             downloadObjectAsJson(compacted, 'Terms')
@@ -1602,8 +1642,7 @@
                 document.body.appendChild(downloadAnchorNode); // required for firefox
                 downloadAnchorNode.click();
                 downloadAnchorNode.remove();
-            }
-            checkDownload()
+            }   
         }
 
         async function rdf(jsonldData,selectedProperties,selectedTerms){
@@ -1612,7 +1651,7 @@
             mainTemp = {};
             tempList =[];
 
-            mainTemp['@context'] = 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld';
+            mainTemp['@context'] = contextLink;
             mainTemp['@type'] = "nidm:TermsCollection";
 
             for (var l in jsonldData['terms']) {
@@ -1672,7 +1711,6 @@
                 downloadAnchorNode.click();
                 downloadAnchorNode.remove();
             }
-            checkDownload()
         }
 
         function csv(jsonldData,selectedProperties,selectedTerms){
@@ -1755,17 +1793,8 @@
                 document.body.removeChild(link);
 
             };
-            checkDownload()
         }
 
-        function checkDownload(){
-            downloaded++
-            selectedFormats = $('#format :selected').map((_,e) => e.value).get();
-            // only reload page if all file formats have been downloaded
-            if(downloaded===selectedFormats.length){
-                location.reload()
-            }
-        }
 
     </script>      
      

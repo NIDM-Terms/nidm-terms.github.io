@@ -1,7 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<script>
+    //////////////////////////////////////////////////////////////////////////////////////////
+    // IN ORDER TO HOST YOUR OWN COMMUNITY, EDIT THE VARIABLES BELOW
+    var githubLink = "https://github.com/NIDM-Terms/terms" //Link to GitHub terms repository
 
+    var websiteLink = "https://scicrunch.org/nidm-terms/about/project" //Link to project website
+    var websiteLinkName = "NIDM Website" //Hypertext displayed for websiteLink
+
+    var specLink = "http://nidm.nidash.org/" //Link to project specifications
+    var specLinkName = "NIDM Specs" //Hypertext displayed for specLink
+
+    var pyNIDMLink = "https://github.com/incf-nidash/PyNIDM" //Link to GitHub PyNIDM repository
+    var pyNIDMLinkName = "PyNIDM" //Hypertext displayed for pyNIDMLink
+
+    var pageTitle = "NIDM-Terms" //Text displayed beside the logo at the top of the page
+    
+    // TO INSERT YOUR OWN LOGO, PLEASE UPLOAD AN IMAGE TO THE 'img' FOLDER AND UPDATE logoFileName
+    var logoFileName = "nidm-terms_576163.png" //name of the file containing the logo inside the 'img' folder
+    
+    //Text displayed above the API Token input bar explaining the purpose of requiring users to enter their API Tokens
+    var headerText = `The NIDM-Terms effort is focused on developing and adopting a set of community driven controlled vocabulary 
+                    for neuroimaging. NIDM-Terms infrastructure consists of a GitHub repository containing JSON-LD formatted 
+                    files for each term. Newly added communities will be sent as a pull request to our GitHub repository.
+                    Therefore, in order to suggest a new community, a GitHub API Token must be provided.`
+
+    var communityLink = 'https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json' //Link to list of available communities
+
+    var contextLink = 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld' //Link to context file
+
+    var repoName = 'terms'; //Name of repository containing terms
+
+    var footerText = "This project was supported by the National Institutes of Mental Health (NIMH) grant 1RF1MH120021"
+    //////////////////////////////////////////////////////////////////////////////////////////
+</script>
 
     <head>
 
@@ -24,32 +57,47 @@
 
         <header>
             <div class="about">
-                <form action = "https://github.com/NIDM-Terms/terms" target="_blank">
-                    <button class= "github">Github <i class="fa fa-github" style="font-size:17px"></i>
-                    </button>
+                <form target="_blank">
+                    <button class= "github" id="github">Github <i class="fa fa-github" style="font-size:17px"></i></button>
                 </form>
-                <form action = "https://scicrunch.org/nidm-terms/about/project" target="_blank">
-                    <button class= "website">NIDM Website</button>
+                <form target="_blank">
+                    <button class= "website" id = "website"></button>
                 </form>
-                <form action = "http://nidm.nidash.org/" target="_blank">
-                    <button class = "nidmSpecs"> NIDM Specs</button>
+                <form target="_blank">
+                    <button class = "specs" id = "specs"></button>
                 </form>
-                <form action ="https://github.com/incf-nidash/PyNIDM" target= "_blank" >
-                    <button class= "pyNidm"> PyNIDM</a>
-                </form>
-                <form action ="https://sanuann.github.io/nidmterms-ui/#/annotate" target= "_blank" >
-                    <button class= "annoTool"> Annotation Tool</a>
+                <form target= "_blank" >
+                    <button class= "pyNidm" id = "pyNidm"></a>
                 </form>
             </div>
     
             <div class="logo-items">
                 <div class= "logo">
-                    <img src="img/nidm-terms_576163.png" width= "70" height="70">
+                    <img width= "70" height="70" id = "image">
                 </div>
                 <div class="inner">
-                    <h>NIDM-Terms</h>
+                    <h id="pageTitle"></h>
                 </div>
             </div>
+    
+            <script>
+                //link the buttons to the specified pages and insert information (button labels, titles, etc.) specific to the project
+                document.getElementById("github").addEventListener('click', function(){location.href=githubLink})
+    
+                document.getElementById("website").addEventListener('click', function(){location.href=websiteLink})
+                $("#website").text(websiteLinkName)
+    
+                document.getElementById("specs").addEventListener('click', function(){location.href=specLink})
+                $("#specs").text(specLinkName)
+    
+                document.getElementById("pyNidm").addEventListener('click', function(){location.href=pyNIDMLink})
+                $("#pyNidm").text(pyNIDMLinkName)
+    
+                $("#pageTitle").text(pageTitle)
+    
+                //add the logo image to the page
+                document.getElementById('image').src=("img/"+logoFileName)
+            </script>
         </header>
     
         <div>
@@ -100,12 +148,12 @@
                 <h2 id="stepTitles">GitHub Access Token<hr style="margin-top: 5px;"></h2>
 
 
-                <div class="headerBrdr"><center>
-                    The NIDM-Terms effort is focused on developing and adopting a set of community driven controlled vocabulary 
-                    for neuroimaging. NIDM-Terms infrastructure consists of a GitHub repository containing JSON-LD formatted 
-                    files for each term. Newly added terms will be sent as a pull request to our GitHub repository.
-                    Therefore, in order to suggest a new term, a GitHub API Token must be provided. 
-                </center></div>
+                <div class="headerBrdr" id="headerBrdr"><center></center></div>
+
+                <script>
+                    //insert information (button labels, titles, etc.) specific to the project
+                    $("#headerBrdr").text(headerText)
+                </script>
 
                 <br>
 
@@ -284,8 +332,8 @@
                     //add checkmarks with available community names by fetching (https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json)
                     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                     $(document).ready(function(event){
-                        //Fetch 'https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json' to get a list of the available communities in NIDM-Terms/terms
-                        fetch('https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json')
+                        //Fetch communityLink to get a list of the available communities in the repository
+                        fetch(communityLink)
                         .then(function(res){
                             return res.json(); 
                         })
@@ -448,14 +496,14 @@
 
                             $(document).ready(function(event) { 
                                 // fetch the context file and create a jsonld
-                                fetch("https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld")
+                                fetch(contextLink)
                                 .then(function(resp){
                                     return resp.json(); 
                                 })
 
                                 .then(async function(context){
 
-                                    dict['@context'] = 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld'
+                                    dict['@context'] = contextLink
 
                                     //call checkTerm to checkif the lable of the term already exists to avoid duplication
                                     //returns 1 if the terms exists and 0 if the term doesn't exist
@@ -517,7 +565,7 @@
 
 
                                     //compact term dictionary
-                                    const compacted = await jsonld.compact(dict, 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld');
+                                    const compacted = await jsonld.compact(dict, contextLink);
                                     console.log(compacted)
 
                                     return compacted
@@ -561,7 +609,7 @@
                             // const info = octokit.request(`GET /user`);
                             // console.log(info)
 
-                            const repo = 'terms';
+                            const repo = repoName;
                             const fileName = document.getElementById("label").value;
                             
                             //GET user's github username
@@ -818,7 +866,12 @@
     <footer>
         <div id="footer">
             <hr id= "bottomLine">
-            <p><center>This project was supported by the National Institutes of Mental Health (NIMH) grant 1RF1MH120021</center></p>
+            <p id="footerText"><center></center></p>
+
+            <script>
+                //add a message to the footer
+                $("#footerText").text(footerText)
+            </script>
         <div>
     </footer>
 
@@ -872,7 +925,7 @@
             transition: 0.1s;
         }
 
-        .nidmSpecs{
+        .specs{
             float: right;
             margin-right: -20px;
             color: #646464;
@@ -882,7 +935,7 @@
             font-weight: lighter;
         }
 
-        .nidmSpecs:hover{
+        .specs:hover{
             color: #32e17c;
             transition: 0.1s;
         }
@@ -898,21 +951,6 @@
         }
 
         .pyNidm:hover{
-            color: #32e17c;
-            transition: 0.1s;
-        }
-
-        .annoTool{
-            float: right;
-            margin-right: -20px;
-            color: #646464;
-            font-size: 13px;
-            width: 130px;
-            height:50px;
-            font-weight: lighter;
-        }
-
-        .annoTool:hover{
             color: #32e17c;
             transition: 0.1s;
         }
