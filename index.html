@@ -3,26 +3,8 @@
 
 <script>
     //////////////////////////////////////////////////////////////////////////////////////////
-    // IN ORDER TO HOST YOUR OWN COMMUNITY, EDIT THE VARIABLES BELOW
-    var githubLink = "https://github.com/NIDM-Terms/terms" //Link to GitHub terms repository
-
-    var websiteLink = "https://scicrunch.org/nidm-terms/about/project" //Link to project website
-    var websiteLinkName = "NIDM Website" //Hypertext displayed for websiteLink
-
-    var specLink = "http://nidm.nidash.org/" //Link to project specifications
-    var specLinkName = "NIDM Specs" //Hypertext displayed for specLink
-
-    var pyNIDMLink = "https://github.com/incf-nidash/PyNIDM" //Link to GitHub PyNIDM repository
-    var pyNIDMLinkName = "PyNIDM" //Hypertext displayed for pyNIDMLink
-
-    var pageTitle = "NIDM-Terms" //Text displayed beside the logo at the top of the page
-    
-    // TO INSERT YOUR OWN LOGO, PLEASE UPLOAD AN IMAGE TO THE 'img' FOLDER AND UPDATE logoFileName
-    var logoFileName = "nidm-terms_576163.png" //name of the file containing the logo inside the 'img' folder
-
-    var communityLink = 'https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json' //Link to list of available communities
-    
-    var footerText = "This project was supported by the National Institutes of Mental Health (NIMH) grant 1RF1MH120021"
+    // IN ORDER TO HOST YOUR COMMUNITY IN YOUR OWN SPACE, EDIT THE VARIABLES BELOW
+    var communityLink = 'https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json' //Link to list of available communities JSON dictionary found in the UI repository
     //////////////////////////////////////////////////////////////////////////////////////////
 </script>
 
@@ -47,50 +29,35 @@
 <body>
     <header>
         <div class="about">
-            <form target="_blank">
-                <button class= "github" id="github">Github <i class="fa fa-github" style="font-size:17px"></i></button>
+            <form action = "https://github.com/NIDM-Terms/terms" target="_blank">
+                <button class= "github">Github <i class="fa fa-github" style="font-size:17px"></i>
+                </button>
             </form>
-            <form target="_blank">
-                <button class= "website" id = "website"></button>
+            <form action = "https://scicrunch.org/nidm-terms/about/project" target="_blank">
+                <button class= "website">NIDM Website</button>
             </form>
-            <form target="_blank">
-                <button class = "specs" id = "specs"></button>
+            <form action = "http://nidm.nidash.org/" target="_blank">
+                <button class = "nidmSpecs"> NIDM Specs</button>
             </form>
-            <form target= "_blank" >
-                <button class= "pyNidm" id = "pyNidm"></a>
+            <form action ="https://github.com/incf-nidash/PyNIDM" target= "_blank" >
+                <button class= "pyNidm"> PyNIDM</a>
+            </form>
+            <form action ="https://incf-nidash.github.io/nidmterms-ui/#/annotate" target= "_blank" >
+                <button class= "annoTool"> CSV Annotation Tool</a>
             </form>
         </div>
 
         <div class="logo-items">
             <div class= "logo">
-                <img width= "70" height="70" id = "image">
+                <img src="img/nidm-terms_576163.png" width= "70" height="70">
             </div>
             <div class="inner">
-                <h id="pageTitle"></h>
+                <h>NIDM-Terms</h>
             </div>
             <div class= "search-box">
                 <input id= "searchBar" class="search_bar" type="text" name="box" placeholder = "Search Terms"><i id= "searchIcon" class="fa fa-search" style="font-size:24px"></i>
             </div>
         </div>
-
-        <script>
-            //link the buttons to the specified pages and insert information (button labels, titles, etc.) specific to the project
-            document.getElementById("github").addEventListener('click', function(){location.href=githubLink})
-
-            document.getElementById("website").addEventListener('click', function(){location.href=websiteLink})
-            $("#website").text(websiteLinkName)
-
-            document.getElementById("specs").addEventListener('click', function(){location.href=specLink})
-            $("#specs").text(specLinkName)
-
-            document.getElementById("pyNidm").addEventListener('click', function(){location.href=pyNIDMLink})
-            $("#pyNidm").text(pyNIDMLinkName)
-
-            $("#pageTitle").text(pageTitle)
-
-            //add the logo image to the page
-            document.getElementById('image').src=("img/"+logoFileName)
-        </script>
     </header>
         
     <div id = "loader" class="loader"> </div>
@@ -275,7 +242,7 @@
             transition: 0.1s;
         }
 
-        .specs{
+        .nidmSpecs{
             float: right;
             margin-right: -20px;
             color: #646464;
@@ -285,7 +252,7 @@
             font-weight: lighter;
         }
 
-        .specs:hover{
+        .nidmSpecs:hover{
             color: #32e17c;
             transition: 0.1s;
         }
@@ -301,6 +268,21 @@
         }
 
         .pyNidm:hover{
+            color: #32e17c;
+            transition: 0.1s;
+        }
+
+        .annoTool{
+            float: right;
+            margin-right: -20px;
+            color: #646464;
+            font-size: 13px;
+            width: 150px;
+            height:50px;
+            font-weight: lighter;
+        }
+
+        .annoTool:hover{
             color: #32e17c;
             transition: 0.1s;
         }
@@ -785,6 +767,7 @@
                 $("#termsView").append(html);
 
                 function fetchAll(url,commName){
+                    //NIDMT = 3622, NIDMC = 274, BIDS = 235, CONP = 143
                     fetch(url)
                     .then(function(resp){
                         return resp.json(); 
@@ -1016,7 +999,16 @@
                         }
                         if(placeInDict !== -1 && newIndex!==mainDictCopy[commName].length){
                             html += '<div class="treeview_'+commName+'"' 
+                            //color codes the communities' terms to differentiate them
+                            // if(key==='NIDM_Terms'){html += 'style="color:darkred"';}   
+                            // else if(key==='NIDM_Concepts') {html += 'style="color:darkorange"';}
+                            // else if(key==='BIDS_Terms') {html += 'style="color:darkgreen"';}
+                            // else if(key==='CONP_DATS_Terms') {html += 'style="color:darkcyan"';}
                             html += 'style="margin-left:-40px;"><ul class= "treeview" style="margin-top:-20px;">'
+                            // html += 'style="margin-top:50px;margin-left:-40px;"><ul class= "treeview" style="margin-top:-20px;">'
+                            
+                                // style="margin-left:-39px;margin-top:12px;"
+                            // html += '><ul class= "treeview" style="margin-left:-45px;margin-top:-13px;">'
 
                             html += '<li style="color:#4d4d4d;"><span style="font-size:21px;margin-bottom:2px;">' + sortedList[index] + '</span><br>';
 
@@ -1380,12 +1372,7 @@
 <footer>
     <div id="footer">
         <hr id= "bottomLine">
-        <p id="footerText"><center></center></p>
-
-        <script>
-            //add a message to the footer
-            $("#footerText").text(footerText)
-        </script>
+        <p><center>This project was supported by the National Institutes of Mental Health (NIMH) grant 1RF1MH120021</center></p>
     <div>
 </footer>
 
