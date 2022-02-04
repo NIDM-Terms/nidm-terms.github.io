@@ -3,36 +3,13 @@
 
 <script>
     //////////////////////////////////////////////////////////////////////////////////////////
-    // IN ORDER TO HOST YOUR OWN COMMUNITY, EDIT THE VARIABLES BELOW
-    var githubLink = "https://github.com/NIDM-Terms/terms" //Link to GitHub terms repository
-
-    var websiteLink = "https://scicrunch.org/nidm-terms/about/project" //Link to project website
-    var websiteLinkName = "NIDM Website" //Hypertext displayed for websiteLink
-
-    var specLink = "http://nidm.nidash.org/" //Link to project specifications
-    var specLinkName = "NIDM Specs" //Hypertext displayed for specLink
-
-    var pyNIDMLink = "https://github.com/incf-nidash/PyNIDM" //Link to GitHub PyNIDM repository
-    var pyNIDMLinkName = "PyNIDM" //Hypertext displayed for pyNIDMLink
-
-    var pageTitle = "NIDM-Terms" //Text displayed beside the logo at the top of the page
-    
-    // TO INSERT YOUR OWN LOGO, PLEASE UPLOAD AN IMAGE TO THE 'img' FOLDER AND UPDATE logoFileName
-    var logoFileName = "nidm-terms_576163.png" //name of the file containing the logo inside the 'img' folder
-    
-    //Text displayed above the API Token input bar explaining the purpose of requiring users to enter their API Tokens
-    var headerText = `The NIDM-Terms effort is focused on developing and adopting a set of community driven controlled vocabulary 
-                    for neuroimaging. NIDM-Terms infrastructure consists of a GitHub repository containing JSON-LD formatted 
-                    files for each term. Newly added communities will be sent as a pull request to our GitHub repository.
-                    Therefore, in order to suggest a new community, a GitHub API Token must be provided.`
-
-    var communityLink = 'https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json' //Link to list of available communities
-
-    var contextLink = 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld' //Link to context file
-
-    var repoName = 'terms'; //Name of repository containing terms
-
-    var footerText = "This project was supported by the National Institutes of Mental Health (NIMH) grant 1RF1MH120021"
+    // IN ORDER TO HOST YOUR COMMUNITY IN YOUR OWN SPACE, EDIT THE VARIABLES BELOW
+    var contextLink = "https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld" //Link to context file
+    var communityLink = 'https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json' //Link to list of available communities JSON dictionary found in the UI repository
+    var orgRepo = 'NIDM-Terms' //If you cloned the repository (which contains one repository for the terms and another repository for the UI) to your organization, this is the name of the organization's GitHub repository. If you cloned the repository to your personal GitHub account, this is the name of your personal GitHub repository.
+    var termsRepo = 'terms'; //Name of GitHub repository that contains terms - this variable can be changed if you decide to change the name of terms repository
+    var pullsLink = 'https://github.com/NIDM-Terms/terms/pulls' //Link to view pull requests in the GitHub terms repository
+    var issueLink = 'https://github.com/NIDM-Terms/terms/issues' //Link to view reported issues in the GitHub terms repository
     //////////////////////////////////////////////////////////////////////////////////////////
 </script>
 
@@ -57,47 +34,32 @@
 
         <header>
             <div class="about">
-                <form target="_blank">
-                    <button class= "github" id="github">Github <i class="fa fa-github" style="font-size:17px"></i></button>
+                <form action = "https://github.com/NIDM-Terms/terms" target="_blank">
+                    <button class= "github">Github <i class="fa fa-github" style="font-size:17px"></i>
+                    </button>
                 </form>
-                <form target="_blank">
-                    <button class= "website" id = "website"></button>
+                <form action = "https://scicrunch.org/nidm-terms/about/project" target="_blank">
+                    <button class= "website">NIDM Website</button>
                 </form>
-                <form target="_blank">
-                    <button class = "specs" id = "specs"></button>
+                <form action = "http://nidm.nidash.org/" target="_blank">
+                    <button class = "nidmSpecs"> NIDM Specs</button>
                 </form>
-                <form target= "_blank" >
-                    <button class= "pyNidm" id = "pyNidm"></a>
+                <form action ="https://github.com/incf-nidash/PyNIDM" target= "_blank" >
+                    <button class= "pyNidm"> PyNIDM</a>
                 </form>
+	            <form action ="https://incf-nidash.github.io/nidmterms-ui/#/annotate" target= "_blank" >
+	                <button class= "annoTool"> CSV Annotation Tool</a>
+	            </form>
             </div>
     
             <div class="logo-items">
                 <div class= "logo">
-                    <img width= "70" height="70" id = "image">
+                    <img src="img/nidm-terms_576163.png" width= "70" height="70">
                 </div>
                 <div class="inner">
-                    <h id="pageTitle"></h>
+                    <h>NIDM-Terms</h>
                 </div>
             </div>
-    
-            <script>
-                //link the buttons to the specified pages and insert information (button labels, titles, etc.) specific to the project
-                document.getElementById("github").addEventListener('click', function(){location.href=githubLink})
-    
-                document.getElementById("website").addEventListener('click', function(){location.href=websiteLink})
-                $("#website").text(websiteLinkName)
-    
-                document.getElementById("specs").addEventListener('click', function(){location.href=specLink})
-                $("#specs").text(specLinkName)
-    
-                document.getElementById("pyNidm").addEventListener('click', function(){location.href=pyNIDMLink})
-                $("#pyNidm").text(pyNIDMLinkName)
-    
-                $("#pageTitle").text(pageTitle)
-    
-                //add the logo image to the page
-                document.getElementById('image').src=("img/"+logoFileName)
-            </script>
         </header>
     
         <div>
@@ -148,12 +110,12 @@
                 <h2 id="stepTitles">GitHub Access Token<hr style="margin-top: 5px;"></h2>
 
 
-                <div class="headerBrdr" id="headerBrdr"><center></center></div>
-
-                <script>
-                    //insert information (button labels, titles, etc.) specific to the project
-                    $("#headerBrdr").text(headerText)
-                </script>
+                <div class="headerBrdr"><center>
+                    The NIDM-Terms effort is focused on developing and adopting a set of community driven controlled vocabulary 
+                    for neuroimaging. NIDM-Terms infrastructure consists of a GitHub repository containing JSON-LD formatted 
+                    files for each term. Newly added terms will be sent as a pull request to our GitHub repository.
+                    Therefore, in order to suggest a new term, a GitHub API Token must be provided. 
+                </center></div>
 
                 <br>
 
@@ -179,7 +141,11 @@
                     
                 </center></div>
 
-                <center><table id="table"></table></center>
+                <center>
+                    <div id="selectCommunity">
+                        <table id="table"></table>
+                    </div>
+                </center>
 
                 <br><br><br>
 
@@ -329,7 +295,7 @@
                         document.getElementById("loadingText").style.display = "none";  
                     }
                     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                    //add checkmarks with available community names by fetching (https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json)
+                    //add checkmarks with available community names by fetching communityLink
                     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                     $(document).ready(function(event){
                         //Fetch communityLink to get a list of the available communities in the repository
@@ -414,7 +380,7 @@
 
 
                     ///////////////////////////////////////////////////////////////////////////
-                    /// function created to add choices if the term is a catagorical variable
+                    /// function created to add choices if the term is a categorical variable
                     ///////////////////////////////////////////////////////////////////////////
                     var list = [];
                     function addOptions(){
@@ -470,10 +436,10 @@
                     function submitTerm(){
 
                         if(document.querySelector('input[name="radio"]:checked') == null){
-                            document.getElementById('selectComunity').style.borderColor = 'red'
-                            document.getElementById('selectComunity').style.borderWidth = '1px'
-                            document.getElementById('selectComunity').style.backgroundColor = '#FFF1F1'
-                            $('#selectComunity').focus();
+                            document.getElementById('selectCommunity').style.borderColor = 'red'
+                            document.getElementById('selectCommunity').style.borderWidth = '1px'
+                            document.getElementById('selectCommunity').style.backgroundColor = '#FFF1F1'
+                            $('#selectCommunity').focus();
                         }
                         else{
                         
@@ -609,7 +575,7 @@
                             // const info = octokit.request(`GET /user`);
                             // console.log(info)
 
-                            const repo = repoName;
+                            const repo = termsRepo;
                             const fileName = document.getElementById("label").value;
                             
                             //GET user's github username
@@ -631,7 +597,7 @@
                                 octokit.request(
                                     `GET /repos/{owner}/{repo}`, {
                                         headers: {
-                                            'User-Agent': 'terms',
+                                            'User-Agent': termsRepo,
                                             'accept': 'application/json'
                                         },
                                         owner: owner,
@@ -649,7 +615,7 @@
                                                 headers: {
                                                     'Authorization': 'token ' + gitToken,
                                                 },
-                                                owner: 'NIDM-Terms',
+                                                owner: orgRepo,
                                                 repo: repo
                                             }).then((response) => {
                                             console.log(71, 'successfully forked: ', response.status);
@@ -662,7 +628,7 @@
                                             console.log(77, "post fork: ", response);
                                         }).catch((e) => {
                                             console.log(79, e.message);
-                                            reportAnIssue('NIDM Terms UI: an issue with forking NIDM-Terms repo', e);
+                                            reportAnIssue('NIDM Terms UI: an issue with forking '+orgRepo+' repo', e);
                                         });
                                     }
                                 });
@@ -740,7 +706,7 @@
                                         headers: {
                                             'Authorization': 'token ' + gitToken,
                                         },
-                                        owner: 'NIDM-Terms',
+                                        owner: orgRepo,
                                         repo: repo,
                                         title: 'New '+community+' Term Added: ' + fileName,
                                         body: 'Edited or Added Terms:' + pathToFile,
@@ -769,7 +735,7 @@
 
                                     html += '<h2 id="stepTitles">Submission Complete <hr style="margin-top: 5px;"></h2>'
 
-                                    html += '<div class="headerBrdr"><center>Thank you for adding a new term to NIDM-Terms. ';
+                                    html += '<div class="headerBrdr"><center>Thank you for adding a new term to '+orgRepo+'. ';
                                     html += 'Your term has been submitted for further discussion.<br><br></center></div>';
 
                                     html += '<div class="headerBrdr">';
@@ -779,13 +745,15 @@
                                     html += '</center></form>';
                                         
                                     html += '<form><center>';
-                                    html += '<a href= "https://github.com/NIDM-Terms/terms/pulls" target = "_blank"> <button id = "viewPR" class= "subBtn" type = "button" > View Pull Request </button></a>';
+                                    html += '<a target = "_blank"> <button id = "viewPR" class= "subBtn" type = "button" > View Pull Request </button></a>';
                                     html += '</center></form>';
 
                                     html += '<br><br>';
                                     html += '</div>';
 
                                     $('#rmv').append(html)
+
+                                    document.getElementById("viewPR").addEventListener('click', function(){location.href="https://github.com/"+orgRepo+"/"+termsRepo+"/pulls"})
                                 }
                             }
 
@@ -817,8 +785,8 @@
 
                             async function createGithubIssue(issue, e){
                                 octokit.request(`POST /repos/{owner}/{repo}/issues`, {
-                                owner: 'NIDM-Terms',
-                                repo: 'terms',
+                                owner: orgRepo,
+                                repo: termsRepo,
                                 title: issue,
                                 body: 'An issue occurred while submitting a new term: '+JSON.stringify(newTermJsonld) +  '\n' + e 
                                 }).then(l => {
@@ -837,18 +805,20 @@
                                 html += '<h2 id="stepTitles">Issue Reported <hr style="margin-top: 5px;"></h2>'
 
                                 html += '<div class="headerBrdr"><center>Thank you for reporting! ';
-                                html += 'A GitHub issue in the NIDM-Terms repository reporting the problem was created on your behalf.<br><br></center></div>';
+                                html += 'A GitHub issue in the '+orgRepo+' repository reporting the problem was created on your behalf.<br><br></center></div>';
 
                                 html += '<div class="headerBrdr">';
 
                                 html += '<form><center>';
-                                html += '<a href= "https://github.com/NIDM-Terms/terms/issues" target = "_blank"> <button id = "viewPR" class= "subBtn" type = "button" > View GitHub Issue </button></a>';
+                                html += '<a target = "_blank"> <button id = "viewIssue" class= "subBtn" type = "button" > View GitHub Issue </button></a>';
                                 html += '</center></form>';
 
                                 html += '<br>';
                                 html += '</div>';
 
                                 $('#rmv').append(html);
+
+                                document.getElementById("viewIssue").addEventListener('click', function(){location.href="https://github.com/"+orgRepo+"/"+termsRepo+"/issues"})
                             }
 
                         }
@@ -866,12 +836,7 @@
     <footer>
         <div id="footer">
             <hr id= "bottomLine">
-            <p id="footerText"><center></center></p>
-
-            <script>
-                //add a message to the footer
-                $("#footerText").text(footerText)
-            </script>
+            <p><center>This project was supported by the National Institutes of Mental Health (NIMH) grant 1RF1MH120021</center></p>
         <div>
     </footer>
 
@@ -925,7 +890,7 @@
             transition: 0.1s;
         }
 
-        .specs{
+        .nidmSpecs{
             float: right;
             margin-right: -20px;
             color: #646464;
@@ -935,7 +900,7 @@
             font-weight: lighter;
         }
 
-        .specs:hover{
+        .nidmSpecs:hover{
             color: #32e17c;
             transition: 0.1s;
         }
@@ -951,6 +916,21 @@
         }
 
         .pyNidm:hover{
+            color: #32e17c;
+            transition: 0.1s;
+        }
+
+        .annoTool{
+            float: right;
+            margin-right: -20px;
+            color: #646464;
+            font-size: 13px;
+            width: 150px;
+            height:50px;
+            font-weight: lighter;
+        }
+
+        .annoTool:hover{
             color: #32e17c;
             transition: 0.1s;
         }
@@ -1776,9 +1756,9 @@
         }
 
         #selectCommunity{
-            border: 1px solid rgb(175, 175, 175);
+            border: 1px solid rgb(240, 240, 240);
             border-radius: 3px;
-            background-color: rgb(250, 250, 250);
+            background-color: rgb(240, 240, 240);
             padding-top: 15px;
             padding-bottom: 20px;
             margin-left: 60px;
