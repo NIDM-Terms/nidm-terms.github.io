@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
+<script>
+    //////////////////////////////////////////////////////////////////////////////////////////
+    // IN ORDER TO HOST YOUR COMMUNITY IN YOUR OWN SPACE, EDIT THE VARIABLES BELOW
+    var contextLink = "https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld" //Link to context file
+    var communityLink = 'https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json' //Link to list of available communities JSON dictionary found in the UI repository
+    //////////////////////////////////////////////////////////////////////////////////////////
+</script>
 
     <head>
 
@@ -54,9 +60,9 @@
                 <form action ="https://github.com/incf-nidash/PyNIDM" target= "_blank" >
                     <button class= "pyNidm"> PyNIDM</a>
                 </form>
-				<form action ="https://sanuann.github.io/nidmterms-ui/#/annotate" target= "_blank" >
-					<button class= "annoTool"> CSV Annotation Tool</a>
-				</form>
+                <form action ="https://incf-nidash.github.io/nidmterms-ui/#/annotate" target= "_blank" >
+                  <button class= "annoTool"> CSV Annotation Tool</a>
+                </form>
             </div>
 
             <div class="logo-items">
@@ -957,10 +963,10 @@
         var displayedTerms = [];
 
         //////////////////////////////////////////////////////////////////////////////////////////
-        //fetch the NIDM-Terms Context file and save into a variable
+        //fetch the Context file and save into a variable
         //////////////////////////////////////////////////////////////////////////////////////////
         var context = {};
-        fetch('https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld')
+        fetch(contextLink)
         .then(function(res){
             return res.json(); 
         })
@@ -1014,8 +1020,8 @@
             var checkedTerms = [];
 
             //Add options
-            //Fetch 'https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json' to get a list of the available communities in NIDM-Terms/terms
-            fetch('https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json')
+            //Fetch communityLink to get a list of the available communities in NIDM-Terms/terms
+            fetch(communityLink)
             .then(function(res){
                 return res.json(); 
             })
@@ -1350,7 +1356,7 @@
                     })
                     .then(function(data){
                         //add the terms to a singular main list and sort
-                        temp['@context'] = 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld';
+                        temp['@context'] = contextLink;
                         var currData = tempList.concat(data['terms'])
                         tempList = currData
                         temp['terms'] = sortOnKeys(tempList)
@@ -1555,7 +1561,7 @@
             mainTemp = {};
             tempList =[];
 
-            mainTemp['@context'] = 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld';
+            mainTemp['@context'] = contextLink;
             mainTemp['@type'] = "nidm:TermsCollection";
 
 
@@ -1599,7 +1605,7 @@
             mainTemp[context['@context']['terms']['@id']] = tempList
 
             //compact term dictionary
-            const compacted = await jsonld.compact(mainTemp, 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld');
+            const compacted = await jsonld.compact(mainTemp, contextLink);
             
             //Download file
             downloadObjectAsJson(compacted, 'Terms')
@@ -1621,7 +1627,7 @@
             mainTemp = {};
             tempList =[];
 
-            mainTemp['@context'] = 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld';
+            mainTemp['@context'] = contextLink;
             mainTemp['@type'] = "nidm:TermsCollection";
 
             for (var l in jsonldData['terms']) {
