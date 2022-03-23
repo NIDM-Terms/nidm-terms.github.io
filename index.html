@@ -5,6 +5,8 @@
     //////////////////////////////////////////////////////////////////////////////////////////
     // IN ORDER TO HOST YOUR COMMUNITY IN YOUR OWN SPACE, EDIT THE VARIABLES BELOW
     var communityLink = 'https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json' //Link to list of available communities JSON dictionary found in the UI repository
+    
+    var contextLink = 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld' //Link to context file
     //////////////////////////////////////////////////////////////////////////////////////////
 </script>
 
@@ -1108,6 +1110,25 @@
             background: #e5e5e5;
         }
 
+        #selectProp {
+            appearance:none;
+            float:left;
+            width:225px;
+            border:none;
+            color:#73767a;
+            background: transparent;
+            border-radius:6px;
+            cursor:pointer;
+            font-family:Arial;
+            font-style: italic;
+            font-weight: bold;
+            font-size:14px;
+            height:25px;
+        }
+        #selectProp:hover{
+            background:#73767a13;
+        }
+
         #instruct-bar {
             margin-left:38px;
             color: darkgray;
@@ -1176,7 +1197,11 @@
         var editList = [] //List to contain indices of all terms that the user selected to edit
         var searchList = [] //List to contain indices of all searched terms
         var typeOptions = ['string', 'boolean', 'integer', 'float', 'double', 'duration', 'dateTime', 'time', 'date', 'anyURI', 'complexType'] //List of all values in valueType dropdown
-
+        var notDisplayed = ['@type','@version','rdfs','xsd','nidm','skos','owl','prov','reproschema','schema','DataElement','PersonalDataElement','CommonDataElement','Concept','name','value','bids','terms','version'] // List of properties that don't need to be displayed
+        var availableProperties = []; // List to contain all properties that the user can edit or add to the term
+        var otherProperties = []; // List to contain properties not shown that the user can add to the term
+        var displayedProperties = []; // List to contain properties shown on the Edit Page
+        
         /// This function fetches data from all of the communities' jsonld files
         $(document).ready(function(event) {
             //display the loading screen
@@ -1220,6 +1245,28 @@
             document.getElementById('editBtn2').addEventListener('click', enableEdits)
 
             addLoading()    //show a loading display while the page is loading
+
+            // fetch the context file and create a list of properties that are displayed on the page and another list that the user can add while editing a term
+            var context = {};
+            fetch(contextLink)
+            .then(function(resp){
+                return resp.json(); 
+            })
+            .then(function(temp){
+                //loop throught the context file and display all available properties in the "Select Term Properties" drop down menu
+                for(const property in temp['@context']){
+                    if(!notDisplayed.includes(property)){
+                        availableProperties.push(property)
+                    }else{
+                        otherProperties.push(property)
+                    }
+                }
+                //assign temp to the global dictionary context
+                context = temp
+                
+                console.log(1156, displayedProperties)
+            })
+
             //Fetch communityLink to get a list of the available communities in the terms repository
             fetch(communityLink)
             .then(function(res){
@@ -1791,7 +1838,8 @@
                 html += '<button id="backBtn" style="font-style:italic;font-weight:normal;color:#1f91c2;font-size:17px;display:inline-block;margin-left:-135px;">Back</button>'
 
                 html += `<div id = "instruct-bar">To edit, please click on the desired term(s) and make your changes.<br>
-                    Changes will be reflected once the PR is merged.</div>`
+                    Changes will be reflected once the PR is merged.<br>
+                    Removing the value of any property is equivalent to removing the entire property from the term.</div>`
 
                 html += '<ul class = "treeview3">';
 
@@ -1818,6 +1866,9 @@
                         <input id= "label" class="newComInput" type="text" name="label" value ="`+ term.label +`"placeholder = "REQUIRED: Term in camelCase (e.g. durationTime, author)" required>`
                     
                     for (const [key,value] of Object.entries(term)){
+                        //add to the list of properties that are on display
+                        if(!notDisplayed.includes(key)){displayedProperties.push(key)}
+                        
                         // console.log(key+': '+typeof value)
                         if(key==='description'){
                             html+= `<h4 style="margin-bottom:10px;margin-left:-10px;">Description *
@@ -2050,7 +2101,7 @@
                                             html+=`<p>`+kk+`:</p>`
                                             for(const [kkk,vvv] of Object.entries(vv)){
                                                 if(kk==='valueType'){
-                                                    html+='<select name="valueType" id="newComInput" class="newComInput" style="width:95.2%;margin-left:10px;">'
+                                                    html+='<select name="valueType" id="selectValueType" class="newComInput" style="width:95.2%;margin-left:10px;">'
                                                     
                                                     //sets default type of dropdown to the current value for valueType
                                                     for(var i = 0; i < typeOptions.length; i++){
@@ -2192,8 +2243,20 @@
                         }
                     }
 
+                    html+='<div id="addedProps"></div>'
+
+                    console.log(413, displayedProperties)
+
                     // add option for the user to add more properties
-                    html+='<button id="addProp" class="btn2" type = "button" style="float:left; width:175px;"><i>&#xFE62; Add Another Property</i></button>'
+                    html+=`<select id="selectProp" class="newComInput"><option value = "all"><i>&#xFE62; Add Another Property</i></option>`
+
+                    for(var i = 0; i < availableProperties.length; i++){
+                        // if the page does not display a property on the availableProperties list, give the user the option to add it to the term
+                        if( !(displayedProperties.includes(availableProperties[i])) ){
+                            html+='<option value = "'+availableProperties[i]+'">'+availableProperties[i]+'</option>'
+                        }
+                    }
+                    html+='</select>'
 
                     // html+='<div>'
                     html+='</ul></li><hr id= "dividerLine" style="margin-right:30px;">'
@@ -2276,29 +2339,45 @@
 
                     $('#wrapper'+index).append(html);
                 };
+                
+                document.getElementById('selectProp').addEventListener("change", function(){
+                    var selectedVal = document.getElementById("selectProp").value
+                    // console.log(224, $('#addedProps').text())
+                    // create an input field for the user to fill out this property
+                    var sentenceCase = selectedVal.replace(/([A-Z])/g,' $1').charAt(0).toUpperCase() + selectedVal.replace(/([A-Z])/g,' $1').slice(1)
+                    var html = '';
+                    html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">`+ sentenceCase +`</h4>
+                        <input id="`+ selectedVal +`" class="newComInput" type="text" name="`+ selectedVal +`" placeholder = "OPTIONAL: `+ sentenceCase +`"></div>`
+                    $('#addedProps').append(html)
+                    // console.log(224, document.getElementById('addedProps'))
+                    // reset the dropdown menu
+                    document.getElementById("selectProp").value = 'all'
+                }, false)
 
                 // enables submit button if changes have been made to the entries
                 const inputs = document.querySelectorAll("input.newComInput");
-                console.log(inputs)
+                console.log(44, inputs)
                 //Get the values selected in the checkboxes
                 var checkboxElems = document.querySelectorAll("input[name='tagCheckbox']");
-                var oldSelect = '' //initial value of dropdown list
-                var selectList = document.querySelector("select") // get the dropdown list
+                var oldValueType = '' //initial value of the valueType dropdown list
+                var valueTypeList = document.getElementById('selectValueType') // get the valueType dropdown list
+                // var selectList = document.querySelector("select") // get the valueType dropdown list
 
                 function saveInitial() {
                     for (const el of inputs) el.oldValue = el.value;
-                    if(selectList!== null){
-                        for(var i = 0; i < selectList.length; i++){
-                            if(selectList[i].selected){ oldSelect = selectList[i].value }
+                    if(valueTypeList!== null){
+                        for(var i = 0; i < valueTypeList.length; i++){
+                            if(valueTypeList[i].selected){ oldValueType = valueTypeList[i].value }
                         }
                     }
                     
                 }
                 function setEnabled() {
+                    console.log(224, document.getElementById('addedProps'))
                     var e = false;
                     var numChecked = document.querySelectorAll("input[name='tagCheckbox']:checked").length
                     for (const el of inputs) {
-                        if (el.oldValue !== el.value || numChecked!==checkboxElems.length || (selectList !== null && oldSelect !== selectList.value)) {
+                        if (el.oldValue !== el.value || numChecked!==checkboxElems.length || (valueTypeList !== null && oldValueType !== valueTypeList.value) || ($('#addedProps').html().length !== 0)) {
                             e = true;
                             break;
                         }
