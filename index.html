@@ -1110,7 +1110,7 @@
             background: #e5e5e5;
         }
 
-        #selectProp {
+        .selectProp {
             appearance:none;
             float:left;
             width:225px;
@@ -1125,7 +1125,7 @@
             font-size:14px;
             height:25px;
         }
-        #selectProp:hover{
+        .selectProp:hover{
             background:#73767a13;
         }
 
@@ -2243,12 +2243,12 @@
                         }
                     }
 
-                    html+='<div id="addedProps"></div>'
+                    html+='<div id="addedProps'+j+'" class="addedProps"></div>'
 
                     console.log(413, displayedProperties)
 
                     // add option for the user to add more properties
-                    html+=`<select id="selectProp" class="newComInput"><option value = "all"><i>&#xFE62; Add Another Property</i></option>`
+                    html+=`<select id="`+j+`" class="selectProp newComInput"><option value = "all"><i>&#xFE62; Add Another Property</i></option>`
 
                     for(var i = 0; i < availableProperties.length; i++){
                         // if the page does not display a property on the availableProperties list, give the user the option to add it to the term
@@ -2340,19 +2340,37 @@
                     $('#wrapper'+index).append(html);
                 };
                 
-                document.getElementById('selectProp').addEventListener("change", function(){
-                    var selectedVal = document.getElementById("selectProp").value
-                    // console.log(224, $('#addedProps').text())
+                //when a dropdown menu property is selected, call the function that creates a new input box for the property
+                var selectPropElems = document.getElementsByClassName("selectProp")
+                for(var k = 0; k < selectPropElems.length; k++){
+                    selectPropElems[k].addEventListener("change", function(e){
+                        addInputs(this.id)
+                    }, false)
+                }
+
+                var propsAdded = false;
+                //create a new input box for the user to add a property
+                function addInputs(index){
+                    var selectedVal = document.querySelector("select[id='"+index+"']").value
+
                     // create an input field for the user to fill out this property
                     var sentenceCase = selectedVal.replace(/([A-Z])/g,' $1').charAt(0).toUpperCase() + selectedVal.replace(/([A-Z])/g,' $1').slice(1)
+
                     var html = '';
                     html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">`+ sentenceCase +`</h4>
                         <input id="`+ selectedVal +`" class="newComInput" type="text" name="`+ selectedVal +`" placeholder = "OPTIONAL: `+ sentenceCase +`"></div>`
-                    $('#addedProps').append(html)
-                    // console.log(224, document.getElementById('addedProps'))
+                    $('#addedProps'+index).append(html)
+
+                    propsAdded = true
+                    setEnabled()
+                    // console.log(document.getElementsByClassName('addedProps'))
+                    // console.log(91, 'length of '+index+' is '+$('#addedProps'+index).html().length)
+
                     // reset the dropdown menu
-                    document.getElementById("selectProp").value = 'all'
-                }, false)
+                    $("select[id='"+index+"']").value = 'all'
+                    // remove the newly added property from the dropdown menu
+                    $("select[id='"+index+"'] option[value='"+selectedVal+"']").remove()
+                }
 
                 // enables submit button if changes have been made to the entries
                 const inputs = document.querySelectorAll("input.newComInput");
@@ -2373,11 +2391,10 @@
                     
                 }
                 function setEnabled() {
-                    console.log(224, document.getElementById('addedProps'))
                     var e = false;
                     var numChecked = document.querySelectorAll("input[name='tagCheckbox']:checked").length
                     for (const el of inputs) {
-                        if (el.oldValue !== el.value || numChecked!==checkboxElems.length || (valueTypeList !== null && oldValueType !== valueTypeList.value) || ($('#addedProps').html().length !== 0)) {
+                        if (el.oldValue !== el.value || numChecked!==checkboxElems.length || (valueTypeList !== null && oldValueType !== valueTypeList.value) || propsAdded) {
                             e = true;
                             break;
                         }
