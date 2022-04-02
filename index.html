@@ -131,7 +131,8 @@
 
             <div id="editPage" style="margin-left:45px;margin-top:-40px;">
                 <div id= "editInputs"></div>
-                <br><button id = "submitBtn" class= "btn" type = "button" onclick="submitEdit()" style="display:none;"> Submit Edit for Review </button><br><br>
+                <br><button id = "submitBtn" class= "btn" type = "button" style="display:none;"> Submit Edit for Review </button><br><br>
+                <!-- <br><button id = "submitBtn" class= "btn" type = "button" onclick="submitEdit()" style="display:none;"> Submit Edit for Review </button><br><br> -->
             </div>
 
             <button id="editBtn2"><i>Edit Terms</i></button>
@@ -1110,6 +1111,24 @@
             background: #e5e5e5;
         }
 
+        .delPropBtn{
+            color:#8b2b2b;
+            border-radius:6px;
+            cursor:pointer;
+            font-family:Arial;
+            font-size:14px;
+            text-decoration:none;
+            padding:0px;
+            width:25px;
+            height:25px;
+            float:left;
+            margin-left:-20px;
+            margin-top:-3px;
+        }
+        .delPropBtn:hover:enabled{
+            background:#73767a13;
+        }
+
         .selectProp {
             appearance:none;
             float:left;
@@ -1194,13 +1213,14 @@
         var data = [] //List to contain terms dictionaries to display
         var labelsDict = [] //List to contain ONLY the labels of terms, used to search through terms for treeview display
         var mainList = [] //List to contain terms from all communities
-        var editList = [] //List to contain indices of all terms that the user selected to edit
+///////
+        var editList = ['0','1','2561'] //List to contain indices of all terms that the user selected to edit
         var searchList = [] //List to contain indices of all searched terms
         var typeOptions = ['string', 'boolean', 'integer', 'float', 'double', 'duration', 'dateTime', 'time', 'date', 'anyURI', 'complexType'] //List of all values in valueType dropdown
         var notDisplayed = ['@type','@version','rdfs','xsd','nidm','skos','owl','prov','reproschema','schema','DataElement','PersonalDataElement','CommonDataElement','Concept','name','value','bids','terms','version'] // List of properties that don't need to be displayed
         var availableProperties = []; // List to contain all properties that the user can edit or add to the term
-        var otherProperties = []; // List to contain properties not shown that the user can add to the term
-        var displayedProperties = []; // List to contain properties shown on the Edit Page
+        // var otherProperties = []; // List to contain properties not shown that the user can add to the term
+        // var displayedProperties = []; // List to contain properties shown on the Edit Page
         
         /// This function fetches data from all of the communities' jsonld files
         $(document).ready(function(event) {
@@ -1257,14 +1277,12 @@
                 for(const property in temp['@context']){
                     if(!notDisplayed.includes(property)){
                         availableProperties.push(property)
-                    }else{
-                        otherProperties.push(property)
                     }
                 }
                 //assign temp to the global dictionary context
                 context = temp
                 
-                console.log(1156, displayedProperties)
+                console.log(1156, availableProperties)
             })
 
             //Fetch communityLink to get a list of the available communities in the terms repository
@@ -1544,10 +1562,12 @@
 
                 // only runs after all terms have been added to labelsDictCopy
                 if(numCalls === communityList.length){
-                    for(var i = 0; i < sortedList.length; i++)
-                    {
-                        addAllTerms(i)
-                    }
+///////
+                    enableEdits()
+                    // for(var i = 0; i < sortedList.length; i++)
+                    // {
+                    //     addAllTerms(i)
+                    // }
                 }else{
                     return;
                 }
@@ -1700,7 +1720,8 @@
                 html += '</ul></div>';
 
                 $('#termsView').append(html);
-                $('.treeview').treeView();
+///////
+                // $('.treeview').treeView();
                 
                 var style = ".treeview,";
                 style += ".treeview ul {list-style-type:none;overflow:hidden;}";
@@ -1713,7 +1734,8 @@
                 // Expands all the nodes of treeviews
                 //$('.treeview').treeView('expandAll');
                 // Collapses all the nodes of treeviews
-                $('.treeview').treeView('collapseAll');
+///////
+                // $('.treeview').treeView('collapseAll');
                 showEditButtons()
                 removeLoading()
             }
@@ -1837,7 +1859,8 @@
                 // html += '<button id="backBtn" style="color:#4d4d4d;display:inline-block;">Back</button>'
                 html += '<button id="backBtn" style="font-style:italic;font-weight:normal;color:#1f91c2;font-size:17px;display:inline-block;margin-left:-135px;">Back</button>'
 
-                html += `<div id = "instruct-bar">To edit, please click on the desired term(s) and make your changes.<br>
+                html += `<div id = "instruct-bar">To edit, please click on the desired term(s) and make your changes.
+                    Click <a id = "here" style="color:#1f91c2;" href="https://github.com/NIDM-Terms/terms/blob/master/terms/README.md" target="_blank">here</a>  to view data element property descriptions<br>
                     Changes will be reflected once the PR is merged.<br>
                     Removing the value of any property is equivalent to removing the entire property from the term.</div>`
 
@@ -1852,405 +1875,105 @@
                     var termIndex = editList[j]
                     //gets the term from mainList
                     var term = mainList[termIndex]
+                    // list to contain properties from this term that are shown on the Edit Page
+                    var displayedProperties = []; 
 
                     html += '<li style="color:#4d4d4d;"><span style="font-size:21px;margin-bottom:2px;">' + term.label + '</span><br><ul>';
 
-                    html+= `<h4 style="margin-bottom:10px;margin-left:-10px;">Label *
-                            <div class="tool-tip">
-                                <i class="tool-tip__icon">i</i>
-                                <p class="tool-tip__info">
-                                <span class="info"> Label for the term in camelCase.</span>
-                                </p>
-                            </div>
-                        </h4> 
+                    html+= `<h4 style="margin-bottom:10px;margin-left:-10px;">Label *</h4> 
                         <input id= "label" class="newComInput" type="text" name="label" value ="`+ term.label +`"placeholder = "REQUIRED: Term in camelCase (e.g. durationTime, author)" required>`
                     
                     for (const [key,value] of Object.entries(term)){
-                        //add to the list of properties that are on display
-                        if(!notDisplayed.includes(key)){displayedProperties.push(key)}
-                        
-                        // console.log(key+': '+typeof value)
-                        if(key==='description'){
-                            html+= `<h4 style="margin-bottom:10px;margin-left:-10px;">Description *
-                                    <div class="tool-tip">
-                                        <i class="tool-tip__icon">i</i>
-                                        <p class="tool-tip__info">
-                                        <span class="info"> An explanation of the nature, scope, or meaning of the new term.</span>
-                                        </p>
-                                    </div>
-                                </h4>
-                                <input id= "des" class="newComInput" type="text" name="description" value="`+ term.description +`" placeholder = "REQUIRED: Term description" required>`
-                        }else if(key==='comment'){
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Comment
-                                    <div class="tool-tip">
-                                        <i class="tool-tip__icon">i</i>
-                                        <p class="tool-tip__info">
-                                        <span class="info"> Additional information about the term.</span>
-                                        </p>
-                                    </div>
-                                </h4>
-                                <input id= "comment" class="newComInput" type="text" name="comment" value="`+ value +`" placeholder = "OPTIONAL: Additional comments">`
-                        }else if(key==='sourceVariable'){
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Source Variable
-                                    <div class="tool-tip">
-                                        <i class="tool-tip__icon">i</i>
-                                        <p class="tool-tip__info">
-                                            <span class="info"> Variable name of the personal data element from dataset.</span>
-                                        </p>
-                                    </div>
-                                </h4>
-                                <input id="sourceVariable" class="newComInput" type="text" name="sourceVariable" value="`+ value +`" placeholder = "OPTIONAL: Source Variable"></div>`
-                        }else if(key==='isAbout'){
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Is About
-                                    <div class="tool-tip">
-                                        <i class="tool-tip__icon">i</i>
-                                        <p class="tool-tip__info">
-                                            <span class="info"> What the object being described is primarily about.</span>
-                                        </p>
-                                    </div>
-                                </h4>
-                                <input id="isAbout" class="newComInput" type="text" name="isAbout" value="`+ value +`" placeholder = "OPTIONAL: Is About"></div>`
-                        }else if(key==='isPartOf'){
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Is Part Of
-                                    <div class="tool-tip">
-                                        <i class="tool-tip__icon">i</i>
-                                        <p class="tool-tip__info">
-                                            <span class="info"> Larger categor(y/ies) to which the object belongs.</span>
-                                        </p>
-                                    </div>
-                                </h4>
-                                <input id="isPartOf" class="newComInput" type="text" name="isPartOf" value="`+ value +`" placeholder = "OPTIONAL: Is Part Of"></div>`
-                        }else if(key==='closeMatch'){
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Close Match
-                                    <div class="tool-tip">
-                                        <i class="tool-tip__icon">i</i>
-                                        <p class="tool-tip__info">
-                                            <span class="info"> Another object that this object closely matches.</span>
-                                        </p>
-                                    </div>
-                                </h4>
-                                <input id="closeMatch" class="newComInput" type="text" name="closeMatch" value="`+ value +`" placeholder = "OPTIONAL: Close Match"></div>`
-                        }else if(key==='url'){
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">URL
-                                <div class="tool-tip">
-                                    <i class="tool-tip__icon">i</i>
-                                    <p class="tool-tip__info">
-                                    <span class="info"> If exists, URL associated with the term.</span>
-                                    </p>
-                                </div>
-                            </h4>
-                            <input id="url" class="newComInput" type="text" name="url" value="`+ value +`" placeholder = "OPTIONAL: Term URL">`
-                        }else if(key==='candidateTerms'){
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Candidate Terms
-                                    <div class="tool-tip">
-                                        <i class="tool-tip__icon">i</i>
-                                        <p class="tool-tip__info">
-                                            <span class="info"> Terms similar to this term.</span>
-                                        </p>
-                                    </div>
-                                </h4>
-                                <input id="candidateTerms" class="newComInput" type="text" name="candidateTerms" value="`+ value +`" placeholder = "OPTIONAL: Candidate Terms"></div>`
-                        // }else if(key==='valueType'){
-                        //     html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Value Type
-                        //             <div class="tool-tip">
-                        //                 <i class="tool-tip__icon">i</i>
-                        //                 <p class="tool-tip__info">
-                        //                     <span class="info"> The type of values allowed for this entry (e.g. integer, float, string, date/time).</span>
-                        //                 </p>
-                        //             </div>
-                        //         </h4>
-                        //         <input id="valueType" class="newComInput" type="text" name="valueType" value="`+ value +`" placeholder = "OPTIONAL: Value Type"></div>`
-                        }else if(key==='unitCode'){
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Unit Code
-                                    <div class="tool-tip">
-                                        <i class="tool-tip__icon">i</i>
-                                        <p class="tool-tip__info">
-                                            <span class="info"> The term's value of measurement (e.g. boolean, date).</span>
-                                        </p>
-                                    </div>
-                                </h4>
-                                <input id="unitCode" class="newComInput" type="text" name="unitCode" value="`+ value +`" placeholder = "OPTIONAL: Unit Code"></div>`
-                        }else if(key==='unitOptions'){
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Unit Options
-                                    <div class="tool-tip">
-                                        <i class="tool-tip__icon">i</i>
-                                        <p class="tool-tip__info">
-                                            <span class="info"> The options for the types of units that can be used for this entry.</span>
-                                        </p>
-                                    </div>
-                                </h4>
-                                <input id="unitOptions" class="newComInput" type="text" name="unitOptions" value="`+ value +`" placeholder = "OPTIONAL: Unit Options"></div>`
-                        }else if(key==='datumType'){
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Datum Type
-                                    <div class="tool-tip">
-                                        <i class="tool-tip__icon">i</i>
-                                        <p class="tool-tip__info">
-                                            <span class="info"> The type of datum that the term is (e.g. range,count,scalar etc.).</span>
-                                        </p>
-                                    </div>
-                                </h4>
-                                <input id="datumType" class="newComInput" type="text" name="datumType" value="`+ value +`" placeholder = "OPTIONAL: Datum Type"></div>`
-                        }else if(key==='measureOf'){
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Measure Of
-                                    <div class="tool-tip">
-                                        <i class="tool-tip__icon">i</i>
-                                        <p class="tool-tip__info">
-                                            <span class="info"> The property of the object that is being measured (e.g. volume, area, distance).</span>
-                                        </p>
-                                    </div>
-                                </h4>
-                                <input id="measureOf" class="newComInput" type="text" name="measureOf" value="`+ value +`" placeholder = "OPTIONAL: Measure Of"></div>`
-                        }else if(key==='minValue'){
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Minimum Value
-                                    <div class="tool-tip">
-                                        <i class="tool-tip__icon">i</i>
-                                        <p class="tool-tip__info">
-                                            <span class="info"> The lower value of the data element or NA if not applicable.</span>
-                                        </p>
-                                    </div>
-                                </h4>
-                                <input id="minValue" class="newComInput" type="text" name="minValue" value="`+ value +`" placeholder = "OPTIONAL: Minimum Value"></div>`
-                        }else if(key==='maxValue'){
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Maximum Value
-                                    <div class="tool-tip">
-                                        <i class="tool-tip__icon">i</i>
-                                        <p class="tool-tip__info">
-                                            <span class="info"> The upper value of the data element or NA if not applicable.</span>
-                                        </p>
-                                    </div>
-                                </h4>
-                                <input id="maxValue" class="newComInput" type="text" name="maxValue" value="`+ value +`" placeholder = "OPTIONAL: Maximum Value"></div>`
-                        // }else if(key==='allowableValues'){
-                        //     html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Allowable Values
-                        //             <div class="tool-tip">
-                        //                 <i class="tool-tip__icon">i</i>
-                        //                 <p class="tool-tip__info">
-                        //                     <span class="info"> A set of numerical or literal values that are allowed for a categorical variable.</span>
-                        //                 </p>
-                        //             </div>
-                        //         </h4>
-                        //         <input id="allowableValues" class="newComInput" type="text" name="allowableValues" value="`+ value +`" placeholder = "OPTIONAL: Allowable Values"></div>`
-                        }else if(key==='wasDerivedFrom'){
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Was Derived From
-                                    <div class="tool-tip">
-                                        <i class="tool-tip__icon">i</i>
-                                        <p class="tool-tip__info">
-                                            <span class="info"> An entity from which this object was derived.</span>
-                                        </p>
-                                    </div>
-                                </h4>
-                                <input id="wasDerivedFrom" class="newComInput" type="text" name="wasDerivedFrom" value="`+ value +`" placeholder = "OPTIONAL: Was Derived From"></div>`
-                        }else if(key==='ontologyConceptID'){
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Ontology Concept ID
-                                    <div class="tool-tip">
-                                        <i class="tool-tip__icon">i</i>
-                                        <p class="tool-tip__info">
-                                            <span class="info"> A unique identifier of a concept in an ontology of concepts and relations.</span>
-                                        </p>
-                                    </div>
-                                </h4>
-                                <input id="ontologyConceptID" class="newComInput" type="text" name="ontologyConceptID" value="`+ value +`" placeholder = "OPTIONAL: Ontology Concept ID"></div>`
-                        }else if(key==='subtypeCDEs'){
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Subtype CDEs
-                                    <div class="tool-tip">
-                                        <i class="tool-tip__icon">i</i>
-                                        <p class="tool-tip__info">
-                                            <span class="info"> Common Data Elements that describe the same property but with greater specificity than original CDE.</span>
-                                        </p>
-                                    </div>
-                                </h4>
-                                <input id="subtypeCDEs" class="newComInput" type="text" name="subtypeCDEs" value="`+ value +`" placeholder = "OPTIONAL: Subtype CDEs"></div>`
-                        }else if(key==='supertypeCDEs'){
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Supertype CDEs
-                                    <div class="tool-tip">
-                                        <i class="tool-tip__icon">i</i>
-                                        <p class="tool-tip__info">
-                                            <span class="info"> Common Data Elements that describe the same property but more generally than original CDE.</span>
-                                        </p>
-                                    </div>
-                                </h4>
-                                <input id="supertypeCDEs" class="newComInput" type="text" name="supertypeCDEs" value="`+ value +`" placeholder = "OPTIONAL: Supertype CDEs"></div>`
-                        }else if(key==='relatedConcepts'){
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Related Concepts
-                                    <div class="tool-tip">
-                                        <i class="tool-tip__icon">i</i>
-                                        <p class="tool-tip__info">
-                                            <span class="info"> Other concepts related to this entity.</span>
-                                        </p>
-                                    </div>
-                                </h4>
-                                <input id="relatedConcepts" class="newComInput" type="text" name="relatedConcepts" value="`+ value +`" placeholder = "OPTIONAL: Related Concepts"></div>`
-                        }else if(key==='responseOptions'){
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Response Options
-                                    <div class="tool-tip">
-                                        <i class="tool-tip__icon">i</i>
-                                        <p class="tool-tip__info">
-                                            <span class="info"> The options for the types of values that can be used for this entry.</span>
-                                        </p>
-                                    </div>
-                                </h4>`
+                        if(!(notDisplayed.includes(key))){
+                            displayedProperties.push(key)
 
-                            console.log(13,value)
+                            var sentenceCase = key.replace(/([A-Z])/g,' $1').charAt(0).toUpperCase() + key.replace(/([A-Z])/g,' $1').slice(1)
+                            
+                            if(key === 'description'){                                
+                                html+=`<div id="`+j+` `+key+`"><h4 style="margin-bottom:10px;margin-left:-10px;">`+ sentenceCase +` *</h4>
+                                    <input id="`+ key +`" class="newComInput" type="text" name="`+ key +`" value="`+ value +`" placeholder = "OPTIONAL: `+ key +`">
+                                    </div></div>`
+                            }else if(key==='responseOptions'){
+                                html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Response Options</h4>`
 
-                            html+=`<div style="margin-left:20px;margin-right:45px;">`
-                            // display input boxes for each of the choices
-                            for(const [k,v] of Object.entries(value)){
-                                if(typeof(v) === 'object'){ 
-                                    for(const [kk,vv] of Object.entries(v)){
-                                        if(typeof(vv) === 'object'){
-                                            html+=`<p>`+kk+`:</p>`
-                                            for(const [kkk,vvv] of Object.entries(vv)){
-                                                if(kk==='valueType'){
-                                                    html+='<select name="valueType" id="selectValueType" class="newComInput" style="width:95.2%;margin-left:10px;">'
-                                                    
-                                                    //sets default type of dropdown to the current value for valueType
-                                                    for(var i = 0; i < typeOptions.length; i++){
-                                                        // console.log(343, vvv.includes(typeOptions[i]))
-                                                        // console.log(344, vvv+' = '+typeOptions[i])
-                                                        if(vvv.includes(typeOptions[i])){
-                                                            html+='<option value="'+typeOptions[i]+'" selected="selected">'+typeOptions[i]+'</option>'
-                                                        }else{
-                                                            html+='<option value="'+typeOptions[i]+'">'+typeOptions[i]+'</option>'
+                                console.log(13,value)
+
+                                html+=`<div style="margin-left:20px;margin-right:45px;">`
+                                // display input boxes for each of the choices
+                                for(const [k,v] of Object.entries(value)){
+                                    if(typeof(v) === 'object'){ 
+                                        for(const [kk,vv] of Object.entries(v)){
+                                            if(typeof(vv) === 'object'){
+                                                html+=`<div id="`+j+` `+kk+`"><p><button type = "button" id="`+j+` `+kk+`" class= "delPropBtn"><i>&times;</i></button>`+kk+`:</p>`
+                                                for(const [kkk,vvv] of Object.entries(vv)){
+                                                    if(kk==='valueType'){
+                                                        html+='<select name="valueType" id="selectValueType" class="newComInput" style="width:95.2%;margin-left:10px;">'
+                                                        
+                                                        //sets default type of dropdown to the current value for valueType
+                                                        for(var i = 0; i < typeOptions.length; i++){
+                                                            // console.log(343, vvv.includes(typeOptions[i]))
+                                                            // console.log(344, vvv+' = '+typeOptions[i])
+                                                            if(vvv.includes(typeOptions[i])){
+                                                                html+='<option value="'+typeOptions[i]+'" selected="selected">'+typeOptions[i]+'</option>'
+                                                            }else{
+                                                                html+='<option value="'+typeOptions[i]+'">'+typeOptions[i]+'</option>'
+                                                            }
                                                         }
-                                                    }
 
-                                                    html+='</select>'
-                                                }else{
-                                                    html+=`<input id="choices" class="newComInput" type="text" name="choices" value="`+ vvv +`" placeholder = "OPTIONAL: Choices" style="margin-left:10px;">`
+                                                        html+='</select>'
+                                                    }else{
+                                                        html+=`<input id="choices" class="newComInput" type="text" name="choices" value="`+ vvv +`" placeholder = "OPTIONAL: Choices" style="margin-left:10px;">`
+                                                    }
                                                 }
+                                                html+=`</div>`
+                                            }else if(typeof(vv) === 'string'){
+                                                html+=`<div id="`+j+` `+kk+`"><p><button type = "button" id="`+j+` `+kk+`" class= "delPropBtn"><i>&times;</i></button>`+kk+`:</p>
+                                                    <input id="choices" class="newComInput" type="text" name="choices" value="`+ vv +`" placeholder = "OPTIONAL: Choices" style="margin-left:10px;"></div>`
                                             }
-                                        }else if(typeof(vv) === 'string'){
-                                            html+=`<p>`+kk+`:</p>
-                                                <input id="choices" class="newComInput" type="text" name="choices" value="`+ vv +`" placeholder = "OPTIONAL: Choices" style="margin-left:10px;">`
                                         }
+                                    }else if(typeof(v) === 'string'){
+                                        html+=`<input id="choices" class="newComInput" type="text" name="choices" value="`+ v +`" placeholder = "OPTIONAL: Choices" style="margin-left:10px;">`
                                     }
-                                }else if(typeof(v) === 'string'){
-                                    html+=`<input id="choices" class="newComInput" type="text" name="choices" value="`+ v +`" placeholder = "OPTIONAL: Choices" style="margin-left:10px;">`
+                                    html+=`</div>`
                                 }
                                 html+=`</div>`
+                            }else if(key==='associatedWith'){                                        
+                                html+=`<div id="`+j+` `+key+`"><h4 style="margin-bottom:10px;margin-left:-10px;"><button type = "button" id="`+j+` `+key+`" class= "delPropBtn"><i>&times;</i></button>Associated With</h4>`
+                                
+                                // make a checkbox for each of the community names and then add an option to add more community tags
+                                for(var i = 0; i < value.length; i++){
+                                    //add checkboxes
+                                    html += '<label id = "'+value[i]+'" class="con" >'+value[i];
+                                    html += '<input id = "'+value[i]+'" type="checkbox" name="tagCheckbox" value = "'+value[i]+'" checked="checked">';
+                                    html += '<span class="checkmark"></span>'
+                                    html += '</label><br><br>';
+                                }
+                                
+                                html+=`<br><form style="margin-left:-10px;">
+                                    <input id="numOfValues`+j+`" class="numOfValues newComInput" type="text" name="associatedWith" placeholder = "OPTIONAL: Please specify the number of tags you would like to add">
+                                    <button type = "button" id="`+j+`" class= "btn3 tagBtn" style="width:150px;margin-top:-15px;height:51.5px;"> Add Community Tags </button></form>
+                                    <div id="wrapper`+j+`" class="wrapper"></div></div>`
+
+                                // html+='</div>'
+                            }else if(key !== 'label'){
+                                html+=`<div id="`+j+` `+key+`">
+                                    <h4 style="margin-bottom:10px;margin-left:-10px;"><button type = "button" id="`+j+` `+key+`" class= "delPropBtn"><i>&times;</i></button>`+ sentenceCase +`</h4>
+                                    <input id="`+ key +`" class="newComInput" type="text" name="`+ key +`" value="`+ value +`" placeholder = "OPTIONAL: `+ key +`">
+                                    </div></div>`
                             }
-                            html+=`</div>`
-
-                            // for(const [k,v] of Object.entries(value)){
-                            //     if(typeof(v) === 'object'){ 
-                            //         for(const [kk,vv] of Object.entries(v)){
-                            //             if(typeof(vv) === 'object'){
-                            //                 html+=`<p>`+kk+`:</p>`
-                            //                 for(const [kkk,vvv] of Object.entries(vv)){
-                            //                     html+=`<input id="choices" class="newComInput" type="text" name="choices" value="`+ vvv +`" placeholder = "OPTIONAL: Choices" style="margin-left:10px;">`
-                            //                 }
-                            //             }else if(typeof(vv) === 'string'){
-                            //                 html+=`<p>`+kk+`:</p>
-                            //                     <input id="choices" class="newComInput" type="text" name="choices" value="`+ vv +`" placeholder = "OPTIONAL: Choices" style="margin-left:10px;">`
-                            //             }
-                            //         }
-                            //     }else if(typeof(v) === 'string'){
-                            //         html+=`<input id="choices" class="newComInput" type="text" name="choices" value="`+ v +`" placeholder = "OPTIONAL: Choices" style="margin-left:10px;">`
-                            //     }
-                            //     html+=`</div>`
-                            // }
-                            // html+=`</div>`
-
-
-                            // html += '<h5>Tag '+i+':</h5>';
-                            // html += '<input id="n'+i+'" id="name" class="newComInput" type="text" name="name" placeholder = "Community Tag">';
-                            // html += '<br>'; 
-
-
-                            // for(var i = 0; i < value.length; i++){
-                            //     for(j = 0; j < value[i].length; j++){
-                            //         html+=`<h3`+value[i]+`: </h3>
-                            //         <input id="choices" class="newComInput" type="text" name="choices" value="`+ value[i][j] +`" placeholder = "OPTIONAL: Choices"></div>`
-                            //     }
-                            // }
-
-
-
-                            // html+=`<h4 style="margin-bottom: 10px;">Choices
-                            //         <div class="tool-tip">
-                            //             <i class="tool-tip__icon">i</i>
-                            //             <p class="tool-tip__info">
-                            //                 <span class="info"> The options for the types of values that can be used for this entry.</span>
-                            //             </p>
-                            //         </div>
-                            //     </h4>
-                            // <input id="choices" class="newComInput" type="text" name="choices" value="`+ value +`" placeholder = "OPTIONAL: Choices"></div>`
-                        }else if(key==='derivative'){
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Derivative
-                                    <div class="tool-tip">
-                                        <i class="tool-tip__icon">i</i>
-                                        <p class="tool-tip__info">
-                                            <span class="info"> An output of common processing pipelines that captures data and meta-data.</span>
-                                        </p>
-                                    </div>
-                                </h4>
-                                <input id="derivative" class="newComInput" type="text" name="derivative" value="`+ value +`" placeholder = "OPTIONAL: Derivative"></div>`
-                        }else if(key==='citation'){
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Citation
-                                    <div class="tool-tip">
-                                        <i class="tool-tip__icon">i</i>
-                                        <p class="tool-tip__info">
-                                            <span class="info"> A citation or reference to another work.</span>
-                                        </p>
-                                    </div>
-                                </h4>
-                                <input id="citation" class="newComInput" type="text" name="citation" value="`+ value +`" placeholder = "OPTIONAL: Citation"></div>`
-                        }else if(key==='ilxId'){
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">ilxId
-                                    <div class="tool-tip">
-                                        <i class="tool-tip__icon">i</i>
-                                        <p class="tool-tip__info">
-                                            <span class="info"> A unique identifier of a term in the InterLex database.</span>
-                                        </p>
-                                    </div>
-                                </h4>
-                                <input id="ilxId" class="newComInput" type="text" name="ilxId" value="`+ value +`" placeholder = "OPTIONAL: ilxId"></div>`
-                        }else if(key==='sameAs'){
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Same As
-                                    <div class="tool-tip">
-                                        <i class="tool-tip__icon">i</i>
-                                        <p class="tool-tip__info">
-                                            <span class="info"> Another entity that is equal to this entity.</span>
-                                        </p>
-                                    </div>
-                                </h4>
-                                <input id="sameAs" class="newComInput" type="text" name="sameAs" value="`+ value +`" placeholder = "OPTIONAL: Same As"></div>`
-                        }else if(key==='associatedWith'){                                        
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Associated With
-                                    <div class="tool-tip">
-                                        <i class="tool-tip__icon">i</i>
-                                        <p class="tool-tip__info">
-                                            <span class="info"> The communities that the term is a part of.</span>
-                                        </p>
-                                    </div>
-                                </h4>`
-                            
-                            // make a checkbox for each of the community names and then add an option to add more community tags
-                            for(var i = 0; i < value.length; i++){
-                                //add checkboxes
-                                html += '<label id = "'+value[i]+'" class="con" >'+value[i];
-                                html += '<input id = "'+value[i]+'" type="checkbox" name="tagCheckbox" value = "'+value[i]+'" checked="checked">';
-                                html += '<span class="checkmark"></span>'
-                                html += '</label><br><br>';
-                            }
-                            
-                            html+=`<br><form style="margin-left:-10px;">
-                                <input id="numOfValues`+j+`" class="numOfValues newComInput" type="text" name="associatedWith" placeholder = "OPTIONAL: Please specify the number of tags you would like to add">
-                                <button type = "button" id="`+j+`" class= "btn3 tagBtn" style="width:150px;margin-top:-15px;height:51.5px;"> Add Community Tags </button></form>
-                                <div id="wrapper`+j+`" class="wrapper"></div>`
-
-                            // html+='</div>'
                         }
                     }
 
                     html+='<div id="addedProps'+j+'" class="addedProps"></div>'
 
-                    console.log(413, displayedProperties)
+                    // console.log(413, displayedProperties)
 
                     // add option for the user to add more properties
                     html+=`<select id="`+j+`" class="selectProp newComInput"><option value = "all"><i>&#xFE62; Add Another Property</i></option>`
 
                     for(var i = 0; i < availableProperties.length; i++){
+                        // alphabetize the list of properties
+                        availableProperties.sort()
                         // if the page does not display a property on the availableProperties list, give the user the option to add it to the term
                         if( !(displayedProperties.includes(availableProperties[i])) ){
                             html+='<option value = "'+availableProperties[i]+'">'+availableProperties[i]+'</option>'
@@ -2286,14 +2009,6 @@
                 // Collapses all the nodes of treeviews
                 $('.treeview3').treeView('collapseAll');
 
-                var tagElems = document.getElementsByClassName("tagBtn")
-                for(var k = 0; k < tagElems.length; k++){
-                    tagElems[k].addEventListener("click", function(e){
-                        //pass index of tagBtn to addOptions so that input boxes are appended to the correct term's treeview
-                        addOptions(this.id)
-                    })
-                }
-
                 // when the back button is clicked, re-display the terms page
                 document.getElementById('backBtn').addEventListener("click", function(){
                     //re-display the treeview
@@ -2311,6 +2026,14 @@
                     // display the search bar again
                     document.getElementById("searchBar").style.display = "block"
                 })
+
+                var tagElems = document.getElementsByClassName("tagBtn")
+                for(var k = 0; k < tagElems.length; k++){
+                    tagElems[k].addEventListener("click", function(e){
+                        //pass index of tagBtn to addOptions so that input boxes are appended to the correct term's treeview
+                        addOptions(this.id)
+                    })
+                }
 
                 //gives user option to add more community tags
                 var list = [];
@@ -2352,17 +2075,45 @@
                 //create a new input box for the user to add a property
                 function addInputs(index){
                     var selectedVal = document.querySelector("select[id='"+index+"']").value
-
-                    // create an input field for the user to fill out this property
                     var sentenceCase = selectedVal.replace(/([A-Z])/g,' $1').charAt(0).toUpperCase() + selectedVal.replace(/([A-Z])/g,' $1').slice(1)
-
+                    
+                    // create an input field for the user to fill out this property
                     var html = '';
-                    html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">`+ sentenceCase +`</h4>
-                        <input id="`+ selectedVal +`" class="newComInput" type="text" name="`+ selectedVal +`" placeholder = "OPTIONAL: `+ sentenceCase +`"></div>`
+                    if(selectedVal==='associatedWith'){                                        
+                        html+=`<div id="`+index+` `+selectedVal+`"><h4 style="margin-bottom:10px;margin-left:-10px;"><button type = "button" id="`+index+` `+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>Associated With</h4>
+                            <br><form style="margin-left:-10px;">
+                            <input id="numOfValues`+index+`" class="numOfValues newComInput" type="text" name="associatedWith" placeholder = "OPTIONAL: Please specify the number of tags you would like to add">
+                            <button type = "button" id="`+index+`" class= "btn3 tagBtn" style="width:150px;margin-top:-15px;height:51.5px;"> Add Community Tags </button></form>
+                            <div id="wrapper`+index+`" class="wrapper"></div></div>`
+
+                        // html+='</div>'
+                    }else if(selectedVal==='valueType'){
+                        html+=`<div id="optionsDiv"><h4 style="margin-bottom:10px;margin-left:-10px;">Response Options</h4>`
+                        html+=`<div id="`+index+` `+selectedVal+`"><p><button type = "button" id="`+index+` `+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>`+selectedVal+`:</p>
+                            <select name="valueType" id="selectValueType" class="newComInput" style="width:95.2%;margin-left:10px;">`
+                            
+                            //create dropdown of valueType options
+                            html+='<option value="all">-- Select a Value Type --</option>'
+                            for(var i = 0; i < typeOptions.length; i++){
+                                html+='<option value="'+typeOptions[i]+'">'+typeOptions[i]+'</option>'
+                            }
+                        html+='</select></div></div>'
+                    }else if(selectedVal==='minValue' || selectedVal==='maxValue'){
+                        //CHECK TYPEOF UNITCODE, ALLOWABLEVALUES, CHOICES
+
+                    }else if(selectedVal !== 'label'){
+                        html+=`<div id="`+index+` `+selectedVal+`">
+                            <h4 style="margin-bottom:10px;margin-left:-10px;"><button type = "button" id="`+index+` `+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>`+ sentenceCase +`</h4>
+                            <input id="`+ selectedVal +`" class="newComInput" type="text" name="`+ selectedVal +`" placeholder = "OPTIONAL: `+ sentenceCase +`">
+                            </div></div>`
+                    }
                     $('#addedProps'+index).append(html)
+
+                    // $("div[id='"+index+` `+selectedVal+"']").remove()
 
                     propsAdded = true
                     setEnabled()
+                    updateRemove()
                     // console.log(document.getElementsByClassName('addedProps'))
                     // console.log(91, 'length of '+index+' is '+$('#addedProps'+index).html().length)
 
@@ -2370,6 +2121,16 @@
                     $("select[id='"+index+"']").value = 'all'
                     // remove the newly added property from the dropdown menu
                     $("select[id='"+index+"'] option[value='"+selectedVal+"']").remove()
+                }
+
+                //remove input box when delete button next to a property is clicked
+                function updateRemove(){
+                    var deletePropElems = document.getElementsByClassName("delPropBtn")
+                    for(var k = 0; k < deletePropElems.length; k++){
+                        deletePropElems[k].addEventListener("click", function(e){
+                            $("div[id='"+this.id+"']").remove()
+                        }, false)
+                    }
                 }
 
                 // enables submit button if changes have been made to the entries
@@ -2404,6 +2165,7 @@
                 document.addEventListener("input", setEnabled);
                 saveInitial();
                 setEnabled();
+                updateRemove();
                 return false;
             }
             
