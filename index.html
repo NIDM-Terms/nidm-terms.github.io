@@ -1219,6 +1219,7 @@
         var typeOptions = ['string', 'boolean', 'integer', 'float', 'double', 'duration', 'dateTime', 'time', 'date', 'anyURI', 'complexType'] //List of all values in valueType dropdown
         var notDisplayed = ['@type','@version','rdfs','xsd','nidm','skos','owl','prov','reproschema','schema','DataElement','PersonalDataElement','CommonDataElement','Concept','name','value','bids','terms','version'] // List of properties that don't need to be displayed
         var availableProperties = []; // List to contain all properties that the user can edit or add to the term
+        var respOptList = ['minValue', 'maxValue', 'valueType', 'unitCode', 'choices', 'allowableValues'] // List of properties under responseOptions
         // var otherProperties = []; // List to contain properties not shown that the user can add to the term
         // var displayedProperties = []; // List to contain properties shown on the Edit Page
         
@@ -1885,7 +1886,7 @@
                     
                     for (const [key,value] of Object.entries(term)){
                         if(!(notDisplayed.includes(key))){
-                            displayedProperties.push(key)
+                            if(key!=='responseOptions'){ displayedProperties.push(key) }
 
                             var sentenceCase = key.replace(/([A-Z])/g,' $1').charAt(0).toUpperCase() + key.replace(/([A-Z])/g,' $1').slice(1)
                             
@@ -1898,11 +1899,12 @@
 
                                 console.log(13,value)
 
-                                html+=`<div style="margin-left:20px;margin-right:45px;">`
+                                html+=`<div id = "respoDiv`+j+`" style="margin-left:20px;margin-right:45px;">`
                                 // display input boxes for each of the choices
                                 for(const [k,v] of Object.entries(value)){
                                     if(typeof(v) === 'object'){ 
                                         for(const [kk,vv] of Object.entries(v)){
+                                            displayedProperties.push(kk)
                                             if(typeof(vv) === 'object'){
                                                 html+=`<div id="`+j+` `+kk+`"><p><button type = "button" id="`+j+` `+kk+`" class= "delPropBtn"><i>&times;</i></button>`+kk+`:</p>`
                                                 for(const [kkk,vvv] of Object.entries(vv)){
@@ -1971,14 +1973,31 @@
                     // add option for the user to add more properties
                     html+=`<select id="`+j+`" class="selectProp newComInput"><option value = "all"><i>&#xFE62; Add Another Property</i></option>`
 
-                    for(var i = 0; i < availableProperties.length; i++){
-                        // alphabetize the list of properties
-                        availableProperties.sort()
-                        // if the page does not display a property on the availableProperties list, give the user the option to add it to the term
-                        if( !(displayedProperties.includes(availableProperties[i])) ){
-                            html+='<option value = "'+availableProperties[i]+'">'+availableProperties[i]+'</option>'
+                    // alphabetize the lists of properties
+                    availableProperties.sort()
+                    respOptList.sort()
+
+                    var responseList = [] //list to contain the properties that will be displayed in the dropdown menu under responseOptions
+                    // create the dropdown menu for adding properties
+                    for(var i = 0; i < respOptList.length; i++){
+                        if(!displayedProperties.includes(respOptList[i])){
+                            responseList.push(respOptList[i])
                         }
                     }
+                    for(var i = 0; i < availableProperties.length; i++){
+                        if(!displayedProperties.includes(availableProperties[i])){
+                            if(availableProperties[i]==='responseOptions' && responseList.length!==0){
+                                html+='<optgroup label="responseOptions">'
+                                for(var k = 0; k < responseList.length; k++){
+                                    html+='<option value = "'+responseList[k]+'">'+responseList[k]+'</option>'
+                                }
+                                html+='</optgroup>'
+                            }else if(!responseList.includes(availableProperties[i])){
+                                html+='<option value = "'+availableProperties[i]+'">'+availableProperties[i]+'</option>'
+                            }
+                        }
+                    }
+
                     html+='</select>'
 
                     // html+='<div>'
@@ -2077,37 +2096,170 @@
                     var selectedVal = document.querySelector("select[id='"+index+"']").value
                     var sentenceCase = selectedVal.replace(/([A-Z])/g,' $1').charAt(0).toUpperCase() + selectedVal.replace(/([A-Z])/g,' $1').slice(1)
                     
-                    // create an input field for the user to fill out this property
+                    // create an input field for the user to fill out the selected property
                     var html = '';
-                    if(selectedVal==='associatedWith'){                                        
-                        html+=`<div id="`+index+` `+selectedVal+`"><h4 style="margin-bottom:10px;margin-left:-10px;"><button type = "button" id="`+index+` `+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>Associated With</h4>
-                            <br><form style="margin-left:-10px;">
-                            <input id="numOfValues`+index+`" class="numOfValues newComInput" type="text" name="associatedWith" placeholder = "OPTIONAL: Please specify the number of tags you would like to add">
-                            <button type = "button" id="`+index+`" class= "btn3 tagBtn" style="width:150px;margin-top:-15px;height:51.5px;"> Add Community Tags </button></form>
-                            <div id="wrapper`+index+`" class="wrapper"></div></div>`
+                    if(respOptList.includes(selectedVal)){
+                        // if responseOptions properties are already being displayed then add to that div
+                        if(!document.getElementById('respoDiv'+index)){
+                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Response Options</h4>
+                                <div id = "respoDiv`+index+`" style="margin-left:20px;margin-right:45px;">`
+                        }
 
-                        // html+='</div>'
-                    }else if(selectedVal==='valueType'){
-                        html+=`<div id="optionsDiv"><h4 style="margin-bottom:10px;margin-left:-10px;">Response Options</h4>`
-                        html+=`<div id="`+index+` `+selectedVal+`"><p><button type = "button" id="`+index+` `+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>`+selectedVal+`:</p>
-                            <select name="valueType" id="selectValueType" class="newComInput" style="width:95.2%;margin-left:10px;">`
-                            
-                            //create dropdown of valueType options
-                            html+='<option value="all">-- Select a Value Type --</option>'
-                            for(var i = 0; i < typeOptions.length; i++){
-                                html+='<option value="'+typeOptions[i]+'">'+typeOptions[i]+'</option>'
-                            }
-                        html+='</select></div></div>'
-                    }else if(selectedVal==='minValue' || selectedVal==='maxValue'){
-                        //CHECK TYPEOF UNITCODE, ALLOWABLEVALUES, CHOICES
+                        if(selectedVal==='valueType'){
+                            html+=`<div id="optionsDiv"><h4 style="margin-bottom:10px;margin-left:-10px;">Response Options</h4>`
+                            html+=`<div id="`+index+` `+selectedVal+`" style="margin-left:20px;margin-right:45px;"><p><button type = "button" id="`+index+` `+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>`+selectedVal+`:</p>
+                                <select name="valueType" id="selectValueType" class="newComInput" style="width:95.2%;margin-left:10px;">`
+                                
+                                //create dropdown of valueType options
+                                html+='<option value="all">-- Select a Value Type --</option>'
+                                for(var i = 0; i < typeOptions.length; i++){
+                                    html+='<option value="'+typeOptions[i]+'">'+typeOptions[i]+'</option>'
+                                }
+                            html+='</select></div></div>'
+                        }else if(selectedVal==='minValue' || selectedVal==='maxValue' || selectedVal==='unitCode'){
+                            html+=`<div id="`+index+` `+selectedVal+`">
+                                <h4 style="margin-bottom:10px;margin-left:-10px;"><button type = "button" id="`+index+` `+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>`+ sentenceCase +`</h4>
+                                <input id="`+ selectedVal +`" class="newComInput" type="text" name="`+ selectedVal +`" placeholder = "OPTIONAL: `+ sentenceCase +`">
+                                </div></div>`
+                        }else if(selectedVal==='choices'){
+                            // html+=`<form>
+                            //     <input id="numOfValues" class="numOfValues" type="text" placeholder="Enter the number of choices">
+                            //     <button type = "button" class= "btn3" id = "catValue"> Add Choices </button>
+                            //     </form>`
 
-                    }else if(selectedVal !== 'label'){
-                        html+=`<div id="`+index+` `+selectedVal+`">
-                            <h4 style="margin-bottom:10px;margin-left:-10px;"><button type = "button" id="`+index+` `+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>`+ sentenceCase +`</h4>
-                            <input id="`+ selectedVal +`" class="newComInput" type="text" name="`+ selectedVal +`" placeholder = "OPTIONAL: `+ sentenceCase +`">
-                            </div></div>`
+                            // create addChoices function
+                            // var list = [];
+                            // function addOptions(){
+
+                            //     var html = '';
+
+                            //     html += '<div id="wrapper">';
+
+                            //     var numOfOptions = document.getElementById('numOfValues').value;
+
+                            //     list.push(numOfOptions)
+
+                            //     if(document.getElementById('numOfValues').value != 0 & list.length == 1){
+
+                            //         for (var i = 1; i <= numOfOptions; i++){
+
+                            //             html += '<h5>Choice '+i+':</h5>';
+                            //             html += '<input id="n'+i+'" id="name" class="newInput" type="text" name="name" placeholder = "Name">';
+                            //             html += '<input id="v'+i+'" id="value" class="newInput" type="text" name="value" placeholder = "Value">';
+                            //             html += '<br>';
+                                            
+                            //         }
+
+                            //         html += '</div>';
+                            //         $('#add').append(html);
+                            //     } 
+                                
+                            //     if (document.getElementById('numOfValues').value != 0 & list.length > 1){
+
+                            //         $("#add").html("");
+
+                            //         for (var i = 1; i <= numOfOptions; i++){
+
+                            //             html += '<h5>Choice '+i+':</h5>';
+                            //             html += '<input id="n'+i+'" id="name" class="newInput" type="text" name="name" placeholder = "Name">';
+                            //             html += '<input id="v'+i+'" id="value" class="newInput" type="text" name="value" placeholder = "Value">';
+                            //             html += '<br>';
+
+                            //         }
+
+                            //         html += '</div>';
+                            //         $('#add').append(html);
+
+                            //     }
+                            //     if (document.getElementById('numOfValues').value == 0){
+                            //         html += '</div>';
+                            //         $("#add").html("");
+                            //     }
+                            // };
+                        }else if(selectedVal==='allowableValues'){
+                            // like addOptions
+                        }
+                        
+                        if(!document.getElementById('respoDiv'+index)){
+                            $('#addedProps'+index).append(html)
+                        }else{
+                            $('#respoDiv'+index).append(html)
+                        }
+                    }else{
+                        if(selectedVal==='associatedWith'){                                        
+                            html+=`<div id="`+index+` `+selectedVal+`"><h4 style="margin-bottom:10px;margin-left:-10px;"><button type = "button" id="`+index+` `+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>Associated With</h4>
+                                <br><form style="margin-left:-10px;">
+                                <input id="numOfValues`+index+`" class="numOfValues newComInput" type="text" name="associatedWith" placeholder = "OPTIONAL: Please specify the number of tags you would like to add">
+                                <button type = "button" id="`+index+`" class= "btn3 tagBtn" style="width:150px;margin-top:-15px;height:51.5px;"> Add Community Tags </button></form>
+                                <div id="wrapper`+index+`" class="wrapper"></div></div>`
+                        }else if(selectedVal !== 'label'){
+                            html+=`<div id="`+index+` `+selectedVal+`">
+                                <h4 style="margin-bottom:10px;margin-left:-10px;"><button type = "button" id="`+index+` `+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>`+ sentenceCase +`</h4>
+                                <input id="`+ selectedVal +`" class="newComInput" type="text" name="`+ selectedVal +`" placeholder = "OPTIONAL: `+ sentenceCase +`">
+                                </div></div>`
+                        }
+                        $('#addedProps'+index).append(html)
                     }
-                    $('#addedProps'+index).append(html)
+
+                    // // create an input field for the user to fill out this property
+                    // var html = '';
+                    // if(selectedVal==='associatedWith'){                                        
+                    //     html+=`<div id="`+index+` `+selectedVal+`"><h4 style="margin-bottom:10px;margin-left:-10px;"><button type = "button" id="`+index+` `+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>Associated With</h4>
+                    //         <br><form style="margin-left:-10px;">
+                    //         <input id="numOfValues`+index+`" class="numOfValues newComInput" type="text" name="associatedWith" placeholder = "OPTIONAL: Please specify the number of tags you would like to add">
+                    //         <button type = "button" id="`+index+`" class= "btn3 tagBtn" style="width:150px;margin-top:-15px;height:51.5px;"> Add Community Tags </button></form>
+                    //         <div id="wrapper`+index+`" class="wrapper"></div></div>`
+
+                    //     // html+='</div>'
+                    // }else if(selectedVal==='valueType'){
+                    //     html+=`<div id="optionsDiv"><h4 style="margin-bottom:10px;margin-left:-10px;">Response Options</h4>`
+                    //     html+=`<div id="`+index+` `+selectedVal+`" style="margin-left:20px;margin-right:45px;"><p><button type = "button" id="`+index+` `+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>`+selectedVal+`:</p>
+                    //         <select name="valueType" id="selectValueType" class="newComInput" style="width:95.2%;margin-left:10px;">`
+                            
+                    //         //create dropdown of valueType options
+                    //         html+='<option value="all">-- Select a Value Type --</option>'
+                    //         for(var i = 0; i < typeOptions.length; i++){
+                    //             html+='<option value="'+typeOptions[i]+'">'+typeOptions[i]+'</option>'
+                    //         }
+                    //     html+='</select></div></div>'
+                    // }else if(selectedVal==='minValue' || selectedVal==='maxValue'){
+                    //     //CHECK TYPEOF UNITCODE, ALLOWABLEVALUES, CHOICES
+
+                    // }else if(selectedVal !== 'label'){
+                    //     html+=`<div id="`+index+` `+selectedVal+`">
+                    //         <h4 style="margin-bottom:10px;margin-left:-10px;"><button type = "button" id="`+index+` `+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>`+ sentenceCase +`</h4>
+                    //         <input id="`+ selectedVal +`" class="newComInput" type="text" name="`+ selectedVal +`" placeholder = "OPTIONAL: `+ sentenceCase +`">
+                    //         </div></div>`
+                    // }
+                    // $('#addedProps'+index).append(html)
+
+                    // if(selectedVal==='associatedWith'){                                        
+                    //     html+=`<div id="`+index+` `+selectedVal+`"><h4 style="margin-bottom:10px;margin-left:-10px;"><button type = "button" id="`+index+` `+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>Associated With</h4>
+                    //         <br><form style="margin-left:-10px;">
+                    //         <input id="numOfValues`+index+`" class="numOfValues newComInput" type="text" name="associatedWith" placeholder = "OPTIONAL: Please specify the number of tags you would like to add">
+                    //         <button type = "button" id="`+index+`" class= "btn3 tagBtn" style="width:150px;margin-top:-15px;height:51.5px;"> Add Community Tags </button></form>
+                    //         <div id="wrapper`+index+`" class="wrapper"></div></div>`
+                    // }else if(selectedVal==='valueType'){
+                    //     html+=`<div id="optionsDiv"><h4 style="margin-bottom:10px;margin-left:-10px;">Response Options</h4>`
+                    //     html+=`<div id="`+index+` `+selectedVal+`" style="margin-left:20px;margin-right:45px;"><p><button type = "button" id="`+index+` `+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>`+selectedVal+`:</p>
+                    //         <select name="valueType" id="selectValueType" class="newComInput" style="width:95.2%;margin-left:10px;">`
+                            
+                    //         //create dropdown of valueType options
+                    //         html+='<option value="all">-- Select a Value Type --</option>'
+                    //         for(var i = 0; i < typeOptions.length; i++){
+                    //             html+='<option value="'+typeOptions[i]+'">'+typeOptions[i]+'</option>'
+                    //         }
+                    //     html+='</select></div></div>'
+                    // }else if(selectedVal==='minValue' || selectedVal==='maxValue'){
+                    //     //CHECK TYPEOF UNITCODE, ALLOWABLEVALUES, CHOICES
+
+                    // }else if(selectedVal !== 'label'){
+                    //     html+=`<div id="`+index+` `+selectedVal+`">
+                    //         <h4 style="margin-bottom:10px;margin-left:-10px;"><button type = "button" id="`+index+` `+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>`+ sentenceCase +`</h4>
+                    //         <input id="`+ selectedVal +`" class="newComInput" type="text" name="`+ selectedVal +`" placeholder = "OPTIONAL: `+ sentenceCase +`">
+                    //         </div></div>`
+                    // }
+                    // $('#addedProps'+index).append(html)
 
                     // $("div[id='"+index+` `+selectedVal+"']").remove()
 
