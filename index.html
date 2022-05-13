@@ -1891,11 +1891,6 @@
                             if(key!=='responseOptions'){ displayedProperties.push(key) }
 
                             var sentenceCase = key.replace(/([A-Z])/g,' $1').charAt(0).toUpperCase() + key.replace(/([A-Z]+)/g, " $1").slice(1)
-
-                            // var 
-                            // function changeCase(str){
-                                
-                            // }
                             
                             if(key === 'description'){                                
                                 html+=`<div id="`+j+` `+key+`"><h4 style="margin-bottom:10px;margin-left:-10px;">`+ sentenceCase +` *</h4>
@@ -2096,8 +2091,8 @@
                     if(respOptList.includes(selectedVal)){
                         // if responseOptions properties are already being displayed then add to that div
                         if(!document.getElementById('respoDiv'+index)){
-                            html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Response Options</h4>
-                                <div id = "respoDiv`+index+`" style="margin-left:20px;margin-right:45px;">`
+                            html+=`<div id = "respoDiv`+index+`" style="margin-left:20px;margin-right:45px;">
+                                <h4 style="margin-bottom:10px;margin-left:-30px;">Response Options</h4>`
                         }
 
                         if(selectedVal==='valueType'){
@@ -2117,17 +2112,17 @@
                                 <input id="`+ selectedVal +`" class="newComInput" type="text" name="`+ selectedVal +`" placeholder = "OPTIONAL: `+ sentenceCase +`">
                                 </div></div>`
                         }else if(selectedVal==='choices'){
-                            html+=`<p><button type = "button" id="`+index+` `+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>`+sentenceCase+`:</p>
+                            html+=`<div id="`+index+` `+selectedVal+`" style="margin-right:22px;"><p><button type = "button" id="`+index+` `+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>`+sentenceCase+`:</p>
                                 <br><form style="margin-left:-10px;">
                                 <input id="choicesInput`+index+`" class="numOfValues newComInput" type="text" name="choices" placeholder="OPTIONAL: Please specify the number of choices you would like to add">
                                 <button type = "button" id = "`+index+`" class= "btn3 choicesBtn" style="width:130px;margin-top:-15px;height:51.5px;"> Add Choices </button></form>
-                                <div id="choicesWrapper`+index+`" class="wrapper"></div></div>`
+                                <div id="choicesWrapper`+index+`" class="wrapper"></div></div></div>`
                         }else if(selectedVal==='allowableValues'){
-                            html+=`<p><button type = "button" id="`+index+` `+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>`+sentenceCase+`:</p>
+                            html+=`<div id="`+index+` `+selectedVal+`" style="margin-right:22px;"><p><button type = "button" id="`+index+` `+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>`+sentenceCase+`:</p>
                                 <br><form style="margin-left:-10px;">
                                 <input id="valueInput`+index+`" class="numOfValues newComInput" type="text" name="allowableValues" placeholder = "OPTIONAL: Please specify the number of values you would like to add">
                                 <button type = "button" id="`+index+`" class= "btn3 valueBtn" style="width:130px;margin-top:-15px;height:51.5px;"> Add Allowable Values </button></form>
-                                <div id="valueWrapper`+index+`" class="wrapper"></div></div>`
+                                <div id="valueWrapper`+index+`" class="wrapper"></div></div></div>`
                         }
                         
                         if(!document.getElementById('respoDiv'+index)){
@@ -2227,7 +2222,16 @@
                     console.log(31, deletePropElems)
                     for(var k = 0; k < deletePropElems.length; k++){
                         deletePropElems[k].addEventListener("click", function(e){
+                            //get index of term on page
+                            var substring = this.id.substring(0,1)
+
                             $("div[id='"+this.id+"']").remove()
+                            //if there are no more properties in responseOptions, remove the whole div
+                            if(document.getElementById("respoDiv"+substring) &&
+                                document.getElementById("respoDiv"+substring).getElementsByTagName("div").length === 0){
+                                    document.getElementById("respoDiv"+substring).remove()
+                            }
+                            console.log(83, document.getElementById("respoDiv"+substring))
                         }, false)
                     }
                 }
