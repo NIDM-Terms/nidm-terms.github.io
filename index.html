@@ -1212,8 +1212,7 @@
         var data = [] //List to contain terms dictionaries to display
         var labelsDict = [] //List to contain ONLY the labels of terms, used to search through terms for treeview display
         var mainList = [] //List to contain terms from all communities
-///////
-        var editList = ['0','1','2561'] //List to contain indices of all terms that the user selected to edit
+        var editList = [] //List to contain indices of all terms that the user selected to edit
         var searchList = [] //List to contain indices of all searched terms
         var typeOptions = ['string', 'boolean', 'integer', 'float', 'double', 'duration', 'dateTime', 'time', 'date', 'anyURI', 'complexType'] //List of all values in valueType dropdown
         var notDisplayed = ['@type','@version','rdfs','xsd','nidm','skos','owl','prov','reproschema','schema','DataElement','PersonalDataElement','CommonDataElement','Concept','name','value','bids','terms','version'] // List of properties that don't need to be displayed
@@ -1561,12 +1560,10 @@
 
                 // only runs after all terms have been added to labelsDictCopy
                 if(numCalls === communityList.length){
-///////
-                    enableEdits()
-                    // for(var i = 0; i < sortedList.length; i++)
-                    // {
-                    //     addAllTerms(i)
-                    // }
+                    for(var i = 0; i < sortedList.length; i++)
+                    {
+                        addAllTerms(i)
+                    }
                 }else{
                     return;
                 }
@@ -1719,8 +1716,7 @@
                 html += '</ul></div>';
 
                 $('#termsView').append(html);
-///////
-                // $('.treeview').treeView();
+                $('.treeview').treeView();
                 
                 var style = ".treeview,";
                 style += ".treeview ul {list-style-type:none;overflow:hidden;}";
@@ -1733,8 +1729,7 @@
                 // Expands all the nodes of treeviews
                 //$('.treeview').treeView('expandAll');
                 // Collapses all the nodes of treeviews
-///////
-                // $('.treeview').treeView('collapseAll');
+                $('.treeview').treeView('collapseAll');
                 showEditButtons()
                 removeLoading()
             }
@@ -1819,13 +1814,30 @@
             }
 
             function updateEditCheck(){
-                // restore all of the checkbox selections
-                var editChecks = document.getElementsByClassName('editCon')
-                for(var i = 0; i < editList.length; i++){
-                    // console.log(document.querySelector(".editCon input[type='checkbox'][value='"+editList[i]+"']"))
-                    $(".editCon input[type='checkbox'][value='"+editList[i]+"']").prop('checked',true)
-                    // document.querySelector(".editCon input[type='checkbox'][value='"+editList[i]+"']").prop('checked',true)
+                //if user has already selected terms, restore the checkbox selections on the search display
+                if(document.getElementById('editBtn').style.display === "block"){
+                    console.log('editBtn is on display')
+
+                    //if the user is selecting terms to edit, display the checkboxes
+                    var checkElems = document.getElementsByClassName('editCon')
+                    for(var i = 0; i < checkElems.length; i++){
+                        checkElems[i].style.display = "inline-block"
+                    }
+                    
+                    //check all of the boxes that were checked in the previous display
+                    var editChecks = document.getElementsByName('editCheckbox')
+                    for(var j = 0; j < editList.length; j++){
+                        editChecks[j].checked=true;
+                    }
                 }
+
+                // // restore all of the checkbox selections
+                    // var editChecks = document.getElementsByClassName('editCon')
+                    // for(var i = 0; i < editList.length; i++){
+                    //     // console.log(document.querySelector(".editCon input[type='checkbox'][value='"+editList[i]+"']"))
+                    //     $(".editCon input[type='checkbox'][value='"+editList[i]+"']").prop('checked',true)
+                    //     // document.querySelector(".editCon input[type='checkbox'][value='"+editList[i]+"']").prop('checked',true)
+                    // }
                 // //loop through the checkboxes and call displayCheck
                 // for (var i = 0; i < editChecks.length; i++) {
                 //     editChecks[i].style.display = "inline-block"
@@ -2231,7 +2243,6 @@
                                 document.getElementById("respoDiv"+substring).getElementsByTagName("div").length === 0){
                                     document.getElementById("respoDiv"+substring).remove()
                             }
-                            console.log(83, document.getElementById("respoDiv"+substring))
                         }, false)
                     }
                 }
@@ -2467,6 +2478,7 @@
                 // Collapses all the nodes of treeviews
                 $('.treeview2').treeView('collapseAll');
                 showEditButtons()
+                updateEditCheck()
                 removeLoading()
             }
 
