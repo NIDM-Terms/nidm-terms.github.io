@@ -1367,7 +1367,7 @@
                     checkboxElems[i].addEventListener("click", displayCheck);
                 }
 
-                //This function checks which checkboxes were unchecked and passes a list of urls to the function fetchAll to display
+                //This function checks which checkboxes were unchecked and updates the communities that are on display
                 function displayCheck(e) {
                     addLoading()
                     //the checkbox displays update (check/uncheck shows up right away) while the display asynchronously updates  
@@ -1430,6 +1430,14 @@
                 document.getElementById("selectCommunitiesAgain").innerHTML = '' //after box is checked, remove message to select 1+ communities
                 document.getElementById("treeviewsearched").innerHTML = ''
                 document.getElementById('noMatches').innerHTML = ''
+
+                //remove the checkboxes from the previous display
+                var editChecks = document.getElementsByClassName('editCon')
+                //loop through the checkboxes and call displayCheck
+                for (var i = 0; i < editChecks.length; i++) {
+                    editChecks[i].style.display = "none"
+                }
+
                 $('.treeview').treeView('collapseAll');
                 for(var key in mainDict){
                     var elements = document.getElementsByClassName('treeview_'+key);
@@ -1445,6 +1453,8 @@
                         }
                     }
                 }
+
+                updateEditCheck()
             }
 
             //This function sorts the terms in an alphabetical order
@@ -1745,7 +1755,7 @@
                 //hide all of the checkboxes - differs from editElems because editElems does not have a "display" property
                 var editChecks = document.getElementsByClassName('editCon')
                 for (var i = 0; i < editChecks.length; i++) {
-                editChecks[i].style.display = "none"
+                    editChecks[i].style.display = "none"
                 }
 
                 // whenever the user checks a checkbox, add that term to the list of terms for editing
@@ -1822,13 +1832,32 @@
                     var checkElems = document.getElementsByClassName('editCon')
                     for(var i = 0; i < checkElems.length; i++){
                         checkElems[i].style.display = "inline-block"
+                        // if(checkElems[i].checked==="true"){ console.log(31, i+" is true")}
+                        // console.log(3, checkElems[i].checked)
+                        // if(editList.includes(checkElems[i].checked)){
+                        //     $(".editCheckbox [value='"+checkElems[i].value+"']").checked=true
+                        // }
                     }
-                    
+
+                    // restore the checkbox selections from the previous display
+                    var editElems = document.querySelectorAll(".editCon input[type='checkbox']");
+                    // console.log(22, editElems[0].value)
+                    for(var i = 0; i < editElems.length; i++){
+                        if(editList.includes(editElems[i].value)){
+                            editElems[i].checked = "true"
+                        }
+                    }
+
                     //check all of the boxes that were checked in the previous display
-                    var editChecks = document.getElementsByName('editCheckbox')
-                    for(var j = 0; j < editList.length; j++){
-                        editChecks[j].checked=true;
-                    }
+                    // var editChecks = document.getElementsByName('editCheckbox')
+                    // for(var j = 0; j < editList.length; j++){
+                    //     $(":checkbox").filter({"value":editList[j]}).attr("checked", "true")
+                    //     // console.log(document.getElementsByName("editCheckbox"))
+                    //     // console.log(document.querySelector(".editCheckbox [value=0]"))
+                    //     // console.log($('.editCheckbox input[type="checkbox"][value="0"]'))
+                    //     // $(".editCheckbox [value='"+editList[j]+"']").checked=true
+                    //     // editChecks[j].checked=true;
+                    // }
                 }
 
                 // // restore all of the checkbox selections
@@ -2335,10 +2364,10 @@
                             newIndex++
                         }
                         if(placeInDict !== -1 && newIndex!==mainDictCopy[commName].length){
-                            html += '<li style="color:#4d4d4d;"><span style="font-size:21px;margin-bottom:2px;">' + terms[index].label + '</span><br>';
+                            html += '<li style="color:#4d4d4d;"><span style="font-size:21px;margin-bottom:2px;">' + terms[index].label + '</span>';
                             
                             html += '<label id = "'+index+'" class="editCon">';
-                            html += '<input id = "'+index+'" type="checkbox" name="editCheckbox" value = "'+searchEditList[index]+'">';
+                            html += '<input id = "'+index+'" type="checkbox" name="editCheckbox" value = "'+searchEditList[index]+'" class="editCheckbox">';
                             html += '<span class="editCheckmark"></span>'
                             html += '</label><br>';
 
