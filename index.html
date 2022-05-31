@@ -1938,12 +1938,24 @@
 
                 //create an edit display for each item in editList
                 for(var j = 0; j < editList.length; j++){
-                    console.log('using editList index: '+j)
+                    // console.log('using editList index: '+j)
                     // html+='<div id=term_'+j+'>'
 
+                    const deepCopy = (origArr) => {
+                        let copyArr, value, key
+                        if(typeof origArr !== "object" || origArr === null){
+                            return origArr
+                        }
+                        copyArr = Array.isArray(origArr) ? [] : {}
+                        for(key in origArr){
+                            value = origArr[key]
+                            copyArr[key] = deepCopy(value)
+                        }
+                        return copyArr
+                    }    
+                    
                     //add the term to the dictionary of terms that are edited
-                    editDict[editList[j]] = mainList[editList[j]]
-                    console.log(143, editDict)
+                    editDict[editList[j]] = deepCopy(mainList[editList[j]])
 
                     //pulls index of the term from editList
                     var termIndex = editList[j]
@@ -1970,7 +1982,7 @@
                             }else if(key==='responseOptions'){
                                 // html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Response Options</h4>`
 
-                                console.log(13,value)
+                                // console.log(13,value)
 
                                 html+=`<div id = "`+termIndex+`respoDiv" style="margin-left:20px;margin-right:45px;">
                                     <h4 style="margin-bottom:10px;margin-left:-30px;">Response Options</h4>`
@@ -1999,20 +2011,19 @@
 
                                                         html+='</select>'
                                                     }else if(kk==='allowableValues'){
-                                                        html+=`<div id="`+termIndex+kk+`" style="margin-right:22px;" class="respOptElem"><input id="`+termIndex+`allowableValues" class="newComInput" type="text" name="choices" value="`+ vvv +`" style="margin-left:10px;">`
+                                                        html+=`<div id="`+termIndex+kk+`" style="margin-right:22px;" class="respOptElem"><input id="`+termIndex+`allowableValues" class="newComInput" type="text" name="allowableValues" value="`+ vvv +`" style="margin-left:10px;">`
                                                         if(kkk===''+(vv.length-1))
                                                         {
                                                             html+=`<form style="margin-left:-9px;"><input id="`+termIndex+`valueInput" class="numOfValues" type="text" name="allowableValues" style="margin-left:20px;" placeholder = "OPTIONAL: Please specify the number of values you would like to add">
                                                                 <button type = "button" id="`+termIndex+`" class= "btn3 valueBtn" style="width:130px;margin-top:-15px;height:51.5px;margin-right:30px;"> Add Allowable Values </button></form>
-                                                                <div id="`+termIndex+`valueWrapper" class="wrapper" style="margin-left:20px;width:682px;"></div>`
+                                                                <div id="`+termIndex+`valueWrapper" class="wrapper" style="margin-left:20px;width:682px;"></div></div>`
                                                         }
-                                                        html+=`</div>`
                                                     }else if(kk==='choices'){
                                                         html+=`<div id="`+termIndex+kk+`" class="respOptElem" style="margin-left:20px;">`
                                                         
                                                         for(const [kkkk,vvvv] of Object.entries(vvv)){
-                                                            html+=`<input id="name" type="text" class="addedInput" name="name" value="`+kkkk+`" style="width:280px;">
-                                                                <input id="value" type="text" class="addedInput" name="value" value="`+vvvv+`" style="width:280px;margin-left:20px;">
+                                                            html+=`<input id="`+termIndex+`choices" type="text" class="addedInput newComInput" name="name" value="`+kkkk+`" style="width:280px;">
+                                                                <input id="`+termIndex+`choices" type="text" class="addedInput newComInput" name="value" value="`+vvvv+`" style="width:280px;margin-left:20px;">
                                                                 <br>`
                                                         }
 
@@ -2020,7 +2031,7 @@
                                                         {
                                                             html+=`<br><form ><input id="`+termIndex+`choicesInput" class="numOfValues" type="text" name="choices" placeholder = "OPTIONAL: Please specify the number of choices you would like to add">
                                                                 <button type = "button" id = "`+termIndex+`" class= "btn3 choicesBtn" style="width:130px;margin-top:-15px;height:51.5px;margin-right:50px;"> Add Choices </button></form>
-                                                                <div id="`+termIndex+`choicesWrapper" class="wrapper" style="margin-left:11px;width:673px;"></div>`
+                                                                <div id="`+termIndex+`choicesWrapper" class="wrapper" style="margin-left:11px;width:673px;"></div></div>`
                                                         }
                                                     }else{
                                                         html+=`<input id="`+termIndex+`choices" class="newComInput" type="text" name="choices" value="`+ vvv +`" placeholder = "OPTIONAL: Choices" style="margin-left:10px;">`
@@ -2030,12 +2041,12 @@
                                             }else if(typeof(vv) === 'string'){
                                                 if(kk==='allowableValues'){
                                                     html+=`<div id="`+termIndex+kk+`" class="respOptElem"><p><button type = "button" id="`+termIndex+kk+`" class= "delPropBtn"><i>&times;</i></button>`+capitalized+`:</p>
-                                                        <input id="`+termIndex+`choices" class="newComInput" type="text" name="choices" value="`+ vv +`" placeholder = "OPTIONAL: Choices" style="margin-left:10px;">
+                                                        <input id="`+termIndex+`allowableValues" class="newComInput" type="text" name="allowableValues" value="`+ vv +`" placeholder = "OPTIONAL: Allowable Values" style="margin-left:10px;">
                                                         
                                                         <br><form>
                                                         <input id="`+termIndex+`valueInput" class="numOfValues" type="text" name="allowableValues" placeholder = "OPTIONAL: Please specify the number of values you would like to add">
                                                         <button type = "button" id="`+termIndex+`" class= "btn3 valueBtn" style="width:150px;margin-right:29px;margin-top:-15px;height:51.5px;"> Add Allowable Values </button></form>
-                                                        <div id="`+termIndex+`valueWrapper" class="wrapper" style="margin-left:10px;width:716px;"></div></div></div>`
+                                                        <div id="`+termIndex+`valueWrapper" class="wrapper" style="margin-left:10px;width:716px;"></div></div>`
                                                 }else{
                                                     html+=`<div id="`+termIndex+kk+`" class="respOptElem"><p><button type = "button" id="`+termIndex+kk+`" class= "delPropBtn"><i>&times;</i></button>`+capitalized+`:</p>
                                                         <input id="`+termIndex+`choices" class="newComInput" type="text" name="choices" value="`+ vv +`" placeholder = "OPTIONAL: Choices" style="margin-left:10px;"></div>`
@@ -2299,6 +2310,7 @@
                     }
 
                     propsAdded = true
+                    document.getElementById("submitBtn").disabled = false
                     setEnabled()
                     updateInputs()
                     // updatePropDropdown()
@@ -2357,6 +2369,7 @@
                     }
                     updateInputs();
                     $("#"+index+type+"Wrapper").append(html);
+                    document.getElementById("submitBtn").disabled = false
                 };
 
                 //remove input box when delete button next to a property is clicked
@@ -2365,21 +2378,34 @@
                     // console.log(31, deletePropElems)
                     for(var k = 0; k < deletePropElems.length; k++){
                         deletePropElems[k].addEventListener("click", function(e){
-                            //get index of term on page
+                            //get index of term
                             var num = this.id.replace(/[^0-9]/g,'');
                             //get property being deleted
                             var property = this.id.replace(/[0-9]/g,'');
 
                             $("div[id='"+this.id+"']").remove()
 
+                            //remove the property from editDict
+                            if(!respOptList.includes(property)){
+                                delete editDict[num][property]
+                            }else{
+                                delete editDict[num]['responseOptions']['0'][property]
+                            }
+
                             //if there are no more properties in responseOptions, remove the whole div
                             if(document.getElementById(num+"respoDiv") &&
                                 document.getElementById(num+"respoDiv").getElementsByClassName("respOptElem").length === 0){
                                     document.getElementById(num+"respoDiv").remove()
+                                    delete editDict[num]['responseOptions']
                             }
 
                             //add the removed property back to the dropdown list by unhiding it
                             $("select[id='"+num+"'] option[value='"+property+"']").show()
+                            
+                            //enable the submit button
+                            document.getElementById("submitBtn").disabled = false
+
+                            console.log(64,editDict)
                         }, false)
                     }
                 }
@@ -2392,17 +2418,23 @@
                     // }
                 }
 
-                // enables submit button if changes have been made to the entries
-                const inputs = document.querySelectorAll("input.newComInput");
+                // // enables submit button if changes have been made to the entries
+                // const inputs = document.querySelectorAll("input.newComInput");
                 // console.log(44, inputs)
-                //Get the values selected in the checkboxes
-                var checkboxElems = document.querySelectorAll("input[name='tagCheckbox']");
-//see if valueType event listener is necessary
-                // var oldValueType = '' //initial value of the valueType dropdown list
-                // var valueTypeList = document.getElementById('valueType') // get the valueType dropdown list
+                // //Get the values selected in the checkboxes
+                // var checkboxElems = document.querySelectorAll("input[name='tagCheckbox']");
+                
                 // var selectList = document.querySelector("select") // get the valueType dropdown list
 
                 function saveInitial() {
+                    // enables submit button if changes have been made to the entries
+                    const inputs = document.querySelectorAll("input.newComInput");
+                    // var oldValueType = '' //initial value of the valueType dropdown list
+                    // var valueTypeList = document.getElementById('valueType') // get the valueType dropdown list
+                    // console.log(44, inputs)
+                    //Get the values selected in the checkboxes
+                    // var checkboxElems = document.querySelectorAll("input[name='tagCheckbox']");
+
                     for (const el of inputs) el.oldValue = el.value;
                     // if(valueTypeList!== null){
                     //     for(var i = 0; i < valueTypeList.length; i++){
@@ -2411,22 +2443,14 @@
                     // }
                 }
                 function setEnabled() {
+                    // enables submit button if changes have been made to the entries
+                    const inputs = document.querySelectorAll("input.newComInput");
+                    // console.log(44, inputs)
+                    //Get the values selected in the checkboxes
+                    var checkboxElems = document.querySelectorAll("input[name='tagCheckbox']");
+                    
                     var e = false;
-                    // var editedDict = {}
                     var numChecked = document.querySelectorAll("input[name='tagCheckbox']:checked").length
-
-                    // const deepCopy = (origArr) => {
-                    //     let copyArr, value, key
-                    //     if(typeof origArr !== "object" || origArr === null){
-                    //         return origArr
-                    //     }
-                    //     copyArr = Array.isArray(origArr) ? [] : {}
-                    //     for(key in origArr){
-                    //         value = origArr[key]
-                    //         copyArr[key] = deepCopy(value)
-                    //     }
-                    //     return copyArr
-                    // }      
                     for (const el of inputs) {
                         if(el.oldValue !== el.value){
                             //get index of term on page
@@ -2436,13 +2460,32 @@
                             console.log(2,el.id)
                             
                             var term = editDict[index]
-                            term[prop] = el.value
-                            
-                            // var editedDict = deepCopy(mainList[index])
-                            // editedDict[prop] = el.value
 
-                            // console.log(34, mainList[index])
-                            // console.log(37,editedDict)
+                            if(!respOptList.includes(prop)){
+                                term[prop] = el.value
+                            }else if(prop==='allowableValues'){
+                                var entry = term['responseOptions']['0']['allowableValues']
+                                if(typeof(entry)==='object'){
+                                    var arr = mainList[index]['responseOptions']['0'][prop]
+                                    //get the index of the entry that the user edited
+                                    var i = arr.indexOf(el.oldValue)
+                                    term['responseOptions']['0']['allowableValues'][i] = el.value
+                                }else if(typeof(entry)==='string'){
+                                    term['responseOptions']['0']['allowableValues'] = el.value
+                                }
+                            }else if(prop==='choices'){
+                                var elems = document.getElementById(el.id).getElementsByClassName('addedInput')           
+                                for(var j = 0; j < elems.length; j+=2){
+                                    var name = elems[j].value
+                                    var val = elems[j+1].value
+                                    var dict = {}
+                                    dict[name] = val
+
+                                    editDict[index]['responseOptions']['0']['choices'][j/2] = dict
+                                }       
+                            }else if(prop==='maxValue' || prop==='minValue' || prop==='unitCode'){
+                                term['responseOptions']['0'][prop] = el.value
+                            }
                         }
                     }
                     var tagChecks = document.getElementsByName("tagCheckbox")
@@ -2474,8 +2517,12 @@
                         dropdowns[i].addEventListener("change", function(e){
                             //get index of term on page
                             var index = this.id.replace(/[^0-9]/g,''); 
-
                             editDict[index]['responseOptions']['0']['valueType'] = 'xsd:'+this.value
+                            if(mainList[index]['responseOptions']['0']['valueType']['0']!=='xsd:'+this.value){
+                                document.getElementById("submitBtn").disabled = false
+                            }else{
+                                document.getElementById("submitBtn").disabled = true
+                            }
                         })
                     }
                     //update the dictionary for added community tags, allowable values, and choices
@@ -2486,20 +2533,126 @@
                             var index = this.id.replace(/[^0-9]/g,'');
                             var type = this.id.replace(/[0-9]/g,'');  
 
-                            var elems = document.getElementById(this.id).getElementsByClassName('addedInput')
-                            //get current number of checkboxes 
-                            var currentNum = document.querySelectorAll('[name="tagCheckbox"][id^="'+index+'"]').length
+                            var elems = document.getElementById(this.id).getElementsByClassName('addedInput') 
+                            const initialProps = Object.keys(mainList[index])                           
                             
-                            for(var j = 0; j < elems.length; j++){
-                                if(type==='tagWrapper'){
+                            if(type==='choicesWrapper'){
+                                var currentNum;
+                                if(initialProps.includes('responseOptions')){
+                                    const initialOpts = Object.keys(mainList[index]['responseOptions']['0'])
+                                    console.log(52,initialOpts)
+                                    if(initialOpts.includes('choices')){
+                                        currentNum = mainList[index]['responseOptions']['0']['choices'].length
+                                    }else{
+                                        currentNum = 0
+                                    }
+                                }else{
+                                    currentNum = 0                                    
+                                }
+
+                                var arr = []
+                                for(var j = 0; j < elems.length; j+=2){
+                                    var name = elems[j].value
+                                    var val = elems[j+1].value
+                                    var dict = {}
+                                    dict[name] = val
+                                    // console.log(2,dict)
+                                    
+                                    arr[currentNum+j/2] = dict
+                                }
+
+                                if(initialProps.includes('responseOptions')){
+                                    editDict[index]['responseOptions']['0']['choices'] = arr
+                                }else{
+                                    editDict[index]['responseOptions'] = [{'choices':arr}]
+                                }
+                                
+                                
+                                //if there are responseOptions and this is in responseOptions
+                                // const initialOpts = Object.keys(mainList[index]['responseOptions']['0'])
+                                // if(initialOpts.includes('choices')){
+                                //     var currentNum = mainList[index]['responseOptions']['0']['choices'].length
+                                    // for(var j = 0; j < elems.length; j+=2){
+                                    //     var name = elems[j].value
+                                    //     var val = elems[j+1].value
+                                    //     var dict = {}
+                                    //     dict[name] = val
+                                    //     console.log(2,dict)
+
+                                    //     editDict[index]['responseOptions']['0']['choices'][currentNum+j/2] = dict
+                                    // }
+                                // }else{
+                                //     var arr = []
+                                //     for(var j = 0; j < elems.length; j+=2){
+                                //         var name = elems[j].value
+                                //         var val = elems[j+1].value
+                                //         var dict = {}
+                                //         dict[name] = val
+                                //         console.log(2,dict)
+
+                                //         arr[j/2] = dict
+                                //     }
+                                //     editDict[index]['responseOptions']['0']['choices'] = arr
+                                // }
+                            }else if(type==='tagWrapper'){
+                                var currentNum;
+                                if(initialProps.includes('associatedWith')){
+                                    //get current number of checkboxes 
+                                    currentNum = document.querySelectorAll('[name="tagCheckbox"][id^="'+index+'"]').length
+                                }else{
+                                    currentNum = 0
+                                }
+                                
+                                for(var j = 0; j < elems.length; j++){
                                     if(elems[j].value!==null){
                                         editDict[index]['associatedWith'][currentNum+j] = elems[j].value
                                     }
-                                }else if(type==='valueWrapper'){
-                                    editDict[index]['responseOptions']['0']['allowableValues'][currentNum+j] = elems[j].value
-                                }else if(type==='choicesWrapper'){
-                                    // editDict[index]['responseOptions']['0']['choices']
                                 }
+                            }else if(type==='valueWrapper'){
+                                if(initialProps.includes('responseOptions')){
+                                    const initialOpts = Object.keys(mainList[index]['responseOptions']['0'])
+                                    if(initialOpts.includes('allowableValues')){
+                                        var entry = mainList[index]['responseOptions']['0']['allowableValues']
+                                        if(typeof(entry)==='object'){
+                                            var currentNum = entry.length
+                                            for(var j = 0; j < elems.length; j++){
+                                                editDict[index]['responseOptions']['0']['allowableValues'][currentNum+j] = elems[j].value
+                                            }
+                                        }else if(typeof(entry)==='string'){
+                                            var arr = [entry]
+                                            for(var j = 0; j < elems.length; j++){
+                                                arr.push(elems[j].value)
+                                            }
+                                            editDict[index]['responseOptions']['0']['allowableValues'] = arr
+                                        }
+                                    }else{
+                                        var arr = []
+                                        for(var j = 0; j < elems.length; j++){
+                                            arr.push(elems[j].value)
+                                        }
+                                        editDict[index]['responseOptions']['0']['allowableValues'] = arr
+                                    }
+                                }else{
+                                    var arr = []
+                                    for(var j = 0; j < elems.length; j++){
+                                        arr.push(elems[j].value)
+                                    }
+                                    editDict[index]['responseOptions'] = [{'allowableValues':arr}]                       
+                                }
+
+                                // var entry = mainList[index]['responseOptions']['0']['allowableValues']
+                                // if(typeof(entry)==='object'){
+                                //     var currentNum = entry.length
+                                //     for(var j = 0; j < elems.length; j++){
+                                //         editDict[index]['responseOptions']['0']['allowableValues'][currentNum+j] = elems[j].value
+                                //     }
+                                // }else if(typeof(entry)==='string'){
+                                //     var arr = [entry]
+                                //     for(var j = 0; j < elems.length; j++){
+                                //         arr.push(elems[j].value)
+                                //     }
+                                //     editDict[index]['responseOptions']['0']['allowableValues'] = arr
+                                // }
                             }
                         })
                     }
