@@ -7,6 +7,8 @@
     var communityLink = 'https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json' //Link to list of available communities JSON dictionary found in the UI repository
     
     var contextLink = 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld' //Link to context file
+
+    var repoName = 'terms'; //Name of repository containing terms
     //////////////////////////////////////////////////////////////////////////////////////////
 </script>
 
@@ -111,10 +113,12 @@
 
     
     <center>
-        <div class= "container">
-            <h2 id="stepTitles">Communities<hr style="margin-top: 5px; margin-bottom: 50px;"></h2>
-            <div id="selectCommunity">
-                <center><table id="table"></table></center>
+        <div id= "mainContainer" class="container">
+            <div id="communityHeader">
+                <h2 id="stepTitles">Communities<hr style="margin-top: 5px; margin-bottom: 50px;"></h2>
+                <div id="selectCommunity">
+                    <center><table id="table"></table></center>
+                </div>
             </div>
             <br>
             
@@ -129,14 +133,52 @@
             <div id="selectCommunitiesAgain"></div>
             <div id="noMatches"></div>
 
-            <div id="editPage" style="margin-left:45px;margin-top:-40px;">
+            <button id="editBtn2"><i>Edit Terms</i></button>
+            <button id="scrollBtn"><i>Back to Top</i></button>
+        </div>
+
+        <div id="editContainer" class="container" style="display:none;">
+
+            <button id="backBtn" style="font-style:italic;font-weight:normal;color:#1f91c2;font-size:17px;display:inline-block;margin-left:-95px;">Back</button>
+
+            
+
+            <h2 id="stepTitles">GitHub Access Token<hr style="margin-top: 5px;"></h2>
+
+            <div class="headerBrdr"><center>
+                The NIDM-Terms effort is focused on developing and adopting a set of community driven controlled vocabulary 
+                for neuroimaging. NIDM-Terms infrastructure consists of a GitHub repository containing JSON-LD formatted 
+                files for each term. Newly added terms will be sent as a pull request to our GitHub repository.
+                Therefore, in order to suggest a new term, a GitHub API Token must be provided. 
+            </center></div>
+
+            <br>
+            
+            <div class="keyInfo"><center>
+                For more information on GitHub personal access tokens click <a href= "https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token" target="_blank"> here</a>.
+            </center></div>
+
+            <br>
+
+            <form><input id = "token" type="password"  placeholder="Enter GitHub Personal Access Token" required></form>
+
+            <form action="https://github.com/settings/tokens" target= "_blank">
+                <input class= "btn4" type = "submit" value="Generate GitHub Token">
+            </form>
+
+            <hr><br><br>
+            <div id = "instruct-bar">
+                To edit, please click on the desired term(s) and make your changes.
+                Click <a id = "here" style="color:#1f91c2;" href="https://github.com/NIDM-Terms/terms/blob/master/terms/README.md" target="_blank">here</a>  to view data element property descriptions<br>
+                Changes will be reflected once the PR is merged.<br>
+                Removing the value of any property is equivalent to removing the entire property from the term.
+            </div>
+
+            <div id="editPage" style="margin-left:45px;">
                 <div id= "editInputs"></div>
                 <br><button id = "submitBtn" class= "btn" type = "button" style="display:none;"> Submit Edit for Review </button><br><br>
                 <!-- <br><button id = "submitBtn" class= "btn" type = "button" onclick="submitEdit()" style="display:none;"> Submit Edit for Review </button><br><br> -->
             </div>
-
-            <button id="editBtn2"><i>Edit Terms</i></button>
-            <button id="scrollBtn"><i>Back to Top</i></button>
         </div>
     </center>
     
@@ -1129,6 +1171,37 @@
             background: #e5e5e5;
         }
 
+        .btn4{
+            float: right;
+            cursor: pointer;
+            width: 200px;
+            height: 47px;
+            background-image: linear-gradient(
+            to right, 
+            #EE5A24, 
+            #F79F1F
+            );
+            border-radius: 3px;
+            font-size: 18px;
+            color: #fefcfb;
+            margin-top: -77px;
+            margin-right: 160px;
+            outline: none;
+
+            border-top-style: hidden;
+            border-right-style: hidden;
+            border-left-style: hidden;
+            border-bottom-style: hidden;
+        }
+
+        .btn4:active {
+            -webkit-box-shadow: inset 0px 0px 5px #96161a;
+                -moz-box-shadow: inset 0px 0px 5px #96161a;
+                    box-shadow: inset 0px 0px 5px #96161a;
+            outline: none;
+
+        }
+
         .delPropBtn{
             color:#8b2b2b;
             border-radius:6px;
@@ -1164,6 +1237,77 @@
         }
         .selectProp:hover{
             background:#73767a13;
+        }
+
+        .headerBrdr{
+            font-size: 15px;
+            color: #686666;
+            text-align: justify;
+            text-justify: inter-word;
+            padding-left: 20px;
+            line-height: 26px;
+            margin-left: 80px;
+            margin-right: 55px; 
+
+        }
+        .keyInfo{
+            font-size: 12px;
+            text-indent: 4px;
+            color: #686666;
+            text-align: justify;
+            text-justify: inter-word;
+            padding-left: 10px;
+            line-height: 16px; 
+            font-style: italic;
+        }
+        #token{
+            height: 45px;
+            width: 40%;
+            border-radius: 3px;
+            border: 1px solid #919191;
+            padding: 0px 30px;
+            background-color: #fdfdfd;
+            font-size: 18px;
+            text-indent: 10px;
+            outline: none;
+            font-size: 16px;
+            margin-left: 197px;
+            margin-top: 5px;
+            margin-bottom: 30px;
+
+            border-top-color: #9e9e9e;
+            border-right-color: #9e9e9e;
+            border-left-color: #9e9e9e;
+            border-bottom-color: #9e9e9e;
+        }
+        .subBtn{
+            cursor: pointer;
+            width: 200px;
+            height: 50px;
+            background-color: #fefcfb;
+            border: 2px solid #EE5A24;
+            border-radius: 5px;
+            font-size: 15px;
+            color: #EE5A24;
+            margin-top: 20px;
+        }
+
+        .subBtn:active {
+            background: #e5e5e5;
+            -webkit-box-shadow: inset 0px 0px 5px #96161a;
+                -moz-box-shadow: inset 0px 0px 5px #96161a;
+                    box-shadow: inset 0px 0px 5px #96161a;
+            outline: none;
+
+        }
+        .subBtn:hover{
+            color:#fefcfb;
+            background-image: linear-gradient(
+            to right, 
+            #EE5A24, 
+            #F79F1F
+            );
+            border: none;
         }
 
         #instruct-bar {
@@ -1217,7 +1361,7 @@
     </body>
 
 
-    <script>
+    <script type="module">
 
         //This script fetches raw github jsonld files of NIDM-Terms and displays then in a treeview
         //allowing the user to view and search terms as well as filtering terms based on the terms categories
@@ -1233,6 +1377,8 @@
         var mainList = [] //List to contain terms from all communities
 ///
         var editList = ['0','1','8','434','2561','4296','1786'] //List to contain indices of all terms that the user selected to edit
+        // var editList = [] //List to contain indices of all terms that the user selected to edit
+        // var editList = ['225']
         var editDict = {} //Dictionary to contain all terms that the user selected to edit
         var searchList = [] //List to contain indices of all searched terms
         var typeOptions = ['string', 'boolean', 'integer', 'float', 'double', 'duration', 'dateTime', 'time', 'date', 'anyURI', 'complexType'] //List of all values in valueType dropdown
@@ -1244,6 +1390,7 @@
         // var otherProperties = []; // List to contain properties not shown that the user can add to the term
         // var displayedProperties = []; // List to contain properties shown on the Edit Page
         
+        import { Octokit } from "https://cdn.pika.dev/@octokit/core";
         /// This function fetches data from all of the communities' jsonld files
         $(document).ready(function(event) {
             //display the loading screen
@@ -1261,8 +1408,9 @@
             }
 
             //if the treeview is being displayed, add the 'scroll to top' and 'edit' buttons when the user scrolls down
+            
             window.onscroll = function() {
-                if (document.getElementById('searchBar').style.display === "block" && (document.body.scrollTop > 700 || document.documentElement.scrollTop > 700)) {
+                if(document.body.scrollTop > 700 || document.documentElement.scrollTop > 700){
                     document.getElementById('scrollBtn').style.display = "block";
 
                     // display a floating edit button if the user has selected terms
@@ -1317,7 +1465,7 @@
                 //create an array containing all the urls to pass to pass, create another array with all the community association properties
                 var urlList = [] //List of urls with the terms of each community
 
-                html = ''
+                var html = ''
 
                 var tbl = document.getElementById("table")
                 var body = document.body
@@ -1905,6 +2053,8 @@
                 //sort editList so terms appear alphabetically
                 editList.sort(function (a,b) { return a - b; })
 
+                document.getElementById("mainContainer").style.display = "none"
+                document.getElementById("editContainer").style.display = "block"
                 // hide the main treeview display
                 for(var key in mainDict){
                     var elements = document.getElementsByClassName('treeview_'+key);
@@ -1927,12 +2077,12 @@
                 var html = document.getElementById('editInputs').innerHTML
 
                 // html += '<button id="backBtn" style="color:#4d4d4d;display:inline-block;">Back</button>'
-                html += '<button id="backBtn" style="font-style:italic;font-weight:normal;color:#1f91c2;font-size:17px;display:inline-block;margin-left:-135px;">Back</button>'
+                // html += '<button id="backBtn" style="font-style:italic;font-weight:normal;color:#1f91c2;font-size:17px;display:inline-block;margin-left:-135px;">Back</button>'
 
-                html += `<div id = "instruct-bar">To edit, please click on the desired term(s) and make your changes.
-                    Click <a id = "here" style="color:#1f91c2;" href="https://github.com/NIDM-Terms/terms/blob/master/terms/README.md" target="_blank">here</a>  to view data element property descriptions<br>
-                    Changes will be reflected once the PR is merged.<br>
-                    Removing the value of any property is equivalent to removing the entire property from the term.</div>`
+                // html += `<div id = "instruct-bar">To edit, please click on the desired term(s) and make your changes.
+                //     Click <a id = "here" style="color:#1f91c2;" href="https://github.com/NIDM-Terms/terms/blob/master/terms/README.md" target="_blank">here</a>  to view data element property descriptions<br>
+                //     Changes will be reflected once the PR is merged.<br>
+                //     Removing the value of any property is equivalent to removing the entire property from the term.</div>`
 
                 html += '<ul class = "treeview3" id = "treeview3">';
 
@@ -2150,6 +2300,7 @@
 
                 //show the submit button on the edit terms page
                 document.getElementById('submitBtn').style.display = "block"
+                document.getElementById('submitBtn').addEventListener("click", submitEdits)
 
                 $('#editInputs').append(html);
                 $('.treeview3').treeView();
@@ -2180,6 +2331,9 @@
 
                 // when the back button is clicked, re-display the terms page
                 document.getElementById('backBtn').addEventListener("click", function(){
+                    //re-display the communities header
+                    document.getElementById("mainContainer").style.display = "block"
+                    document.getElementById("editContainer").style.display = "none"
                     //re-display the treeview
                     for(var key in mainDict){
                         var elements = document.getElementsByClassName('treeview_'+key);
@@ -2312,8 +2466,6 @@
                     propsAdded = true
                     document.getElementById("submitBtn").disabled = false
                     setEnabled()
-                    updateInputs()
-                    // updatePropDropdown()
                     updateRemove()
                     // console.log(document.getElementsByClassName('addedProps'))
                     // console.log(91, 'length of '+index+' is '+$('#addedProps'+index).html().length)
@@ -2367,7 +2519,6 @@
                     }else if(document.getElementById(index+type+"Input").value == 0){
                         html += '</div>';
                     }
-                    updateInputs();
                     $("#"+index+type+"Wrapper").append(html);
                     document.getElementById("submitBtn").disabled = false
                 };
@@ -2410,42 +2561,13 @@
                     }
                 }
 
-                function updateInputs(){
-                    var inputFields = document.querySelectorAll("input.newComInput");
-                    // console.log(35, inputFields)
-                    // for(var i = 0; i < inputFields.length; i++){
-                    //     inputFields[i].addEventListener()
-                    // }
-                }
-
-                // // enables submit button if changes have been made to the entries
-                // const inputs = document.querySelectorAll("input.newComInput");
-                // console.log(44, inputs)
-                // //Get the values selected in the checkboxes
-                // var checkboxElems = document.querySelectorAll("input[name='tagCheckbox']");
-                
-                // var selectList = document.querySelector("select") // get the valueType dropdown list
-
                 function saveInitial() {
-                    // enables submit button if changes have been made to the entries
                     const inputs = document.querySelectorAll("input.newComInput");
-                    // var oldValueType = '' //initial value of the valueType dropdown list
-                    // var valueTypeList = document.getElementById('valueType') // get the valueType dropdown list
-                    // console.log(44, inputs)
-                    //Get the values selected in the checkboxes
-                    // var checkboxElems = document.querySelectorAll("input[name='tagCheckbox']");
-
                     for (const el of inputs) el.oldValue = el.value;
-                    // if(valueTypeList!== null){
-                    //     for(var i = 0; i < valueTypeList.length; i++){
-                    //         if(valueTypeList[i].selected){ oldValueType = valueTypeList[i].value }
-                    //     }
-                    // }
                 }
                 function setEnabled() {
                     // enables submit button if changes have been made to the entries
                     const inputs = document.querySelectorAll("input.newComInput");
-                    // console.log(44, inputs)
                     //Get the values selected in the checkboxes
                     var checkboxElems = document.querySelectorAll("input[name='tagCheckbox']");
                     
@@ -2566,34 +2688,6 @@
                                 }else{
                                     editDict[index]['responseOptions'] = [{'choices':arr}]
                                 }
-                                
-                                
-                                //if there are responseOptions and this is in responseOptions
-                                // const initialOpts = Object.keys(mainList[index]['responseOptions']['0'])
-                                // if(initialOpts.includes('choices')){
-                                //     var currentNum = mainList[index]['responseOptions']['0']['choices'].length
-                                    // for(var j = 0; j < elems.length; j+=2){
-                                    //     var name = elems[j].value
-                                    //     var val = elems[j+1].value
-                                    //     var dict = {}
-                                    //     dict[name] = val
-                                    //     console.log(2,dict)
-
-                                    //     editDict[index]['responseOptions']['0']['choices'][currentNum+j/2] = dict
-                                    // }
-                                // }else{
-                                //     var arr = []
-                                //     for(var j = 0; j < elems.length; j+=2){
-                                //         var name = elems[j].value
-                                //         var val = elems[j+1].value
-                                //         var dict = {}
-                                //         dict[name] = val
-                                //         console.log(2,dict)
-
-                                //         arr[j/2] = dict
-                                //     }
-                                //     editDict[index]['responseOptions']['0']['choices'] = arr
-                                // }
                             }else if(type==='tagWrapper'){
                                 var currentNum;
                                 if(initialProps.includes('associatedWith')){
@@ -2639,26 +2733,14 @@
                                     }
                                     editDict[index]['responseOptions'] = [{'allowableValues':arr}]                       
                                 }
-
-                                // var entry = mainList[index]['responseOptions']['0']['allowableValues']
-                                // if(typeof(entry)==='object'){
-                                //     var currentNum = entry.length
-                                //     for(var j = 0; j < elems.length; j++){
-                                //         editDict[index]['responseOptions']['0']['allowableValues'][currentNum+j] = elems[j].value
-                                //     }
-                                // }else if(typeof(entry)==='string'){
-                                //     var arr = [entry]
-                                //     for(var j = 0; j < elems.length; j++){
-                                //         arr.push(elems[j].value)
-                                //     }
-                                //     editDict[index]['responseOptions']['0']['allowableValues'] = arr
-                                // }
                             }
                         })
                     }
 
                     for (const el of inputs) {
-                        if (el.oldValue !== el.value || numChecked!==checkboxElems.length || propsAdded) {
+                        if ((el.oldValue !== el.value || numChecked!==checkboxElems.length || propsAdded)) {
+///
+                        // if ((el.oldValue !== el.value || numChecked!==checkboxElems.length || propsAdded) && document.getElementById("token").value.length !== 0) {
                         // if (el.oldValue !== el.value || numChecked!==checkboxElems.length || (valueTypeList !== null && oldValueType !== valueTypeList.value) || propsAdded) {
                             e = true;
                             break;
@@ -2672,7 +2754,6 @@
 
                 saveInitial();
                 setEnabled();
-                updateInputs();
                 updateRemove();
                 return false;
             }
@@ -2901,6 +2982,433 @@
                         return false;
                 }
                 return true;
+            }
+
+            
+            function submitEdits(){
+                $(document).ready(function(event) { 
+                    // fetch the context file and create a jsonld
+                    fetch(contextLink)
+                    .then(function(resp){
+                        return resp.json(); 
+                    })
+
+                    .then(async function(context){
+                        const deepCopy = (origArr) => {
+                            let copyArr, value, key
+                            if(typeof origArr !== "object" || origArr === null){
+                                return origArr
+                            }
+                            copyArr = Array.isArray(origArr) ? [] : {}
+                            for(key in origArr){
+                                value = origArr[key]
+                                copyArr[key] = deepCopy(value)
+                            }
+                            return copyArr
+                        }
+
+                        for(var i = 0; i < editList.length; i++){
+                            var dict = deepCopy(editDict[editList[i]])
+
+                            //remove all properties with blank inputs except if description is blank
+                            for(const [key,value] of Object.entries(dict)){
+                                if( !(notDisplayed.includes(key)) ){
+                                    if(key==="responseOptions"){
+                                        for(const [k,v] of Object.entries(value)){ //'0'
+                                            for(const [kk,vv] of Object.entries(v)){ //responseOptions properties
+                                                if(typeof(vv)==="string" && vv===""){
+                                                    delete dict[key][k][kk]
+                                                }else if(typeof(vv)==="object"){ //allowableValues and choices
+                                                    for(const [kkk,vvv] of Object.entries(vv)){
+                                                        if(typeof(vvv)==="string" && vvv===""){
+                                                            delete dict[key][k][kk][kkk]
+                                                            // var filtered = vvv.filter(x => typeof x !== 'undefined')
+                                                            // dict[key][k][kk] = dict[key][k][kk].filter(x => typeof x !== 'undefined')
+                                                        }else if(typeof(vvv)==="object"){
+                                                            for(const [kkkk,vvvv] of Object.entries(vvv)){
+                                                                if(kkkk===""){
+                                                                    delete dict[key][k][kk][kkk]
+                                                                }
+                                                            }                                                            
+                                                        }
+                                                        if(vvv.length===0){
+                                                            delete dict[key][k][kk][kkk]
+                                                        }
+                                                    }
+
+                                                    var newArr = vv.filter(x => typeof x !== 'undefined')
+                                                    dict[key][k][kk] = newArr
+                                                    console.log(32,newArr)
+                                                    if(newArr.length===0){
+                                                        delete dict[key][k][kk]
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        //removes responseOptions key if no properties are left
+                                        var filtered = value.filter(x => Object.keys(x).length!==0)
+                                        if(filtered.length===0){
+                                            delete dict[key]
+                                        }
+                                    }else if(key!=="label" && key!=="description"){
+                                        if(typeof(value)==="string" && value===""){
+                                            delete dict[key]
+                                        }else if(typeof(value)==="object"){
+                                            for(const [k,v] of Object.entries(value)){
+                                                if(typeof(v)==="string" && v===""){
+                                                    delete dict[key][k]
+                                                }else if(typeof(v)==="object"){
+                                                    for(const [kk,vv] of Object.entries(v)){
+                                                        if(kk==="" && vv===""){
+                                                            delete dict[key][k][kk]
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            
+                                            if(value.length === 0){
+                                                delete dict[key]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            console.log(18,dict)
+                            dict['@context'] = contextLink
+
+                            const compacted = await jsonld.compact(dict, contextLink);
+                            for(var key in mainDict){
+                                // console.log(214,mainDict[key].includes(mainList[editList[i]]))
+                                if(mainDict[key].includes(mainList[editList[i]])){
+///
+                                    sendPR(compacted,key)
+                                }
+                            }
+                        }
+
+                        // return compacted
+
+                        // for(var i = 0; i < editList.length; i++){
+                        //     //compact term dictionary
+                            // const compacted = await jsonld.compact(editDict[editList[i]], contextLink);
+                            // console.log(compacted)
+
+                            // return compacted
+                        // }
+                        
+                    })
+                    // .then(function(newTermJsonld){
+                    //     // sendPR(newTermJsonld, community)
+                    // })
+                });
+
+                // for(var k = 0; k < editList.length; k++){
+                //     const compacted = await jsonld.compact(editDict[editList[k]], contextLink);
+                //     console.log(compacted)
+                //     //send pr for editList[k]
+                // }
+            };
+
+            //////////////////////////////////////////////////////////////////////////////////
+            /// function created to create jsonld files and submit a pull request to github
+            //////////////////////////////////////////////////////////////////////////////////
+
+            function sendPR (newTermJsonld, community){
+                //Get GitHub API key
+                if(document.getElementById("token").value.length == 0){
+                    removeLoading()
+                    alert('A GitHub API Token is required to complete the pull request')
+                    document.getElementById("token").style.borderWidth = '1px';
+                    document.getElementById("token").style.borderColor = 'red';
+                    document.getElementById("token").style.backgroundColor = '#FFF1F1';
+                } 
+                else {
+                    addLoading()
+
+                    const gitToken = document.getElementById("token").value;
+
+                    const octokit = new Octokit({ auth: gitToken });
+                    // const info = octokit.request(`GET /user`);
+                    // console.log(info)
+
+                    const repo = repoName;
+                    const fileName = newTermJsonld.label
+                    // const fileName = document.getElementById("label").value;
+                    
+                    //GET user's github username
+                    octokit.request(
+                        `GET /user`
+                    ).then((response) => {
+                        console.log(20, response)
+                        //call fork repo to check if the user has the repo forked
+                        //if repo is not found then fork it
+                        forkRepo(response.data.login)
+                    }).catch((e) => {
+                        console.log(23, e.message);
+                        removeLoading()
+                        alert('Bad Credentials... Please Enter A Valid Personal Access Token.')
+                    })
+
+                    //fork repo function
+                    async function forkRepo(owner){
+                        octokit.request(
+                            `GET /repos/{owner}/{repo}`, {
+                                headers: {
+                                    'User-Agent': 'terms',
+                                    'accept': 'application/json'
+                                },
+                                owner: owner,
+                                repo: repo
+                            }).then((res) => {
+                            console.log(47, 'success', owner, repo, newTermJsonld); // repo exists!
+                            //call function to get the master branch sha
+                            getSha(owner)
+                        }).catch((e) => {
+                            console.log(50, e.message);
+                            if (e.message === "Not Found") { // repo not present, so fork the repo
+                                // fork the repo
+                                octokit.request(
+                                    `POST /repos/{owner}/{repo}/forks`, {
+                                        headers: {
+                                            'Authorization': 'token ' + gitToken,
+                                        },
+                                        owner: 'NIDM-Terms',
+                                        repo: repo
+                                    }).then((response) => {
+                                    console.log(71, 'successfully forked: ', response.status);
+                                    if (response.status === 200 || response.status=== 201) {
+                                        //call function to get the master branch sha
+                                        getSha(owner)
+                                    } else if (response.status === 202) {
+                                        setTimeout(getSha, 3000, owner);
+                                    }
+                                    console.log(77, "post fork: ", response);
+                                }).catch((e) => {
+                                    console.log(79, e.message);
+                                    reportAnIssue('NIDM Terms UI: an issue with forking NIDM-Terms repo', e);
+                                });
+                            }
+                        });
+
+                        //function to get sha hash of master branch
+                        async function getSha(user){
+                            octokit.request(`GET /repos/{owner}/{repo}/branches/{branch}`, {
+                                owner: user,
+                                repo: repo,
+                                branch: 'master'
+                            }).then((r) => {
+                                console.log(43, 'sha is: ', r.data.commit.sha)
+                                console.log(44,r)
+                                //call function to create a branch
+                                createNewBranch(r.data.commit.sha, user)
+                            })
+                            .catch((e) => {
+                                console.log(55, e.message);
+                                reportAnIssue('NIDM Terms UI: an issue with getting master branch hash', e);
+                            })
+                        };
+                    }
+
+                    //function to create a new branch with the term name
+                    async function createNewBranch(sha,user){
+                        octokit.request(`POST /repos/{owner}/{repo}/git/refs`, {
+                            owner: user,
+                            repo: repo,
+                            ref: 'refs/heads/'+community+'_'+fileName,
+                            sha: sha
+                        }).then((response) => {
+                            console.log(72, 'successfully created a new branch: ', response.status);
+                            //call function to comit file to the new branch
+                            createFileInRepo(newTermJsonld, 'terms/'+community+'/'+fileName+'.jsonld', user);
+                        }).catch((e) => {
+                            console.log(67, e.message);
+                            reportAnIssue('NIDM Terms UI: an issue with creating a new branch', e);
+                        });
+                    }
+
+                    //function to commit to the new branch
+                    async function createFileInRepo(jsonTermObj, pathToFile, user) {
+                        // var sha
+                        getSha(user)
+
+                        //function to get sha hash of individual file
+                        async function getSha(user){
+                            octokit.request(`GET /repos/{owner}/{repo}/branches/{branch}`, {
+                                owner: user,
+                                repo: repo,
+                                branch: 'master',
+                                path: pathToFile
+                                // **add path - copy and paste 3165 online to see parameter
+                            }).then((r) => {
+                                console.log(432, 'sha is: ', r.data.commit.sha)
+                                console.log(433,r)
+                                // sha = r.data.commit.tree.sha
+                                //call function to create a branch
+                                createNewBranch(r.data.commit.sha, user)
+                            })
+                            .catch((e) => {
+                                console.log(552, e.message);
+                                reportAnIssue("NIDM Terms UI: an issue with getting the term's file hash", e);
+                            })
+                        };
+
+    //put in function to get sha of file - going to replace everything up to .then((response)=>{})
+    // octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+    // owner: 'OWNER', same
+    // repo: 'REPO', same
+    // path: 'PATH', same
+    // message: community+' Term Edited: '+fileName, - user could have edited label within file but file name remains unchanged. if statement in function that checks for edits - create global var and assign val, if label has changed then add comment that there exists another file with same info
+    // content: 'bXkgbmV3IGZpbGUgY29udGVudHM=',
+    // sha: '' add this, in order to get as parameter then write function similar to the getsha
+    // })
+                        console.log(57, jsonTermObj, pathToFile, user);
+                        // let content = Buffer.from(JSON.stringify(jsonTermObj, undefined, 2)).toString('base64');
+                        const content = btoa(JSON.stringify(jsonTermObj, undefined, 2)); // for use in browser
+                        console.log(63, content);
+                        octokit.request(
+                            `PUT /repos/{owner}/{repo}/contents/{path}`, {
+                                headers: {
+                                    'Authorization': 'token ' + gitToken,
+                                },
+                                owner: user,
+                                repo: repo,
+                                path: pathToFile,
+                                message: 'New '+community+' Term Added: '+fileName,
+                                content: content,
+                                branch: community+'_'+fileName
+                            }).then((response) => {
+                            console.log(91, "statusCode for createFile: ", response.status);
+                            if (response.status === 200 || response.status=== 201) {
+                                //call function to raise a pull request
+                                createPullRequest(pathToFile, user);
+                            }
+                        }).catch((e) => {
+                            console.log(93, e.message);
+                            reportAnIssue('NIDM Terms UI: an issue with commiting a new term', e);
+                        });
+                    }
+
+                    //function to raise a pull request
+                    async function createPullRequest(pathToFile, user) {
+                        var st = '';
+                        console.log(96, 'in createPR');
+                        octokit.request(
+                            `POST /repos/{owner}/{repo}/pulls`, {
+                                headers: {
+                                    'Authorization': 'token ' + gitToken,
+                                },
+                                owner: 'NIDM-Terms',
+                                repo: repo,
+                                title: 'New '+community+' Term Added: ' + fileName,
+                                body: 'Edited or Added Terms:' + pathToFile,
+                                head: user + ':'+community+'_' + fileName,
+                                base: 'master'
+                            }).then(resp => {
+                            console.log(108, "StatusCode for Pull Request: ", resp.status);
+                            var st = '1';
+                            //call confimation function
+                            submission(st)
+                        }).catch(e => {
+                            console.log(110, 'error in raising PR: ', e);
+                            reportAnIssue('NIDM Terms UI: an issue with sending a pull request',e);
+                        })
+
+                    } 
+
+
+                    //function to display confirmation to the pull request
+                    async function submission(state){
+                        if(state == '1'){
+                            removeLoading()
+                            $('#editContainer').html("")
+
+                            var html = '<br><br><br>';
+
+                            html += '<h2 id="stepTitles">Submission Complete <hr style="margin-top: 5px;"></h2>'
+
+                            html += '<div class="headerBrdr"><center>Thank you for adding a new term to NIDM-Terms. ';
+                            html += 'Your term has been submitted for further discussion.<br><br></center></div>';
+
+                            html += '<div class="headerBrdr">';
+
+                            html += '<form><center>';
+                            html += '<button onClick="window.location.reload();" id = "newTerm" class= "subBtn" type = "button"> Add another term </button>';
+                            html += '</center></form>';
+                                
+                            html += '<form><center>';
+                            html += '<a href= "https://github.com/NIDM-Terms/terms/pulls" target = "_blank"> <button id = "viewPR" class= "subBtn" type = "button" > View Pull Request </button></a>';
+                            html += '</center></form>';
+
+                            html += '<br><br>';
+                            html += '</div>';
+
+                            $('#editContainer').append(html)
+                        }
+                    }
+
+                    //function to display an issue with the code and how to report it
+                    async function reportAnIssue(issue, e){
+                        removeLoading()
+                        $('#editContainer').html("")
+
+                        var html = '<br><br><br>';
+
+                        html += '<h2 id="stepTitles">Issue with Submission <hr style="margin-top: 5px;"></h2>'
+
+                        html += '<div class="headerBrdr"><center>Oops! Something went wrong while adding the new term.<br><br></center></div>';
+
+                        html += '<div class="headerBrdr">';
+
+                        html += '<form><center>';
+                        html += '<button id = "report" class= "subBtn" type = "button" > Report </button>';
+                        html += '</center></form>';
+
+                        html += '<br><br>';
+                        html += '</div>';
+
+                        $('#editContainer').append(html);
+
+                        document.getElementById("report").addEventListener("click", function(){ createGithubIssue(issue); })
+
+                    }
+
+                    async function createGithubIssue(issue, e){
+                        octokit.request(`POST /repos/{owner}/{repo}/issues`, {
+                        owner: 'NIDM-Terms',
+                        repo: 'terms',
+                        title: issue,
+                        body: 'An issue occurred while submitting a new term: '+JSON.stringify(newTermJsonld) +  '\n' + e 
+                        }).then(l => {
+                            console.log('issue was posted')
+                            issueConfirm()
+                        }).catch(e => {
+                            console.log(59, 'error in posting an issue: ', e);
+                        });
+                    }
+
+                    async function issueConfirm(){
+                        $('#editContainer').html("")
+
+                        var html = '<br><br><br>';
+                        
+                        html += '<h2 id="stepTitles">Issue Reported <hr style="margin-top: 5px;"></h2>'
+
+                        html += '<div class="headerBrdr"><center>Thank you for reporting! ';
+                        html += 'A GitHub issue in the NIDM-Terms repository reporting the problem was created on your behalf.<br><br></center></div>';
+
+                        html += '<div class="headerBrdr">';
+
+                        html += '<form><center>';
+                        html += '<a href= "https://github.com/NIDM-Terms/terms/issues" target = "_blank"> <button id = "viewPR" class= "subBtn" type = "button" > View GitHub Issue </button></a>';
+                        html += '</center></form>';
+
+                        html += '<br>';
+                        html += '</div>';
+
+                        $('#editContainer').append(html);
+                    }
+
+                }
             }
         });
 
