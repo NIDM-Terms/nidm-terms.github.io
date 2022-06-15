@@ -1376,8 +1376,8 @@
         var labelsDict = [] //List to contain ONLY the labels of terms, used to search through terms for treeview display
         var mainList = [] //List to contain terms from all communities
 ///
-        var editList = ['0','1','8','434','2561','4296','1786'] //List to contain indices of all terms that the user selected to edit
-        // var editList = [] //List to contain indices of all terms that the user selected to edit
+        // var editList = ['0','1','8','434','2561','4296','1786'] //List to contain indices of all terms that the user selected to edit
+        var editList = [] //List to contain indices of all terms that the user selected to edit
         // var editList = ['225']
         var editDict = {} //Dictionary to contain all terms that the user selected to edit
         var searchList = [] //List to contain indices of all searched terms
@@ -1741,12 +1741,10 @@
 
                 // only runs after all terms have been added to labelsDictCopy
                 if(numCalls === communityList.length){
-///
-                    enableEdits()
-                    // for(var i = 0; i < sortedList.length; i++)
-                    // {
-                    //     addAllTerms(i)
-                    // }
+                    for(var i = 0; i < sortedList.length; i++)
+                    {
+                        addAllTerms(i)
+                    }
                 }else{
                     return;
                 }
@@ -1899,8 +1897,7 @@
                 html += '</ul></div>';
 
                 $('#termsView').append(html);
-///
-                // $('.treeview').treeView();
+                $('.treeview').treeView();
                 
                 var style = ".treeview,";
                 style += ".treeview ul {list-style-type:none;overflow:hidden;}";
@@ -2172,8 +2169,10 @@
                                                         html+=`<div id="`+termIndex+kk+`" class="respOptElem" style="margin-left:20px;">`
                                                         
                                                         for(const [kkkk,vvvv] of Object.entries(vvv)){
-                                                            html+=`<input id="`+termIndex+`choices" type="text" class="addedInput newComInput" name="name" value="`+kkkk+`" style="width:280px;">
-                                                                <input id="`+termIndex+`choices" type="text" class="addedInput newComInput" name="value" value="`+vvvv+`" style="width:280px;margin-left:20px;">
+                                                            var num = Number(kkk)+1
+                                                            // <p style="display:inline-block;vertical-align:middle;text-align:center;">
+                                                            html+=`<p>Choice `+num+`:</p><input id="`+termIndex+`choices" type="text" class="addedInput newComInput" name="name" placeholder = "Name" value="`+kkkk+`" style="width:280px;">
+                                                                <input id="`+termIndex+`choices" type="text" class="addedInput newComInput" name="value" placeholder = "Value" value="`+vvvv+`" style="width:280px;margin-left:20px;">
                                                                 <br>`
                                                         }
 
@@ -2738,10 +2737,7 @@
                     }
 
                     for (const el of inputs) {
-                        if ((el.oldValue !== el.value || numChecked!==checkboxElems.length || propsAdded)) {
-///
-                        // if ((el.oldValue !== el.value || numChecked!==checkboxElems.length || propsAdded) && document.getElementById("token").value.length !== 0) {
-                        // if (el.oldValue !== el.value || numChecked!==checkboxElems.length || (valueTypeList !== null && oldValueType !== valueTypeList.value) || propsAdded) {
+                        if ((el.oldValue !== el.value || numChecked!==checkboxElems.length || propsAdded) && document.getElementById("token").value.length !== 0) {
                             e = true;
                             break;
                         }
@@ -3022,8 +3018,6 @@
                                                     for(const [kkk,vvv] of Object.entries(vv)){
                                                         if(typeof(vvv)==="string" && vvv===""){
                                                             delete dict[key][k][kk][kkk]
-                                                            // var filtered = vvv.filter(x => typeof x !== 'undefined')
-                                                            // dict[key][k][kk] = dict[key][k][kk].filter(x => typeof x !== 'undefined')
                                                         }else if(typeof(vvv)==="object"){
                                                             for(const [kkkk,vvvv] of Object.entries(vvv)){
                                                                 if(kkkk===""){
@@ -3078,49 +3072,29 @@
 
                             const compacted = await jsonld.compact(dict, contextLink);
                             for(var key in mainDict){
-                                // console.log(214,mainDict[key].includes(mainList[editList[i]]))
                                 if(mainDict[key].includes(mainList[editList[i]])){
-///
-                                    sendPR(compacted,key)
+                                    var oldLabel = mainList[editList[i]].label
+                                    sendPR(compacted,key,oldLabel)
                                 }
                             }
                         }
-
-                        // return compacted
-
-                        // for(var i = 0; i < editList.length; i++){
-                        //     //compact term dictionary
-                            // const compacted = await jsonld.compact(editDict[editList[i]], contextLink);
-                            // console.log(compacted)
-
-                            // return compacted
-                        // }
-                        
                     })
-                    // .then(function(newTermJsonld){
-                    //     // sendPR(newTermJsonld, community)
-                    // })
                 });
-
-                // for(var k = 0; k < editList.length; k++){
-                //     const compacted = await jsonld.compact(editDict[editList[k]], contextLink);
-                //     console.log(compacted)
-                //     //send pr for editList[k]
-                // }
             };
 
             //////////////////////////////////////////////////////////////////////////////////
             /// function created to create jsonld files and submit a pull request to github
             //////////////////////////////////////////////////////////////////////////////////
 
-            function sendPR (newTermJsonld, community){
+            function sendPR (newTermJsonld, community, origLabel){
                 //Get GitHub API key
                 if(document.getElementById("token").value.length == 0){
                     removeLoading()
-                    alert('A GitHub API Token is required to complete the pull request')
+                    // alert('A GitHub API Token is required to complete the pull request')
                     document.getElementById("token").style.borderWidth = '1px';
                     document.getElementById("token").style.borderColor = 'red';
                     document.getElementById("token").style.backgroundColor = '#FFF1F1';
+                    $('#token').focus();
                 } 
                 else {
                     addLoading()
@@ -3132,8 +3106,7 @@
                     // console.log(info)
 
                     const repo = repoName;
-                    const fileName = newTermJsonld.label
-                    // const fileName = document.getElementById("label").value;
+                    const fileName = origLabel
                     
                     //GET user's github username
                     octokit.request(
@@ -3143,6 +3116,7 @@
                         //call fork repo to check if the user has the repo forked
                         //if repo is not found then fork it
                         forkRepo(response.data.login)
+                        // getFileSha(response.data.login)
                     }).catch((e) => {
                         console.log(23, e.message);
                         removeLoading()
@@ -3198,7 +3172,7 @@
                                 branch: 'master'
                             }).then((r) => {
                                 console.log(43, 'sha is: ', r.data.commit.sha)
-                                console.log(44,r)
+                                console.log(44,r) 
                                 //call function to create a branch
                                 createNewBranch(r.data.commit.sha, user)
                             })
@@ -3211,76 +3185,66 @@
 
                     //function to create a new branch with the term name
                     async function createNewBranch(sha,user){
+                        const branchName = fileName.replace(/[-_\s.]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
+                        // console.log(23,fileName)
+                        console.log(24,branchName)
+                        // const branchName = fileName.replace(/[-_\s.]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
+                        // use camelCase for the name of the branch
+                        // var branchName = fileName.toLowerCase().trim().split(/[.\-_\s]/g).reduce((fileName, word) => fileName + word[0].toUpperCase() + word.slice(1));
                         octokit.request(`POST /repos/{owner}/{repo}/git/refs`, {
                             owner: user,
                             repo: repo,
-                            ref: 'refs/heads/'+community+'_'+fileName,
+                            ref: 'refs/heads/'+community+'_'+branchName,
                             sha: sha
                         }).then((response) => {
                             console.log(72, 'successfully created a new branch: ', response.status);
                             //call function to comit file to the new branch
-                            createFileInRepo(newTermJsonld, 'terms/'+community+'/'+fileName+'.jsonld', user);
+                            // createFileInRepo(newTermJsonld, 'terms/'+community+'/'+fileName+'.jsonld', user);
+                            getIndivSha(user)
                         }).catch((e) => {
                             console.log(67, e.message);
                             reportAnIssue('NIDM Terms UI: an issue with creating a new branch', e);
                         });
                     }
 
-                    //function to commit to the new branch
-                    async function createFileInRepo(jsonTermObj, pathToFile, user) {
-                        // var sha
-                        getSha(user)
+                    // get the sha of the individual file in order to edit it
+                    async function getIndivSha(owner){
+                        const branchName = fileName.replace(/[-_\s.]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
+                        octokit.request('GET /repos/{owner}/{repo}/contents/terms/{commName}/{term}.jsonld', {
+                            owner: owner,
+                            repo: repo,
+                            commName: community,
+                            term: branchName
+                        }).then((res) => {
+                            // console.log(322,res)
+                            // console.log(422,res.data.sha)
+                            editFile(owner, res.data.sha)
+                        })
+                    };
 
-                        //function to get sha hash of individual file
-                        async function getSha(user){
-                            octokit.request(`GET /repos/{owner}/{repo}/branches/{branch}`, {
-                                owner: user,
-                                repo: repo,
-                                branch: 'master',
-                                path: pathToFile
-                                // **add path - copy and paste 3165 online to see parameter
-                            }).then((r) => {
-                                console.log(432, 'sha is: ', r.data.commit.sha)
-                                console.log(433,r)
-                                // sha = r.data.commit.tree.sha
-                                //call function to create a branch
-                                createNewBranch(r.data.commit.sha, user)
-                            })
-                            .catch((e) => {
-                                console.log(552, e.message);
-                                reportAnIssue("NIDM Terms UI: an issue with getting the term's file hash", e);
-                            })
-                        };
-
-    //put in function to get sha of file - going to replace everything up to .then((response)=>{})
-    // octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
-    // owner: 'OWNER', same
-    // repo: 'REPO', same
-    // path: 'PATH', same
-    // message: community+' Term Edited: '+fileName, - user could have edited label within file but file name remains unchanged. if statement in function that checks for edits - create global var and assign val, if label has changed then add comment that there exists another file with same info
-    // content: 'bXkgbmV3IGZpbGUgY29udGVudHM=',
-    // sha: '' add this, in order to get as parameter then write function similar to the getsha
-    // })
-                        console.log(57, jsonTermObj, pathToFile, user);
-                        // let content = Buffer.from(JSON.stringify(jsonTermObj, undefined, 2)).toString('base64');
-                        const content = btoa(JSON.stringify(jsonTermObj, undefined, 2)); // for use in browser
+                    // make changes to the desired file on the branch
+                    async function editFile(owner, sha){
+                        const content = btoa(JSON.stringify(newTermJsonld, undefined, 2)); // for use in browser
+                        const branchName = fileName.replace(/[-_\s.]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
+                        var pathToFile = 'terms/'+community+'/'+fileName+'.jsonld'
                         console.log(63, content);
                         octokit.request(
                             `PUT /repos/{owner}/{repo}/contents/{path}`, {
                                 headers: {
                                     'Authorization': 'token ' + gitToken,
                                 },
-                                owner: user,
+                                owner: owner,
                                 repo: repo,
                                 path: pathToFile,
-                                message: 'New '+community+' Term Added: '+fileName,
+                                message: community+' Term Edited: '+fileName,
                                 content: content,
-                                branch: community+'_'+fileName
+                                sha: sha,
+                                branch: community+'_'+branchName
                             }).then((response) => {
                             console.log(91, "statusCode for createFile: ", response.status);
                             if (response.status === 200 || response.status=== 201) {
-                                //call function to raise a pull request
-                                createPullRequest(pathToFile, user);
+                                // call function to raise a pull request
+                                createPullRequest(pathToFile, owner);
                             }
                         }).catch((e) => {
                             console.log(93, e.message);
@@ -3290,6 +3254,7 @@
 
                     //function to raise a pull request
                     async function createPullRequest(pathToFile, user) {
+                        const branchName = fileName.replace(/[-_\s.]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
                         var st = '';
                         console.log(96, 'in createPR');
                         octokit.request(
@@ -3299,9 +3264,9 @@
                                 },
                                 owner: 'NIDM-Terms',
                                 repo: repo,
-                                title: 'New '+community+' Term Added: ' + fileName,
-                                body: 'Edited or Added Terms:' + pathToFile,
-                                head: user + ':'+community+'_' + fileName,
+                                title: community+' Term Edited: '+fileName,
+                                body: 'Edited Terms:' + pathToFile,
+                                head: user + ':'+community+'_' + branchName,
                                 base: 'master'
                             }).then(resp => {
                             console.log(108, "StatusCode for Pull Request: ", resp.status);
@@ -3314,7 +3279,6 @@
                         })
 
                     } 
-
 
                     //function to display confirmation to the pull request
                     async function submission(state){
@@ -3331,9 +3295,9 @@
 
                             html += '<div class="headerBrdr">';
 
-                            html += '<form><center>';
-                            html += '<button onClick="window.location.reload();" id = "newTerm" class= "subBtn" type = "button"> Add another term </button>';
-                            html += '</center></form>';
+                            // html += '<form><center>';
+                            // html += '<button onClick="window.location.reload();" id = "newTerm" class= "subBtn" type = "button"> Back to Browse Terms </button>';
+                            // html += '</center></form>';
                                 
                             html += '<form><center>';
                             html += '<a href= "https://github.com/NIDM-Terms/terms/pulls" target = "_blank"> <button id = "viewPR" class= "subBtn" type = "button" > View Pull Request </button></a>';
