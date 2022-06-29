@@ -5,6 +5,10 @@
     //////////////////////////////////////////////////////////////////////////////////////////
     // IN ORDER TO HOST YOUR COMMUNITY IN YOUR OWN SPACE, EDIT THE VARIABLES BELOW
     var communityLink = 'https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json' //Link to list of available communities JSON dictionary found in the UI repository
+
+    var contextLink = 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld' //Link to context file
+
+    var repoName = 'terms'; //Name of repository containing terms
     //////////////////////////////////////////////////////////////////////////////////////////
 </script>
 
@@ -55,7 +59,7 @@
                 <h>NIDM-Terms</h>
             </div>
             <div class= "search-box">
-                <input id= "searchBar" class="search_bar" type="text" name="box" placeholder = "Search Terms"><i id= "searchIcon" class="fa fa-search" style="font-size:24px"></i>
+                <input id= "searchBar" class="search_bar" type="text" name="box" placeholder = "Search Terms" style="display:block;"><i id= "searchIcon" class="fa fa-search" style="font-size:24px"></i>
             </div>
         </div>
     </header>
@@ -109,16 +113,72 @@
 
     
     <center>
-        <div class= "container">
-            <h2 id="stepTitles">Communities<hr style="margin-top: 5px; margin-bottom: 50px;"></h2>
-            <div id="selectCommunity">
-                <center><table id="table"></table></center>
+        <div id= "mainContainer" class="container">
+            <div id="communityHeader">
+                <h2 id="stepTitles">Communities<hr style="margin-top: 5px; margin-bottom: 50px;"></h2>
+                <div id="selectCommunity">
+                    <center><table id="table"></table></center>
+                </div>
             </div>
             <br>
-            <h2 id="stepTitles">Terms<hr style="margin-top: 5px; margin-bottom: 50px;"></h2>
+            
+            <h2 id="stepTitles">Terms
+                <button id = "selectBtn" class= "btn2" type = "button" style="margin-top:9px;"><i>Select Terms to Edit</i></button>                
+                <button id = "editBtn" class= "btn2" type = "button" style="margin-top:9px;display:none;" disabled="true"><i>Edit Terms</i></button>
+                <button id = "cancelBtn" class= "btn2" type = "button" style="margin-top:9px;display:none;"><i>&times; Cancel</i></button>
+                <hr style="margin-top: 5px; margin-bottom: 50px;">
+            </h2>
+            
             <div id="termsView"></div>
             <div id="selectCommunitiesAgain"></div>
             <div id="noMatches"></div>
+
+            <button id="editBtn2"><i>Edit Terms</i></button>
+            <button id="scrollBtn"><i>Back to Top</i></button>
+        </div>
+
+        <div id="editContainer" class="container" style="display:none;">
+
+            <button id="backBtn" style="font-style:italic;font-weight:normal;color:#1f91c2;font-size:17px;display:inline-block;margin-left:-95px;">Back</button>
+
+            
+
+            <h2 id="stepTitles">GitHub Access Token<hr style="margin-top: 5px;"></h2>
+
+            <div class="headerBrdr"><center>
+                The NIDM-Terms effort is focused on developing and adopting a set of community driven controlled vocabulary 
+                for neuroimaging. NIDM-Terms infrastructure consists of a GitHub repository containing JSON-LD formatted 
+                files for each term. Newly added terms will be sent as a pull request to our GitHub repository.
+                Therefore, in order to suggest a new term, a GitHub API Token must be provided. 
+            </center></div>
+
+            <br>
+            
+            <div class="keyInfo"><center>
+                For more information on GitHub personal access tokens click <a href= "https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token" target="_blank"> here</a>.
+            </center></div>
+
+            <br>
+
+            <form><input id = "token" type="password"  placeholder="Enter GitHub Personal Access Token" required></form>
+
+            <form action="https://github.com/settings/tokens" target= "_blank">
+                <input class= "btn4" type = "submit" value="Generate GitHub Token">
+            </form>
+
+            <hr><br><br>
+            <div id = "instruct-bar">
+                To edit, please click on the desired term(s) and make your changes.
+                Click <a id = "here" style="color:#1f91c2;" href="https://github.com/NIDM-Terms/terms/blob/master/terms/README.md" target="_blank">here</a>  to view data element property descriptions<br>
+                Changes will be reflected once the PR is merged.<br>
+                Removing the value of any property is equivalent to removing the entire property from the term.
+            </div>
+
+            <div id="editPage" style="margin-left:45px;">
+                <div id= "editInputs"></div>
+                <br><button id = "submitBtn" class= "btn" type = "button" style="display:none;"> Submit Edit for Review </button><br><br>
+                <!-- <br><button id = "submitBtn" class= "btn" type = "button" onclick="submitEdit()" style="display:none;"> Submit Edit for Review </button><br><br> -->
+            </div>
         </div>
     </center>
     
@@ -185,6 +245,35 @@
             'js_lib/icons/arrow-down.png'); }
     
         .treeview2>li:hover {cursor:pointer; background-color:rgba(236, 236, 236, 0.7);transition:0.3s;}
+
+        .treeview3,
+        .treeview3 ul {
+            padding-top: 20px;
+            list-style-type:none;
+            overflow:hidden;
+        }
+        .treeview3 li {
+            text-indent:1%;
+            margin-top:0.4em;
+            padding:0.15em 0 0.5em 1.5em;
+            line-height:22px;
+            background-repeat:no-repeat;
+            background-size:24px 24px;
+            margin-right: 30px;
+            margin-bottom: -10px;
+            padding-bottom: 20px;
+            margin-top: -7.5px;
+        }
+
+        .treeview3 li.contains-items {
+            background-image:url(
+            'js_lib/icons/arrow-left.png'); 
+        }
+    
+        .treeview3 li.items-expanded {background-image:url(
+            'js_lib/icons/arrow-down.png'); }
+    
+        .treeview3>li:hover {cursor:pointer; background-color:rgba(236, 236, 236, 0.7);transition:0.3s;}
 
         /*#headerFixed{
             position: fixed; 
@@ -467,6 +556,241 @@
             border-bottom: 5px solid transparent;
         }
 
+        /************** Tool Tip Styles ********************************/
+        .tool-tip {
+            display: inline-block;
+            position: absolute;
+            margin-left: 0.5em;
+        }
+        .tool-tip .tool-tip__icon {
+            border-radius: 10px;
+            cursor: pointer;
+            font-style: italic;
+            font-family: times new roman;
+            height: 18px;
+            line-height: 1.3em;
+            width: 18px;
+            margin-top: -8px;
+            color: #43acdd;
+        }
+        .tool-tip .tool-tip__info {
+            display: none;
+            background: #52575e;
+            border: 1px solid #52575e;
+            border-radius: 3px;
+            font-size: 16px;
+            color: rgb(238, 238, 238);
+            padding: 1em;
+            position: absolute;
+            left: 27px;
+            top: -20px;
+            width: 500px;
+            z-index: 0;
+            text-indent: 7px;
+            font-family:sans-serif;
+            font-weight: normal;
+        }
+        .tool-tip .tool-tip__info:before, .tool-tip .tool-tip__info:after {
+            content: "";
+            position: absolute;
+            left: -10px;
+            top: 7px;
+            border-style: solid;
+            border-width: 10px 10px 10px 0;
+            border-color: transparent #52575e;
+        }
+        .tool-tip .tool-tip__info:after {
+            left: -8px;
+            border-right-color: #52575e;
+        }
+        .tool-tip .tool-tip__info .info {
+            display: block;
+        }
+        .tool-tip .tool-tip__info .info__title {
+            color: #2a2b2c;
+        }
+        .tool-tip:hover .tool-tip__info, .tool-tip:focus .tool-tip__info {
+            display: inline-block;
+        }
+
+        a:focus + .tool-tip .tool-tip__info {
+            display: inline-block;
+        }
+        /* pop-up display for community descriptions when hover over checkbox label */
+        input + .des-tool-tip-text {
+            display: none;
+        }
+        input:hover + .des-tool-tip-text {
+            display: block;
+            position: absolute;
+            text-align:left;
+            padding: 0.3em;
+            width: 150px;
+            bottom: 150%;
+            font-size: 16px;
+            background: #52575e81;
+            color: rgb(238, 238, 238);
+            border-radius: 3px;
+        }
+        /* the triangular point of the pop-up box */
+        input:hover + .des-tool-tip-text:after {
+            content: "";
+            position: absolute;
+            border:1px solid #52575e67;
+            left: 0%;
+            top: 100%;
+            width: 0; 
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 10px solid #52575e67;
+            border-bottom: 5px solid transparent;
+        }
+
+        .step2_tool-tip {
+            display: inline-block;
+            position: absolute;
+            margin-left: 0.5em;
+        }
+        .step2_tool-tip .step2_tool-tip__icon {
+            border-radius: 10px;
+            cursor: pointer;
+            font-style: italic;
+            font-family: times new roman;
+            height: 18px;
+            line-height: 1.3em;
+            width: 18px;
+            margin-left: 90px;
+            margin-top: 70px;
+            color: #43acdd;
+        }
+        .step2_tool-tip .step2_tool-tip__info {
+            display: none;
+            background: #52575e;
+            border: 1px solid #52575e;
+            border-radius: 3px;
+            font-size: 16px;
+            color: rgb(238, 238, 238);
+            padding: 1em;
+            position: absolute;
+            left: 320px;
+            top: -23px;
+            width: 500px;
+            z-index: 0;
+            text-indent: 7px;
+            font-family:sans-serif;
+            font-weight: normal;
+        }
+        .step2_tool-tip .step2_tool-tip__info:before, .step2_tool-tip .step2_tool-tip__info:after {
+            content: "";
+            position: absolute;
+            left: -10px;
+            top: 7px;
+            border-style: solid;
+            border-width: 10px 10px 10px 0;
+            border-color: transparent #52575e;
+        }
+        .step2_tool-tip .step2_tool-tip__info:after {
+            left: -8px;
+            border-right-color: #52575e;
+        }
+        .step2_tool-tip .step2_tool-tip__info .info {
+            display: block;
+        }
+        .step2_tool-tip .step2_tool-tip__info .step2_info__title {
+            color: #2a2b2c;
+        }
+        .step2_tool-tip:hover .step2_tool-tip__info, .step2_tool-tip:focus .step2_tool-tip__info {
+            display: inline-block;
+        }
+
+        a:focus + .step2_tool-tip .step2_tool-tip__info {
+            display: inline-block;
+        }
+
+        .newComInput{
+            width: 90%;
+            height: 45px;
+            border-radius: 3px;
+            border: 1px solid #919191;
+            padding: 0px 20px;
+            background-color: #fdfdfd;
+            text-indent: 10px;
+            outline: none;
+            font-size: 16px;
+            margin-top: 5px;
+            margin-bottom: 30px;
+
+            border-top-color: #9e9e9e;
+            border-right-color: #9e9e9e;
+            border-left-color: #9e9e9e;
+            border-bottom-color: #9e9e9e;
+        }
+
+        .addedInput{
+            width: 90%;
+            height: 45px;
+            border-radius: 3px;
+            border: 1px solid #919191;
+            padding: 0px 20px;
+            background-color: #fdfdfd;
+            text-indent: 10px;
+            outline: none;
+            font-size: 16px;
+            margin-top: 5px;
+            margin-bottom: 30px;
+
+            border-top-color: #9e9e9e;
+            border-right-color: #9e9e9e;
+            border-left-color: #9e9e9e;
+            border-bottom-color: #9e9e9e;
+        }
+
+        .numOfValues{
+            margin-top: -20px;
+            border: 1px solid #9e9e9e;
+            border-radius: 3px;
+            width: 70%;
+            height: 50px;
+            text-indent: 25px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        h4{
+            color: rgb(85, 85, 85);
+        }
+
+        .inputs{
+            padding-top: 3px;
+            padding-left: 75px;
+            
+            font-size: 15px;
+            color: #686666;
+            text-align: justify;
+            text-justify: inter-word;
+            padding-left: 20px;
+            line-height: 26px;
+            margin-left: 80px;
+            margin-right: 55px; 
+        }
+
+        .subTermInput{
+            height: 35px;
+            width: 30%;
+            border-radius: 5px;
+            border-color: #7e7e7e;
+            padding: 0px 20px;
+            background-color: #fdfdfd;
+            font-size: 18px;
+            text-indent: 10px;
+            outline: none;
+            font-size: 16px;
+            margin-left: 35px;
+            margin-top: 5px;
+            margin-bottom: 30px;            
+        }
+
         /* The container */
         .con {
             display: inline-block;
@@ -532,6 +856,118 @@
             -webkit-transform: rotate(45deg);
             -ms-transform: rotate(45deg);
             transform: rotate(45deg);
+        }
+
+        /* The container for edit terms checkboxes */
+        .editCon {
+            position: relative;
+            margin-top:23px;
+            float: right;
+            margin-right:50px;
+            cursor: pointer;
+            font-size: 16px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* Hide the browser's default checkbox */
+        .editCon input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        /* Create a custom checkbox */
+        .editCheckmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 22px;
+            width: 22px;
+            background-color: rgb(219, 217, 217);
+        }
+
+        /* On mouse-over, add a grey background color */
+        .editCon:hover input ~ .editCheckmark {
+            background-color: #ccc;
+        }
+
+        /* When the checkbox is checked, add a blue background #2196F3 */
+        .editCon input:checked ~ .editCheckmark {
+            background-color: #2196F3;
+        }
+
+        /* Create the checkmark/indicator (hidden when not checked) */
+        .editCheckmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        /* Show the checkmark when checked */
+        .editCon input:checked ~ .editCheckmark:after {
+            display: block;
+        }
+
+        /* Style the checkmark/indicator */
+        .editCon .editCheckmark:after {
+            left: 8px;
+            top: 3px;
+            width: 4px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+
+        #scrollBtn {
+            display: none;
+            position: fixed;
+            bottom: 70px;
+            left: 20px;
+            color:#73767a;
+            background:#73767a13;
+            border-radius:60px;
+            cursor:pointer;
+            font-family:Arial;
+            font-size:14px;
+            text-decoration:none;
+            padding:0px;
+            width:75px;
+            height:75px;
+
+            transition: all 2s linear;
+        }
+        #scrollBtn:hover {
+            background:#2f303113;
+        }
+
+        #editBtn2 {
+            display: none;
+            position: fixed;
+            bottom: 160px;
+            left: 20px;
+            color:#73767a;
+            background:#73767a13;
+            border-radius:60px;
+            cursor:pointer;
+            font-family:Arial;
+            font-size:14px;
+            text-decoration:none;
+            padding:0px;
+            width:75px;
+            height:75px;
+
+            transition: all 2s linear;
+        }
+        #editBtn2:hover {
+            background:#2f303113;
         }
 
         #options{
@@ -651,6 +1087,251 @@
             border: 0 none;
             align-content: center;
         }
+
+        .btn{
+            box-shadow:inset 0px 1px 0px 0px #caefab;
+
+            background:linear-gradient(to bottom, #77d42a 5%, #5cb811 100%);
+            background-color:#77d42a;
+            color:#306108;
+            
+            border-radius:6px;
+            border:1px solid #258a1679;
+            cursor:pointer;
+            font-family:Arial;
+            font-size:18px;
+            font-weight:bold;
+            padding:2px 13px;
+            text-decoration:none;
+            text-shadow:0px 1px 0px #aade7c;
+            float: right;
+            margin-right: 58px;
+            width: 250px;
+            height: 50px;
+            margin-top: 30px;
+        }
+        .btn:disabled{
+            background:linear-gradient(to bottom, #76d42a3a 5%, #5cb81136 100%);
+            background-color:#76d42a3a;
+            color:#30610857;
+            cursor:default;
+        }
+        .btn:hover .btn:active{
+            background:linear-gradient(to bottom, #5cb811 5%, #77d42a 100%);
+            background-color:#5cb811;
+        }
+        .btn:active {
+            position:relative;
+            top:1px;
+        }
+
+        .btn2{
+            color:#73767a;
+            border-radius:6px;
+            /* border: 1px solid pink; */
+            cursor:pointer;
+            font-family:Arial;
+            font-size:14px;
+            text-decoration:none;
+            float: right;
+            padding:0px;
+            width:150px;
+            height:25px;
+        }
+        .btn2:disabled{
+            color:#73767a73;
+            cursor:default;
+        }
+        .btn2:hover:enabled{
+            background:#73767a13;
+        }
+        .btn2:active {
+            position:relative;
+            top:1px;
+        }
+
+        .btn3{
+            float: right;
+            cursor: pointer;
+            width: 200px;
+            height: 54px;
+            background-color: #f0f0f0;
+            border: 1px solid #52575e;
+            border-radius: 3px;
+            font-size: 16px;
+            color: #727272;
+            margin-top: -18px;
+            margin-right: 55px;
+        }
+        .btn3:hover{
+            border: 1px solid #47494d;
+            background-color: #e2e2e2;
+        }
+        .btn3:active {
+            background: #e5e5e5;
+        }
+
+        .btn4{
+            float: right;
+            cursor: pointer;
+            width: 200px;
+            height: 47px;
+            background-image: linear-gradient(
+            to right, 
+            #EE5A24, 
+            #F79F1F
+            );
+            border-radius: 3px;
+            font-size: 18px;
+            color: #fefcfb;
+            margin-top: -77px;
+            margin-right: 160px;
+            outline: none;
+
+            border-top-style: hidden;
+            border-right-style: hidden;
+            border-left-style: hidden;
+            border-bottom-style: hidden;
+        }
+
+        .btn4:active {
+            -webkit-box-shadow: inset 0px 0px 5px #96161a;
+                -moz-box-shadow: inset 0px 0px 5px #96161a;
+                    box-shadow: inset 0px 0px 5px #96161a;
+            outline: none;
+
+        }
+
+        .delPropBtn{
+            color:#8b2b2b;
+            border-radius:6px;
+            cursor:pointer;
+            font-family:Arial;
+            font-size:14px;
+            text-decoration:none;
+            padding:0px;
+            width:25px;
+            height:25px;
+            float:left;
+            margin-left:-20px;
+            margin-top:-3px;
+        }
+        .delPropBtn:hover:enabled{
+            background:#73767a13;
+        }
+
+        .selectProp {
+            appearance:none;
+            float:left;
+            width:225px;
+            border:none;
+            color:#73767a;
+            background: transparent;
+            border-radius:6px;
+            cursor:pointer;
+            font-family:Arial;
+            font-style: italic;
+            font-weight: bold;
+            font-size:14px;
+            height:25px;
+        }
+        .selectProp:hover{
+            background:#73767a13;
+        }
+
+        .headerBrdr{
+            font-size: 15px;
+            color: #686666;
+            text-align: justify;
+            text-justify: inter-word;
+            padding-left: 20px;
+            line-height: 26px;
+            margin-left: 80px;
+            margin-right: 55px; 
+
+        }
+        .keyInfo{
+            font-size: 12px;
+            text-indent: 4px;
+            color: #686666;
+            text-align: justify;
+            text-justify: inter-word;
+            padding-left: 10px;
+            line-height: 16px; 
+            font-style: italic;
+        }
+        #token{
+            height: 45px;
+            width: 40%;
+            border-radius: 3px;
+            border: 1px solid #919191;
+            padding: 0px 30px;
+            background-color: #fdfdfd;
+            font-size: 18px;
+            text-indent: 10px;
+            outline: none;
+            font-size: 16px;
+            margin-left: 197px;
+            margin-top: 5px;
+            margin-bottom: 30px;
+
+            border-top-color: #9e9e9e;
+            border-right-color: #9e9e9e;
+            border-left-color: #9e9e9e;
+            border-bottom-color: #9e9e9e;
+        }
+        .subBtn{
+            cursor: pointer;
+            width: 200px;
+            height: 50px;
+            background-color: #fefcfb;
+            border: 2px solid #EE5A24;
+            border-radius: 5px;
+            font-size: 15px;
+            color: #EE5A24;
+            margin-top: 20px;
+        }
+
+        .subBtn:active {
+            background: #e5e5e5;
+            -webkit-box-shadow: inset 0px 0px 5px #96161a;
+                -moz-box-shadow: inset 0px 0px 5px #96161a;
+                    box-shadow: inset 0px 0px 5px #96161a;
+            outline: none;
+
+        }
+        .subBtn:hover{
+            color:#fefcfb;
+            background-image: linear-gradient(
+            to right, 
+            #EE5A24, 
+            #F79F1F
+            );
+            border: none;
+        }
+
+        #instruct-bar {
+            margin-left:38px;
+            color: darkgray;
+            line-height: 20px;
+            font-size:15px;
+            font-style: italic;
+        }
+
+        .wrapper{
+            margin-top:-30px;
+            color: rgb(85, 85, 85);
+            text-indent: 0px;
+            border: 1px solid #9e9e9e;
+            border-top: 0px;
+            border-radius: 3px;
+            background-color: #f8f8f8;
+            padding-top: 25px;
+            padding-left: 50px;
+            margin-right: 55px;
+            padding-bottom: 2%;
+            display:none;
+        }
         
         #bottomLine{
             height: 3px;
@@ -680,7 +1361,7 @@
     </body>
 
 
-    <script>
+    <script type="module">
 
         //This script fetches raw github jsonld files of NIDM-Terms and displays then in a treeview
         //allowing the user to view and search terms as well as filtering terms based on the terms categories
@@ -694,7 +1375,22 @@
         var data = [] //List to contain terms dictionaries to display
         var labelsDict = [] //List to contain ONLY the labels of terms, used to search through terms for treeview display
         var mainList = [] //List to contain terms from all communities
-
+///
+        // var editList = ['0','1','8','434','2561','4296','1786'] //List to contain indices of all terms that the user selected to edit
+        var editList = [] //List to contain indices of all terms that the user selected to edit
+        // var editList = ['225']
+        var editDict = {} //Dictionary to contain all terms that the user selected to edit
+        var searchList = [] //List to contain indices of all searched terms
+        var typeOptions = ['string', 'boolean', 'integer', 'float', 'double', 'duration', 'dateTime', 'time', 'date', 'anyURI', 'complexType'] //List of all values in valueType dropdown
+        var notDisplayed = ['@type','@version','rdfs','xsd','nidm','skos','owl','prov','reproschema','schema','DataElement','PersonalDataElement','CommonDataElement','Concept','name','value','bids','terms','version'] // List of properties that don't need to be displayed
+        var availableProperties = []; // List to contain all properties that the user can edit or add to the term
+        var respOptList = ['minValue', 'maxValue', 'valueType', 'unitCode', 'choices', 'allowableValues'] // List of properties under responseOptions
+        var changesDict = {} //Dictionary to contain edited properties
+        // var changesList = [] //List to contain edited properties
+        // var otherProperties = []; // List to contain properties not shown that the user can add to the term
+        // var displayedProperties = []; // List to contain properties shown on the Edit Page
+        
+        import { Octokit } from "https://cdn.pika.dev/@octokit/core";
         /// This function fetches data from all of the communities' jsonld files
         $(document).ready(function(event) {
             //display the loading screen
@@ -711,7 +1407,53 @@
                 document.getElementById("loadingText").style.display = "none";  
             }
 
+            //if the treeview is being displayed, add the 'scroll to top' and 'edit' buttons when the user scrolls down
+            
+            window.onscroll = function() {
+                if(document.body.scrollTop > 700 || document.documentElement.scrollTop > 700){
+                    document.getElementById('scrollBtn').style.display = "block";
+
+                    // display a floating edit button if the user has selected terms
+                    if(editList.length > 0){
+                        document.getElementById('editBtn2').style.display = "block";
+                    }
+                } else {
+                    document.getElementById('scrollBtn').style.display = "none";
+
+                    // display a floating edit button if the user has selected terms
+                    if(editList.length > 0){
+                        document.getElementById('editBtn2').style.display = "none";
+                    }
+                }
+            }
+            function scrollToTop(){
+                document.body.scrollTop = 0
+                document.documentElement.scrollTop = 0
+            }
+            
+            document.getElementById('scrollBtn').addEventListener('click', scrollToTop)
+            document.getElementById('editBtn2').addEventListener('click', enableEdits)
+
             addLoading()    //show a loading display while the page is loading
+
+            // fetch the context file and create a list of properties that are displayed on the page and another list that the user can add while editing a term
+            var context = {};
+            fetch(contextLink)
+            .then(function(resp){
+                return resp.json(); 
+            })
+            .then(function(temp){
+                //loop throught the context file and display all available properties in the "Select Term Properties" drop down menu
+                for(const property in temp['@context']){
+                    if(!notDisplayed.includes(property)){
+                        availableProperties.push(property)
+                        // console.log(23, property.replace(/([A-Z]+)/g, " $1"))
+                    }
+                }
+                //assign temp to the global dictionary context
+                context = temp
+            })
+
             //Fetch communityLink to get a list of the available communities in the terms repository
             fetch(communityLink)
             .then(function(res){
@@ -723,7 +1465,7 @@
                 //create an array containing all the urls to pass to pass, create another array with all the community association properties
                 var urlList = [] //List of urls with the terms of each community
 
-                html = ''
+                var html = ''
 
                 var tbl = document.getElementById("table")
                 var body = document.body
@@ -783,12 +1525,12 @@
 
                         //add the labels of the terms to this community in labelsDict
                         labelsDict[commName] = sortOnKeys(data['terms'])
-
+                        
                         displayTerms()
                     })
                 }
             })
-            .then(function(){       
+            .then(function(){    
                 //Get the values selected in the checkboxes
                 var checkboxElems = document.querySelectorAll("input[type='checkbox']");
                 //loop through the checked elements and call displayCheck
@@ -796,7 +1538,7 @@
                     checkboxElems[i].addEventListener("click", displayCheck);
                 }
 
-                //This function checks which checkboxes were unchecked and passes a list of urls to the function fetchAll to display
+                //This function checks which checkboxes were unchecked and updates the communities that are on display
                 function displayCheck(e) {
                     addLoading()
                     //the checkbox displays update (check/uncheck shows up right away) while the display asynchronously updates  
@@ -845,6 +1587,12 @@
                         return array.filter(x => typeof x !== 'undefined')
                     };
                 }
+
+                //when the edit button is clicked, display the edit page
+                $('#editBtn').click(function showEditPage(){
+                    enableEdits()
+                    return false;
+                })
             });
             
             function updateTerms(){
@@ -853,6 +1601,14 @@
                 document.getElementById("selectCommunitiesAgain").innerHTML = '' //after box is checked, remove message to select 1+ communities
                 document.getElementById("treeviewsearched").innerHTML = ''
                 document.getElementById('noMatches').innerHTML = ''
+
+                //remove the checkboxes from the previous display
+                var editChecks = document.getElementsByClassName('editCon')
+                //loop through the checkboxes and call displayCheck
+                for (var i = 0; i < editChecks.length; i++) {
+                    editChecks[i].style.display = "none"
+                }
+
                 $('.treeview').treeView('collapseAll');
                 for(var key in mainDict){
                     var elements = document.getElementsByClassName('treeview_'+key);
@@ -868,6 +1624,8 @@
                         }
                     }
                 }
+
+                updateEditCheck()
             }
 
             //This function sorts the terms in an alphabetical order
@@ -893,6 +1651,11 @@
                 //clear the displays from the last search
                 //document.getElementById('needInput').innerHTML = ''
                 document.getElementById('treeviewsearched').innerHTML = ''
+
+                // clear the list of indices of the searched terms
+                searchEditList = []
+                // restore all of the term selections from the previous treeview display
+                updateEditCheck()
 
                 //since display only hides/unhides instead of adding/deleting terms, need to
                 //create a new array of terms that are from the communities that are checked
@@ -1005,15 +1768,16 @@
                             // else if(key==='BIDS_Terms') {html += 'style="color:darkgreen"';}
                             // else if(key==='CONP_DATS_Terms') {html += 'style="color:darkcyan"';}
                             html += 'style="margin-left:-40px;"><ul class= "treeview" style="margin-top:-20px;">'
-                            // html += 'style="margin-top:50px;margin-left:-40px;"><ul class= "treeview" style="margin-top:-20px;">'
                             
-                                // style="margin-left:-39px;margin-top:12px;"
-                            // html += '><ul class= "treeview" style="margin-left:-45px;margin-top:-13px;">'
-
-                            html += '<li style="color:#4d4d4d;"><span style="font-size:21px;margin-bottom:2px;">' + sortedList[index] + '</span><br>';
-
+                            html += '<li style="color:#4d4d4d;"><span style="font-size:21px;margin-bottom:2px;">' + sortedList[index] + '</span>';
+                            
+                            html += '<label id = "'+index+'" class="editCon">';
+                            html += '<input id = "'+index+'" type="checkbox" name="editCheckbox" value = "'+index+'">';
+                            html += '<span class="editCheckmark"></span>'
+                            html += '</label><br>';
+                            
                             var data = mainList[index]
-                            
+
                             for (const [key,value] of Object.entries(data)){
                                 if (key === '@type'){
                                     if(typeof(value) === 'object'){
@@ -1121,7 +1885,7 @@
                             html += '</ul></li><hr id= "dividerLine" style="margin-right:30px;"></div>';
                             
                             $('#treeview_'+commName).append(html);
-
+                            
                             //delete this term in labelsDictCopy and mainDictCopy; necessary so that all future terms are NOT given the value of the first occurrence of this label
                             delete labelsDictCopy[commName][placeInDict]
                             delete mainDictCopy[commName][newIndex]
@@ -1129,11 +1893,12 @@
                         }
                     }
                 }
+                
                 html += '</ul></div>';
 
                 $('#termsView').append(html);
                 $('.treeview').treeView();
-
+                
                 var style = ".treeview,";
                 style += ".treeview ul {list-style-type:none;overflow:hidden;}";
                 style += ".treeview li {text-indent:1%;margin-top:0.2em;padding:0.15em 0 0.5em 1.5em;line-height:22px;background-repeat:no-repeat;background-size:24px 24px;}";
@@ -1146,12 +1911,853 @@
                 //$('.treeview').treeView('expandAll');
                 // Collapses all the nodes of treeviews
                 $('.treeview').treeView('collapseAll');
+                showEditButtons()
                 removeLoading()
             }
 
+            function showEditButtons(){
+                //Get the values selected in the checkboxes
+                var editElems = document.querySelectorAll(".editCon input[type='checkbox']");
+                //loop through the checkboxes and call displayCheck
+                for (var i = 0; i < editElems.length; i++) {
+                    editElems[i].addEventListener("click", displayEditCheck);
+                }
+                
+                //hide all of the checkboxes - differs from editElems because editElems does not have a "display" property
+                var editChecks = document.getElementsByClassName('editCon')
+                for (var i = 0; i < editChecks.length; i++) {
+                    editChecks[i].style.display = "none"
+                }
+
+                // whenever the user checks a checkbox, add that term to the list of terms for editing
+                function displayEditCheck(e) {
+                    // create a list of the terms that were unchecked to filter out
+                    if (!e.target.checked) {
+                        for(i = 0; i < editList.length; i++){
+                            if (editList[i] == e.target.value){
+                                delete editList[i]
+                            }
+                        }
+                        editList = removeNull(editList)
+                        // if the user has not selected any terms to edit, disable the "Edit Terms" button
+                        if(editList.length===0){
+                            console.log('none selected')
+                            document.getElementById('editBtn').disabled = true;
+                            document.getElementById('editBtn2').style.display = "none"
+                        }
+                    } else if (e.target.checked) {
+                        //recheck after uncheck
+                        editList.push(e.target.value)
+                        editList = removeNull(editList)
+                        document.getElementById('editBtn').disabled = false;
+                        //display a pop-up edit button if the user is too far down on the page to see the edit button at the top
+                        if(document.body.scrollTop > 700 || document.documentElement.scrollTop > 700){
+                            document.getElementById('editBtn2').style.display = "block"
+                        }
+                    }
+
+                    //filters out
+                    function removeNull(array) {
+                        return array.filter(x => typeof x !== 'undefined')
+                    };
+
+                    console.log(333, editList)
+                }
+                
+                document.getElementById('selectBtn').addEventListener("click", showSelect)
+                document.getElementById('cancelBtn').addEventListener("click", hideSelect)
+
+                //show checkboxes and options to edit/cancel
+                function showSelect(){
+                    document.getElementById('selectBtn').style.display = "none"
+                    document.getElementById('editBtn').style.display = "block"
+                    document.getElementById('cancelBtn').style.display = "block"
+                    //loop through the checkboxes and call displayCheck
+                    for (var i = 0; i < editChecks.length; i++) {
+                        editChecks[i].style.display = "inline-block"
+                    }
+                    // //change the button text
+                    // $("#selectBtn").html("<i>&times; Cancel</i>");
+                }
+                //hide checkboxes and options to edit/cancel
+                function hideSelect(){
+                    document.getElementById('selectBtn').style.display = "block"
+                    document.getElementById('editBtn').style.display = "none"
+                    document.getElementById('cancelBtn').style.display = "none"
+                    //loop through the checkboxes and call displayCheck
+                    for (var i = 0; i < editChecks.length; i++) {
+                        editChecks[i].style.display = "none"
+                    }
+                    //clear previous selections
+                    editList = []
+                    $('.editCon input[type="checkbox"]:checked').prop('checked',false);
+                }
+            }
+
+            function updateEditCheck(){
+                //if user has already selected terms, restore the checkbox selections on the search display
+                if(document.getElementById('editBtn').style.display === "block"){
+                    console.log('editBtn is on display')
+
+                    //if the user is selecting terms to edit, display the checkboxes
+                    var checkElems = document.getElementsByClassName('editCon')
+                    for(var i = 0; i < checkElems.length; i++){
+                        checkElems[i].style.display = "inline-block"
+                        // if(checkElems[i].checked==="true"){ console.log(31, i+" is true")}
+                        // console.log(3, checkElems[i].checked)
+                        // if(editList.includes(checkElems[i].checked)){
+                        //     $(".editCheckbox [value='"+checkElems[i].value+"']").checked=true
+                        // }
+                    }
+
+                    // restore the checkbox selections from the previous display
+                    var editElems = document.querySelectorAll(".editCon input[type='checkbox']");
+                    // console.log(22, editElems[0].value)
+                    for(var i = 0; i < editElems.length; i++){
+                        if(editList.includes(editElems[i].value)){
+                            editElems[i].checked = "true"
+                        }
+                    }
+
+                    //check all of the boxes that were checked in the previous display
+                    // var editChecks = document.getElementsByName('editCheckbox')
+                    // for(var j = 0; j < editList.length; j++){
+                    //     $(":checkbox").filter({"value":editList[j]}).attr("checked", "true")
+                    //     // console.log(document.getElementsByName("editCheckbox"))
+                    //     // console.log(document.querySelector(".editCheckbox [value=0]"))
+                    //     // console.log($('.editCheckbox input[type="checkbox"][value="0"]'))
+                    //     // $(".editCheckbox [value='"+editList[j]+"']").checked=true
+                    //     // editChecks[j].checked=true;
+                    // }
+                }
+
+                // // restore all of the checkbox selections
+                    // var editChecks = document.getElementsByClassName('editCon')
+                    // for(var i = 0; i < editList.length; i++){
+                    //     // console.log(document.querySelector(".editCon input[type='checkbox'][value='"+editList[i]+"']"))
+                    //     $(".editCon input[type='checkbox'][value='"+editList[i]+"']").prop('checked',true)
+                    //     // document.querySelector(".editCon input[type='checkbox'][value='"+editList[i]+"']").prop('checked',true)
+                    // }
+                // //loop through the checkboxes and call displayCheck
+                // for (var i = 0; i < editChecks.length; i++) {
+                //     editChecks[i].style.display = "inline-block"
+                // }
+            }
+
+            function enableEdits(){
+                console.log('enableEdits called for ' + editList)
+
+                //sort editList so terms appear alphabetically
+                editList.sort(function (a,b) { return a - b; })
+
+                document.getElementById("mainContainer").style.display = "none"
+                document.getElementById("editContainer").style.display = "block"
+                // hide the main treeview display
+                for(var key in mainDict){
+                    var elements = document.getElementsByClassName('treeview_'+key);
+                    for(var j = 0; j < elements.length; j++){
+                        elements[j].style.display = "none"
+                    }
+                }
+                //clear the displays from the last search
+                document.getElementById('noMatches').innerHTML = ''
+                document.getElementById('treeviewsearched').innerHTML = ''
+
+                // hide the search bar
+                document.getElementById("searchBar").style.display = "none"
+                //hide the edit terms-related buttons
+                document.getElementById('cancelBtn').style.display = "none"
+                document.getElementById('editBtn').style.display = "none"
+                document.getElementById('editBtn2').style.display = "none"
+                document.getElementById('scrollBtn').style.display = "none"
+
+                var html = document.getElementById('editInputs').innerHTML
+
+                // html += '<button id="backBtn" style="color:#4d4d4d;display:inline-block;">Back</button>'
+                // html += '<button id="backBtn" style="font-style:italic;font-weight:normal;color:#1f91c2;font-size:17px;display:inline-block;margin-left:-135px;">Back</button>'
+
+                // html += `<div id = "instruct-bar">To edit, please click on the desired term(s) and make your changes.
+                //     Click <a id = "here" style="color:#1f91c2;" href="https://github.com/NIDM-Terms/terms/blob/master/terms/README.md" target="_blank">here</a>  to view data element property descriptions<br>
+                //     Changes will be reflected once the PR is merged.<br>
+                //     Removing the value of any property is equivalent to removing the entire property from the term.</div>`
+
+                html += '<ul class = "treeview3" id = "treeview3">';
+
+                //create an edit display for each item in editList
+                for(var j = 0; j < editList.length; j++){
+                    // console.log('using editList index: '+j)
+                    // html+='<div id=term_'+j+'>'
+
+                    const deepCopy = (origArr) => {
+                        let copyArr, value, key
+                        if(typeof origArr !== "object" || origArr === null){
+                            return origArr
+                        }
+                        copyArr = Array.isArray(origArr) ? [] : {}
+                        for(key in origArr){
+                            value = origArr[key]
+                            copyArr[key] = deepCopy(value)
+                        }
+                        return copyArr
+                    }    
+                    
+                    //add the term to the dictionary of terms that are edited
+                    editDict[editList[j]] = deepCopy(mainList[editList[j]])
+
+                    //pulls index of the term from editList
+                    var termIndex = editList[j]
+                    //gets the term from mainList
+                    var term = mainList[termIndex]
+                    // list to contain properties from this term that are shown on the Edit Page
+                    var displayedProperties = []; 
+
+                    html += '<li style="color:#4d4d4d;"><span style="font-size:21px;margin-bottom:2px;">' + term.label + '</span><br><ul>';
+
+                    html+= `<div id="`+termIndex+`label"><h4 style="margin-bottom:10px;margin-left:-10px;">Label *</h4> 
+                        <input id= "`+termIndex+`label" class="newComInput" type="text" name="label" value ="`+ term.label +`"placeholder = "REQUIRED: Term in camelCase (e.g. durationTime, author)" required></div>`
+                    
+                    for (const [key,value] of Object.entries(term)){
+                        if(!(notDisplayed.includes(key))){
+                            if(key!=='responseOptions'){ displayedProperties.push(key) }
+
+                            var sentenceCase = key.replace(/([A-Z])/g,' $1').charAt(0).toUpperCase() + key.replace(/([A-Z]+)/g, " $1").slice(1)
+                            
+                            if(key === 'description'){                                
+                                html+=`<div id="`+termIndex+key+`"><h4 style="margin-bottom:10px;margin-left:-10px;">`+ sentenceCase +` *</h4>
+                                    <input id="`+termIndex+key+`" class="newComInput" type="text" name="`+ key +`" value="`+ value +`" placeholder = "OPTIONAL: `+ key +`">
+                                    </div></div>`
+                            }else if(key==='responseOptions'){
+                                // html+=`<h4 style="margin-bottom:10px;margin-left:-10px;">Response Options</h4>`
+
+                                // console.log(13,value)
+
+                                html+=`<div id = "`+termIndex+`respoDiv" style="margin-left:20px;margin-right:45px;">
+                                    <h4 style="margin-bottom:10px;margin-left:-30px;">Response Options</h4>`
+                                // display input boxes for each of the choices
+                                for(const [k,v] of Object.entries(value)){
+                                    if(typeof(v) === 'object'){ 
+                                        for(const [kk,vv] of Object.entries(v)){
+                                            displayedProperties.push(kk)
+                                            var capitalized = kk.replace(/([A-Z])/g,' $1').charAt(0).toUpperCase() + kk.replace(/([A-Z]+)/g, " $1").slice(1)
+                                            if(typeof(vv) === 'object'){
+                                                html+=`<div id="`+termIndex+kk+`" class="respOptElem"><p><button type = "button" id="`+termIndex+kk+`" class= "delPropBtn"><i>&times;</i></button>`+capitalized+`:</p>`
+                                                for(const [kkk,vvv] of Object.entries(vv)){
+                                                    if(kk==='valueType'){
+                                                        html+=`<select name="valueTypeDropdown" id="`+termIndex+`valueType" class="newComInput" style="width:95.2%;margin-left:10px;">`
+                                                        
+                                                        //sets default type of dropdown to the current value for valueType
+                                                        for(var i = 0; i < typeOptions.length; i++){
+                                                            // console.log(343, vvv.includes(typeOptions[i]))
+                                                            // console.log(344, vvv+' = '+typeOptions[i])
+                                                            if(vvv.includes(typeOptions[i])){
+                                                                html+='<option value="'+typeOptions[i]+'" selected="selected">'+typeOptions[i]+'</option>'
+                                                            }else{
+                                                                html+='<option value="'+typeOptions[i]+'">'+typeOptions[i]+'</option>'
+                                                            }
+                                                        }
+
+                                                        html+='</select>'
+                                                    }else if(kk==='allowableValues'){
+                                                        html+=`<div id="`+termIndex+kk+`" style="margin-right:22px;" class="respOptElem"><input id="`+termIndex+`allowableValues" class="newComInput" type="text" name="allowableValues" value="`+ vvv +`" style="margin-left:10px;">`
+                                                        if(kkk===''+(vv.length-1))
+                                                        {
+                                                            html+=`<form style="margin-left:-9px;"><input id="`+termIndex+`valueInput" class="numOfValues" type="text" name="allowableValues" style="margin-left:20px;" placeholder = "OPTIONAL: Please specify the number of values you would like to add">
+                                                                <button type = "button" id="`+termIndex+`" class= "btn3 valueBtn" style="width:130px;margin-top:-15px;height:51.5px;margin-right:30px;"> Add Allowable Values </button></form>
+                                                                <div id="`+termIndex+`valueWrapper" class="wrapper" style="margin-left:20px;width:682px;"></div></div>`
+                                                        }
+                                                    }else if(kk==='choices'){
+                                                        html+=`<div id="`+termIndex+kk+`" class="respOptElem" style="margin-left:20px;">`
+                                                        
+                                                        for(const [kkkk,vvvv] of Object.entries(vvv)){
+                                                            var num = Number(kkk)+1
+                                                            // <p style="display:inline-block;vertical-align:middle;text-align:center;">
+                                                            html+=`<p>Choice `+num+`:</p><input id="`+termIndex+`choices" type="text" class="addedInput newComInput" name="name" placeholder = "Name" value="`+kkkk+`" style="width:280px;">
+                                                                <input id="`+termIndex+`choices" type="text" class="addedInput newComInput" name="value" placeholder = "Value" value="`+vvvv+`" style="width:280px;margin-left:20px;">
+                                                                <br>`
+                                                        }
+
+                                                        if(kkk===''+(vv.length-1))
+                                                        {
+                                                            html+=`<br><form ><input id="`+termIndex+`choicesInput" class="numOfValues" type="text" name="choices" placeholder = "OPTIONAL: Please specify the number of choices you would like to add">
+                                                                <button type = "button" id = "`+termIndex+`" class= "btn3 choicesBtn" style="width:130px;margin-top:-15px;height:51.5px;margin-right:50px;"> Add Choices </button></form>
+                                                                <div id="`+termIndex+`choicesWrapper" class="wrapper" style="margin-left:11px;width:673px;"></div></div>`
+                                                        }
+                                                    }else{
+                                                        html+=`<input id="`+termIndex+`choices" class="newComInput" type="text" name="choices" value="`+ vvv +`" placeholder = "OPTIONAL: Choices" style="margin-left:10px;">`
+                                                    }
+                                                    html+=`</div>`
+                                                }
+                                            }else if(typeof(vv) === 'string'){
+                                                if(kk==='allowableValues'){
+                                                    html+=`<div id="`+termIndex+kk+`" class="respOptElem"><p><button type = "button" id="`+termIndex+kk+`" class= "delPropBtn"><i>&times;</i></button>`+capitalized+`:</p>
+                                                        <input id="`+termIndex+`allowableValues" class="newComInput" type="text" name="allowableValues" value="`+ vv +`" placeholder = "OPTIONAL: Allowable Values" style="margin-left:10px;">
+                                                        
+                                                        <br><form>
+                                                        <input id="`+termIndex+`valueInput" class="numOfValues" type="text" name="allowableValues" placeholder = "OPTIONAL: Please specify the number of values you would like to add">
+                                                        <button type = "button" id="`+termIndex+`" class= "btn3 valueBtn" style="width:150px;margin-right:29px;margin-top:-15px;height:51.5px;"> Add Allowable Values </button></form>
+                                                        <div id="`+termIndex+`valueWrapper" class="wrapper" style="margin-left:10px;width:716px;"></div></div>`
+                                                }else{
+                                                    html+=`<div id="`+termIndex+kk+`" class="respOptElem"><p><button type = "button" id="`+termIndex+kk+`" class= "delPropBtn"><i>&times;</i></button>`+capitalized+`:</p>
+                                                        <input id="`+termIndex+`choices" class="newComInput" type="text" name="choices" value="`+ vv +`" placeholder = "OPTIONAL: Choices" style="margin-left:10px;"></div>`
+                                                }
+                                            }
+                                        }
+                                    }
+                                    html+=`</div>`
+                                }
+                                html+=`</div>`
+                            }else if(key==='associatedWith'){                                        
+                                html+=`<div id="`+termIndex+key+`"><h4 style="margin-bottom:10px;margin-left:-10px;"><button type = "button" id="`+termIndex+key+`" class= "delPropBtn"><i>&times;</i></button>Associated With</h4>`
+                                
+                                // make a checkbox for each of the community names and then add an option to add more community tags
+                                for(var i = 0; i < value.length; i++){
+                                    //add checkboxes
+                                    html += '<label id = "'+value[i]+'" class="con" >'+value[i];
+                                    html += '<input id = "'+termIndex+value[i]+'" type="checkbox" name="tagCheckbox" value = "'+value[i]+'" checked="checked">';
+                                    html += '<span class="checkmark"></span>'
+                                    html += '</label><br><br>';
+                                }
+                                
+                                html+=`<br><form style="margin-left:-10px;">
+                                    <input id="`+termIndex+`tagInput" class="numOfValues" type="text" name="associatedWith" placeholder = "OPTIONAL: Please specify the number of tags you would like to add">
+                                    <button type = "button" id="`+termIndex+`" class= "btn3 tagBtn" style="width:150px;margin-top:-15px;height:51.5px;"> Add Community Tags </button></form>
+                                    <div id="`+termIndex+`tagWrapper" class="wrapper"></div></div>`
+
+                                // html+='</div>'
+                            }else if(key !== 'label'){
+                                html+=`<div id="`+termIndex+key+`">
+                                    <h4 style="margin-bottom:10px;margin-left:-10px;"><button type = "button" id="`+termIndex+key+`" class= "delPropBtn"><i>&times;</i></button>`+ sentenceCase +`</h4>
+                                    <input id="`+termIndex+key+`" class="newComInput" type="text" name="`+ key +`" value="`+ value +`" placeholder = "OPTIONAL: `+ key +`">
+                                    </div></div>`
+                            }
+                        }
+                    }
+
+                    html+='<div id="'+termIndex+'addedProps" class="addedProps"></div>'
+
+                    // console.log(413, displayedProperties)
+
+                    // add option for the user to add more properties
+                    html+=`<select id="`+termIndex+`" class="selectProp newComInput"><option value = "all"><i>&#xFE62; Add Another Property</i></option>`
+
+                    // alphabetize the lists of properties
+                    availableProperties.sort()
+                    respOptList.sort()
+
+                    //create the dropdown menu for adding properties
+                    for(var i = 0; i < availableProperties.length; i++){
+                        if(availableProperties[i]==='responseOptions'){
+                            html+='<optgroup label="responseOptions">'
+                            for(var k = 0; k < respOptList.length; k++){
+                                if(!displayedProperties.includes(respOptList[k])){
+                                    html+='<option value = "'+respOptList[k]+'">'+respOptList[k]+'</option>'
+                                }else{
+                                    html+='<option value = "'+respOptList[k]+'" style="display:none;">'+respOptList[k]+'</option>'
+                                }
+                            }
+                            html+='</optgroup>'
+                        }else if(!respOptList.includes(availableProperties[i])){
+                            if(!displayedProperties.includes(availableProperties[i])){
+                                html+='<option value = "'+availableProperties[i]+'">'+availableProperties[i]+'</option>'
+                            }else{
+                                html+='<option value = "'+availableProperties[i]+'" style="display:none;">'+availableProperties[i]+'</option>'
+                            }
+                        }
+                    }
+                    
+                    // var responseList = [] //list to contain the properties that will be displayed in the dropdown menu under responseOptions
+                    // // create the dropdown menu for adding properties
+                    // for(var i = 0; i < respOptList.length; i++){
+                    //     if(!displayedProperties.includes(respOptList[i])){
+                    //         responseList.push(respOptList[i])
+                    //     }
+                    // }
+                    // for(var i = 0; i < availableProperties.length; i++){
+                        // if(!displayedProperties.includes(availableProperties[i])){
+                        //     if(availableProperties[i]==='responseOptions' && responseList.length!==0){
+                        //         html+='<optgroup label="responseOptions">'
+                        //         for(var k = 0; k < responseList.length; k++){
+                        //             html+='<option value = "'+responseList[k]+'">'+responseList[k]+'</option>'
+                        //         }
+                        //         html+='</optgroup>'
+                        //     }else if(!responseList.includes(availableProperties[i])){
+                        //         html+='<option value = "'+availableProperties[i]+'">'+availableProperties[i]+'</option>'
+                        //     }
+                        // }
+                    // }
+
+                    html+='</select>'
+
+                    // html+='<div>'
+                    html+='</ul></li><hr id= "dividerLine" style="margin-right:30px;">'
+                }
+                // html+='</ul></li><hr id= "dividerLine" style="margin-right:30px;">'
+
+                // html+='</div>'
+                
+                html += '</ul>';
+
+                //show the submit button on the edit terms page
+                document.getElementById('submitBtn').style.display = "block"
+                document.getElementById('submitBtn').addEventListener("click", submitEdits)
+
+                $('#editInputs').append(html);
+                $('.treeview3').treeView();
+
+                var style = ".treeview3,";
+                style += ".treeview3 ul {list-style-type:none;overflow:hidden;}";
+                style += ".treeview3 li {text-indent:1%;margin-top:0.2em;padding:0.15em 0 0.5em 1.5em;line-height:22px;background-repeat:no-repeat;background-size:24px 24px;}";
+                style += ".treeview3 li.contains-items {background-image:url('js_lib/icons/arrow-left.png');}";
+                style += ".treeview3 li.contains-items {background-image:url('js_lib/icons/arrow-right.png');}";
+                style += ".treeview3>li:hover {cursor:pointer; .add_terms:hover;background-color: #dbe9ee}";
+                style += ".treeview3 span:hover {background-color: rgba(246,246,246,0.7); }";
+
+                // Expands all the nodes of treeviews
+                // $('.treeview3').treeView('expandAll');
+                // Collapses all the nodes of treeviews
+                $('.treeview3').treeView('collapseAll');
+
+                // //hide all properties that are already on display
+                // function updatePropDropdown(){
+                //     for(var i = 0; i < editList.length; i++){
+                //         for(var j = 0; j < displayedProperties.length; j++){
+                //             // console.log(41,$("select[id='"+editList[i]+"'] option[value='"+displayedProperties[j]+"']"))
+                //             $("select[id='0'] option[value='"+displayedProperties[j]+"']").hide()
+                //             // $("select[id='"+editList[i]+"'] option[value='"+displayedProperties[j]+"']").hide()
+                //         }
+                //     }
+                // }
+
+                // when the back button is clicked, re-display the terms page
+                document.getElementById('backBtn').addEventListener("click", function(){
+                    //re-display the communities header
+                    document.getElementById("mainContainer").style.display = "block"
+                    document.getElementById("editContainer").style.display = "none"
+                    //re-display the treeview
+                    for(var key in mainDict){
+                        var elements = document.getElementsByClassName('treeview_'+key);
+                        for(var j = 0; j < elements.length; j++){
+                            elements[j].style.display = "block"
+                        }
+                    }
+                    //re-display the edit terms-related buttons
+                    document.getElementById('cancelBtn').style.display = "block"
+                    document.getElementById('editBtn').style.display = "block"
+                    // clear the edit page
+                    $("#editInputs").html("");
+                    // display the search bar again
+                    document.getElementById("searchBar").style.display = "block"
+                })
+
+                var tagElems = document.getElementsByClassName("tagBtn")
+                for(var k = 0; k < tagElems.length; k++){
+                    tagElems[k].addEventListener("click", function(e){
+                        //pass index of tagBtn to addOptions so that input boxes are appended to the correct term's treeview
+                        addOptions(this.id, 'tag', 'Community Tag')
+                    })
+                }
+
+                var valueElems = document.getElementsByClassName("valueBtn")
+                for(var k = 0; k < valueElems.length; k++){
+                    valueElems[k].addEventListener("click", function(e){
+                        addOptions(this.id, 'value', 'Allowable Value')
+                    })
+                }
+
+                var choicesElems = document.getElementsByClassName("choicesBtn")
+                for(var k = 0; k < choicesElems.length; k++){
+                    choicesElems[k].addEventListener("click", function(e){
+                        addOptions(this.id, 'choices', 'Choice')
+                    })
+                }
+                
+                //when a dropdown menu property is selected, call the function that creates a new input box for the property
+                var selectPropElems = document.getElementsByClassName("selectProp")
+                for(var k = 0; k < selectPropElems.length; k++){
+                    selectPropElems[k].addEventListener("change", function(e){
+                        addInputs(this.id)
+                    }, false)
+                }
+
+                var propsAdded = false;
+                //create a new input box for the user to add a property
+                function addInputs(index){
+                    var selectedVal = document.querySelector("select[id='"+index+"']").value
+                    var sentenceCase = selectedVal.replace(/([A-Z])/g,' $1').charAt(0).toUpperCase() + selectedVal.replace(/([A-Z]+)/g, " $1").slice(1)
+                    
+                    // create an input field for the user to fill out the selected property
+                    var html = '';
+                    if(respOptList.includes(selectedVal)){
+                        // if responseOptions properties are already being displayed then add to that div
+                        if(!document.getElementById(index+'respoDiv')){
+                            html+=`<div id = "`+index+`respoDiv" style="margin-left:20px;margin-right:45px;">
+                                <h4 style="margin-bottom:10px;margin-left:-30px;">Response Options</h4>`
+                        }
+
+                        if(selectedVal==='valueType'){
+                            // html+=`<div id="optionsDiv"><h4 style="margin-bottom:10px;margin-left:-10px;">Response Options</h4>`
+                            html+=`<div id="optionsDiv">`
+                            html+=`<div id="`+index+selectedVal+`" class="respOptElem" style="margin-right:22px;"><p><button type = "button" id="`+index+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>`+sentenceCase+`:</p>
+                                <select name="valueType" id="`+index+`valueType" class="newComInput" style="width:95.2%;margin-left:10px;">`
+                                
+                                //create dropdown of valueType options
+                                html+='<option value="all">-- Select a Value Type --</option>'
+                                for(var i = 0; i < typeOptions.length; i++){
+                                    html+='<option value="'+typeOptions[i]+'">'+typeOptions[i]+'</option>'
+                                }
+                            html+='</select></div></div>'
+                        }else if(selectedVal==='minValue' || selectedVal==='maxValue' || selectedVal==='unitCode'){
+                            html+=`<div id="`+index+selectedVal+`" class="respOptElem" style="margin-right:22px;"><p><button type = "button" id="`+index+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>`+sentenceCase+`:</p>
+                                <input id="`+index+selectedVal+`" class="newComInput" type="text" name="`+ selectedVal +`" placeholder = "OPTIONAL: `+ sentenceCase +`">
+                                </div></div>`
+                        }else if(selectedVal==='choices'){
+                            html+=`<div id="`+index+selectedVal+`" class="respOptElem" style="margin-right:22px;"><p><button type = "button" id="`+index+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>`+sentenceCase+`:</p>
+                                <br><form style="margin-left:-10px;">
+                                <input id="`+index+`choicesInput" class="numOfValues" type="text" name="choices" placeholder="OPTIONAL: Please specify the number of choices you would like to add">
+                                <button type = "button" id = "`+index+`" class= "btn3 choicesBtn" style="width:130px;margin-top:-15px;height:51.5px;"> Add Choices </button></form>
+                                <div id="`+index+`choicesWrapper" class="wrapper"></div></div></div>`
+                        }else if(selectedVal==='allowableValues'){
+                            html+=`<div id="`+index+selectedVal+`" class="respOptElem" style="margin-right:22px;"><p><button type = "button" id="`+index+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>`+sentenceCase+`:</p>
+                                <br><form style="margin-left:-10px;">
+                                <input id="`+index+`valueInput" class="numOfValues" type="text" name="allowableValues" placeholder = "OPTIONAL: Please specify the number of values you would like to add">
+                                <button type = "button" id="`+index+`" class= "btn3 valueBtn" style="width:130px;margin-top:-15px;height:51.5px;"> Add Allowable Values </button></form>
+                                <div id="`+index+`valueWrapper" class="wrapper"></div></div></div>`
+                        }
+                        
+                        if(!document.getElementById(index+'respoDiv')){
+                            $('#'+index+'addedProps').append(html)
+                        }else{
+                            $('#'+index+'respoDiv').append(html)
+                        }
+                    }else{
+                        if(selectedVal==='associatedWith'){                                        
+                            html+=`<div id="`+index+selectedVal+`"><h4 style="margin-bottom:10px;margin-left:-10px;"><button type = "button" id="`+index+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>Associated With</h4>
+                                <br><form style="margin-left:-10px;">
+                                <input id="`+index+`tagInput" class="numOfValues" type="text" name="associatedWith" placeholder = "OPTIONAL: Please specify the number of tags you would like to add">
+                                <button type = "button" id="`+index+`" class= "btn3 tagBtn" style="width:150px;margin-top:-15px;height:51.5px;"> Add Community Tags </button></form>
+                                <div id="`+index+`tagWrapper" class="wrapper"></div></div>`
+                        }else if(selectedVal !== 'label'){
+                            html+=`<div id="`+index+selectedVal+`">
+                                <h4 style="margin-bottom:10px;margin-left:-10px;"><button type = "button" id="`+index+selectedVal+`" class= "delPropBtn"><i>&times;</i></button>`+ sentenceCase +`</h4>
+                                <input id="`+index+selectedVal+`" class="newComInput" type="text" name="`+ selectedVal +`" placeholder = "OPTIONAL: `+ sentenceCase +`">
+                                </div></div>`
+                        }
+                        $('#'+index+'addedProps').append(html)
+                    }
+
+                    //reset the dropdown selection
+                    $('select[id="'+index+'"]').val('all')
+
+                    var valueElems = document.getElementsByClassName("valueBtn")
+                    for(var k = 0; k < valueElems.length; k++){
+                        valueElems[k].addEventListener("click", function(e){
+                            addOptions(this.id, 'value', 'Allowable Value')
+                        })
+                    }
+
+                    var choicesElems = document.getElementsByClassName("choicesBtn")
+                    for(var k = 0; k < choicesElems.length; k++){
+                        choicesElems[k].addEventListener("click", function(e){
+                            addOptions(this.id, 'choices', 'Choice')
+                        })
+                    }
+
+                    propsAdded = true
+                    document.getElementById("submitBtn").disabled = false
+                    setEnabled()
+                    updateRemove()
+                    // console.log(document.getElementsByClassName('addedProps'))
+                    // console.log(91, 'length of '+index+' is '+$('#addedProps'+index).html().length)
+
+                    // reset the dropdown menu
+                    $("select[id='"+index+"']").value = 'all'
+                    // remove the newly added property from the dropdown menu by hiding it
+                    $("select[id='"+index+"'] option[value='"+selectedVal+"']").hide()
+                    // console.log(22,document.getElementById(index+"respoDiv").getElementsByClassName("respOptElem").length)
+                    // $("select[id='"+index+"'] option[value='"+selectedVal+"']").remove()
+                }
+
+                //gives user option to add more inputs for properties with an option for multiple inputs
+                var list = [];
+                function addOptions(index, type, placeholder){
+                    console.log('called')
+                    var html = '';
+                    document.getElementById(index+type+"Wrapper").style.display = "block"
+                    var numOfOptions = document.getElementById(index+type+"Input").value;
+                    list.push(numOfOptions)
+
+                    var capitalized = type.replace(/([A-Z])/g,' $1').charAt(0).toUpperCase() + type.replace(/([A-Z]+)/g, " $1").slice(1)
+
+                    if(document.getElementById(index+type+"Input").value != 0 & list.length == 1){
+                        for (var i = 1; i <= numOfOptions; i++){
+                            if(type==='choices'){
+                                html += '<p>Choice '+i+':</p>';
+                                html += '<input id="name" type="text" class="addedInput" name="name" placeholder = "Name" style="width:280px;">';
+                                html += '<input id="value" type="text" class="addedInput" name="value" placeholder = "Value" style="width:280px;margin-left:20px;">';
+                                html += '<br>';
+                            }else{
+                                html += '<p>'+capitalized+' '+i+':</p>';
+                                html += '<input id="name" type="text" class="addedInput" name="name" placeholder = "'+placeholder+'">';
+                                html += '<br>'; 
+                            }
+                        }
+                    }else if (document.getElementById(index+type+"Input").value != 0 & list.length > 1){
+                        $("#"+index+type+"Wrapper").html("");
+                        for (var i = 1; i <= numOfOptions; i++){
+                            if(type==='choices'){
+                                html += '<p>Choice '+i+':</p>';
+                                html += '<input id="name" type="text" class="addedInput" name="name" placeholder = "Name" style="width:280px;">';
+                                html += '<input id="value" type="text" class="addedInput" name="value" placeholder = "Value" style="width:280px;margin-left:20px;">';
+                                html += '<br>';
+                            }else{
+                                html += '<p>'+capitalized+' '+i+':</p>';
+                                html += '<input id="name" type="text" class="addedInput" name="name" placeholder = "'+placeholder+'">';
+                                html += '<br>';
+                            }
+                        }
+                    }else if(document.getElementById(index+type+"Input").value == 0){
+                        html += '</div>';
+                    }
+                    $("#"+index+type+"Wrapper").append(html);
+                    document.getElementById("submitBtn").disabled = false
+                };
+
+                //remove input box when delete button next to a property is clicked
+                function updateRemove(){
+                    var deletePropElems = document.getElementsByClassName("delPropBtn")
+                    // console.log(31, deletePropElems)
+                    for(var k = 0; k < deletePropElems.length; k++){
+                        deletePropElems[k].addEventListener("click", function(e){
+                            //get index of term
+                            var num = this.id.replace(/[^0-9]/g,'');
+                            //get property being deleted
+                            var property = this.id.replace(/[0-9]/g,'');
+
+                            $("div[id='"+this.id+"']").remove()
+
+                            //remove the property from editDict
+                            if(!respOptList.includes(property)){
+                                delete editDict[num][property]
+                            }else{
+                                delete editDict[num]['responseOptions']['0'][property]
+                            }
+
+                            //if there are no more properties in responseOptions, remove the whole div
+                            if(document.getElementById(num+"respoDiv") &&
+                                document.getElementById(num+"respoDiv").getElementsByClassName("respOptElem").length === 0){
+                                    document.getElementById(num+"respoDiv").remove()
+                                    delete editDict[num]['responseOptions']
+                            }
+
+                            //add the removed property back to the dropdown list by unhiding it
+                            $("select[id='"+num+"'] option[value='"+property+"']").show()
+                            
+                            //enable the submit button
+                            document.getElementById("submitBtn").disabled = false
+
+                            console.log(64,editDict)
+                        }, false)
+                    }
+                }
+
+                function saveInitial() {
+                    const inputs = document.querySelectorAll("input.newComInput");
+                    for (const el of inputs) el.oldValue = el.value;
+                }
+                function setEnabled() {
+                    // enables submit button if changes have been made to the entries
+                    const inputs = document.querySelectorAll("input.newComInput");
+                    //Get the values selected in the checkboxes
+                    var checkboxElems = document.querySelectorAll("input[name='tagCheckbox']");
+                    
+                    var e = false;
+                    var numChecked = document.querySelectorAll("input[name='tagCheckbox']:checked").length
+                    for (const el of inputs) {
+                        if(el.oldValue !== el.value){
+                            //get index of term on page
+                            var index = el.id.replace(/[^0-9]/g,'');
+                            //get property being deleted
+                            var prop = el.id.replace(/[0-9]/g,'');
+                            console.log(2,el.id)
+                            
+                            var term = editDict[index]
+
+                            if(!respOptList.includes(prop)){
+                                term[prop] = el.value
+                            }else if(prop==='allowableValues'){
+                                var entry = term['responseOptions']['0']['allowableValues']
+                                if(typeof(entry)==='object'){
+                                    var arr = mainList[index]['responseOptions']['0'][prop]
+                                    //get the index of the entry that the user edited
+                                    var i = arr.indexOf(el.oldValue)
+                                    term['responseOptions']['0']['allowableValues'][i] = el.value
+                                }else if(typeof(entry)==='string'){
+                                    term['responseOptions']['0']['allowableValues'] = el.value
+                                }
+                            }else if(prop==='choices'){
+                                var elems = document.getElementById(el.id).getElementsByClassName('addedInput')           
+                                for(var j = 0; j < elems.length; j+=2){
+                                    var name = elems[j].value
+                                    var val = elems[j+1].value
+                                    var dict = {}
+                                    dict[name] = val
+
+                                    editDict[index]['responseOptions']['0']['choices'][j/2] = dict
+                                }       
+                            }else if(prop==='maxValue' || prop==='minValue' || prop==='unitCode'){
+                                term['responseOptions']['0'][prop] = el.value
+                            }
+                        }
+                    }
+                    var tagChecks = document.getElementsByName("tagCheckbox")
+                    for(var i = 0; i < tagChecks.length; i++){
+                        tagChecks[i].addEventListener("click", function(e){
+                            //get index of term on page
+                            var index = this.id.replace(/[^0-9]/g,'');
+                            //get tag being deleted
+                            var communityName = this.id.replace(/[0-9]/g,'');  
+                            
+                            if(!e.target.checked){
+                                console.log(38,this.id+' unchecked')
+                                //remove the unchecked tag from associatedWith
+                                var arr = editDict[index]['associatedWith'].filter(function(ele){
+                                    return ele!==communityName
+                                })
+                                editDict[index]['associatedWith'] = arr
+                            }else if(e.target.checked){
+                                console.log(39,this.id+' checked')
+                                if(!editDict[index]['associatedWith'].includes(communityName)){
+                                    //push the value of the tag to the associatedWith array
+                                    editDict[index]['associatedWith'].push(communityName)
+                                }
+                            }
+                        }, false)
+                    }
+                    var dropdowns = document.getElementsByName("valueTypeDropdown")
+                    for(var i = 0; i < dropdowns.length; i++){
+                        dropdowns[i].addEventListener("change", function(e){
+                            //get index of term on page
+                            var index = this.id.replace(/[^0-9]/g,''); 
+                            editDict[index]['responseOptions']['0']['valueType'] = 'xsd:'+this.value
+                            if(mainList[index]['responseOptions']['0']['valueType']['0']!=='xsd:'+this.value){
+                                document.getElementById("submitBtn").disabled = false
+                            }else{
+                                document.getElementById("submitBtn").disabled = true
+                            }
+                        })
+                    }
+                    //update the dictionary for added community tags, allowable values, and choices
+                    var wrappers = document.getElementsByClassName('wrapper')
+                    for(var i = 0; i < wrappers.length; i++){
+                        wrappers[i].addEventListener("keypress",function(e){
+                            //get index of term on page
+                            var index = this.id.replace(/[^0-9]/g,'');
+                            var type = this.id.replace(/[0-9]/g,'');  
+
+                            var elems = document.getElementById(this.id).getElementsByClassName('addedInput') 
+                            const initialProps = Object.keys(mainList[index])                           
+                            
+                            if(type==='choicesWrapper'){
+                                var currentNum;
+                                if(initialProps.includes('responseOptions')){
+                                    const initialOpts = Object.keys(mainList[index]['responseOptions']['0'])
+                                    console.log(52,initialOpts)
+                                    if(initialOpts.includes('choices')){
+                                        currentNum = mainList[index]['responseOptions']['0']['choices'].length
+                                    }else{
+                                        currentNum = 0
+                                    }
+                                }else{
+                                    currentNum = 0                                    
+                                }
+
+                                var arr = []
+                                for(var j = 0; j < elems.length; j+=2){
+                                    var name = elems[j].value
+                                    var val = elems[j+1].value
+                                    var dict = {}
+                                    dict[name] = val
+                                    // console.log(2,dict)
+                                    
+                                    arr[currentNum+j/2] = dict
+                                }
+
+                                if(initialProps.includes('responseOptions')){
+                                    editDict[index]['responseOptions']['0']['choices'] = arr
+                                }else{
+                                    editDict[index]['responseOptions'] = [{'choices':arr}]
+                                }
+                            }else if(type==='tagWrapper'){
+                                var currentNum;
+                                if(initialProps.includes('associatedWith')){
+                                    //get current number of checkboxes 
+                                    currentNum = document.querySelectorAll('[name="tagCheckbox"][id^="'+index+'"]').length
+                                }else{
+                                    currentNum = 0
+                                }
+                                
+                                for(var j = 0; j < elems.length; j++){
+                                    if(elems[j].value!==null){
+                                        editDict[index]['associatedWith'][currentNum+j] = elems[j].value
+                                    }
+                                }
+                            }else if(type==='valueWrapper'){
+                                if(initialProps.includes('responseOptions')){
+                                    const initialOpts = Object.keys(mainList[index]['responseOptions']['0'])
+                                    if(initialOpts.includes('allowableValues')){
+                                        var entry = mainList[index]['responseOptions']['0']['allowableValues']
+                                        if(typeof(entry)==='object'){
+                                            var currentNum = entry.length
+                                            for(var j = 0; j < elems.length; j++){
+                                                editDict[index]['responseOptions']['0']['allowableValues'][currentNum+j] = elems[j].value
+                                            }
+                                        }else if(typeof(entry)==='string'){
+                                            var arr = [entry]
+                                            for(var j = 0; j < elems.length; j++){
+                                                arr.push(elems[j].value)
+                                            }
+                                            editDict[index]['responseOptions']['0']['allowableValues'] = arr
+                                        }
+                                    }else{
+                                        var arr = []
+                                        for(var j = 0; j < elems.length; j++){
+                                            arr.push(elems[j].value)
+                                        }
+                                        editDict[index]['responseOptions']['0']['allowableValues'] = arr
+                                    }
+                                }else{
+                                    var arr = []
+                                    for(var j = 0; j < elems.length; j++){
+                                        arr.push(elems[j].value)
+                                    }
+                                    editDict[index]['responseOptions'] = [{'allowableValues':arr}]                       
+                                }
+                            }
+                        })
+                    }
+
+                    for (const el of inputs) {
+                        if ((el.oldValue !== el.value || numChecked!==checkboxElems.length || propsAdded) && document.getElementById("token").value.length !== 0) {
+                            e = true;
+                            break;
+                        }
+                    }
+                    document.getElementById("submitBtn").disabled = !e;
+
+                    console.log(36,editDict)
+                }
+                document.addEventListener("input", setEnabled);
+
+                saveInitial();
+                setEnabled();
+                updateRemove();
+                return false;
+            }
+            
             //separate display for individual searched terms, not an entire section of community terms
             function displaySearchedTerms(terms) {
                 console.log(552, 'displayTerms called for searched')
+                // console.log(61, searchEditList)
 
                 //Clear previous term display
                 // document.getElementById('termsView').innerHTML = "";
@@ -1200,8 +2806,13 @@
                             newIndex++
                         }
                         if(placeInDict !== -1 && newIndex!==mainDictCopy[commName].length){
-                            html += '<li style="color:#4d4d4d;"><span style="font-size:21px;margin-bottom:2px;">' + terms[index].label + '</span><br>';
+                            html += '<li style="color:#4d4d4d;"><span style="font-size:21px;margin-bottom:2px;">' + terms[index].label + '</span>';
                             
+                            html += '<label id = "'+index+'" class="editCon">';
+                            html += '<input id = "'+index+'" type="checkbox" name="editCheckbox" value = "'+searchEditList[index]+'" class="editCheckbox">';
+                            html += '<span class="editCheckmark"></span>'
+                            html += '</label><br>';
+
                             var data = terms[index]
 
                             for (const [key,value] of Object.entries(data)){
@@ -1337,6 +2948,8 @@
                 //$('.treeview').treeView('expandAll');
                 // Collapses all the nodes of treeviews
                 $('.treeview2').treeView('collapseAll');
+                showEditButtons()
+                updateEditCheck()
                 removeLoading()
             }
 
@@ -1349,8 +2962,9 @@
                 var termsList = [];
                 var found = data.find(function(post, index){
                     if(post.label.toLowerCase().includes(searchedTerms.toLowerCase())){
-                        termsDict = data[index] 
+                        termsDict = data[index]
                         termsList.push(termsDict)
+                        searchEditList.push(index)
                     }
                 })
 
@@ -1364,6 +2978,401 @@
                         return false;
                 }
                 return true;
+            }
+
+            
+            function submitEdits(){
+                $(document).ready(function(event) { 
+                    // fetch the context file and create a jsonld
+                    fetch(contextLink)
+                    .then(function(resp){
+                        return resp.json(); 
+                    })
+
+                    .then(async function(context){
+                        const deepCopy = (origArr) => {
+                            let copyArr, value, key
+                            if(typeof origArr !== "object" || origArr === null){
+                                return origArr
+                            }
+                            copyArr = Array.isArray(origArr) ? [] : {}
+                            for(key in origArr){
+                                value = origArr[key]
+                                copyArr[key] = deepCopy(value)
+                            }
+                            return copyArr
+                        }
+
+                        for(var i = 0; i < editList.length; i++){
+                            var dict = deepCopy(editDict[editList[i]])
+
+                            //remove all properties with blank inputs except if description is blank
+                            for(const [key,value] of Object.entries(dict)){
+                                if( !(notDisplayed.includes(key)) ){
+                                    if(key==="responseOptions"){
+                                        for(const [k,v] of Object.entries(value)){ //'0'
+                                            for(const [kk,vv] of Object.entries(v)){ //responseOptions properties
+                                                if(typeof(vv)==="string" && vv===""){
+                                                    delete dict[key][k][kk]
+                                                }else if(typeof(vv)==="object"){ //allowableValues and choices
+                                                    for(const [kkk,vvv] of Object.entries(vv)){
+                                                        if(typeof(vvv)==="string" && vvv===""){
+                                                            delete dict[key][k][kk][kkk]
+                                                        }else if(typeof(vvv)==="object"){
+                                                            for(const [kkkk,vvvv] of Object.entries(vvv)){
+                                                                if(kkkk===""){
+                                                                    delete dict[key][k][kk][kkk]
+                                                                }
+                                                            }                                                            
+                                                        }
+                                                        if(vvv.length===0){
+                                                            delete dict[key][k][kk][kkk]
+                                                        }
+                                                    }
+
+                                                    var newArr = vv.filter(x => typeof x !== 'undefined')
+                                                    dict[key][k][kk] = newArr
+                                                    console.log(32,newArr)
+                                                    if(newArr.length===0){
+                                                        delete dict[key][k][kk]
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        //removes responseOptions key if no properties are left
+                                        var filtered = value.filter(x => Object.keys(x).length!==0)
+                                        if(filtered.length===0){
+                                            delete dict[key]
+                                        }
+                                    }else if(key!=="label" && key!=="description"){
+                                        if(typeof(value)==="string" && value===""){
+                                            delete dict[key]
+                                        }else if(typeof(value)==="object"){
+                                            for(const [k,v] of Object.entries(value)){
+                                                if(typeof(v)==="string" && v===""){
+                                                    delete dict[key][k]
+                                                }else if(typeof(v)==="object"){
+                                                    for(const [kk,vv] of Object.entries(v)){
+                                                        if(kk==="" && vv===""){
+                                                            delete dict[key][k][kk]
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            
+                                            if(value.length === 0){
+                                                delete dict[key]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            console.log(18,dict)
+                            dict['@context'] = contextLink
+
+                            const compacted = await jsonld.compact(dict, contextLink);
+                            for(var key in mainDict){
+                                if(mainDict[key].includes(mainList[editList[i]])){
+                                    var oldLabel = mainList[editList[i]].label
+                                    sendPR(compacted,key,oldLabel)
+                                }
+                            }
+                        }
+                    })
+                });
+            };
+
+            //////////////////////////////////////////////////////////////////////////////////
+            /// function created to create jsonld files and submit a pull request to github
+            //////////////////////////////////////////////////////////////////////////////////
+
+            function sendPR (newTermJsonld, community, origLabel){
+                //Get GitHub API key
+                if(document.getElementById("token").value.length == 0){
+                    removeLoading()
+                    // alert('A GitHub API Token is required to complete the pull request')
+                    document.getElementById("token").style.borderWidth = '1px';
+                    document.getElementById("token").style.borderColor = 'red';
+                    document.getElementById("token").style.backgroundColor = '#FFF1F1';
+                    $('#token').focus();
+                } 
+                else {
+                    addLoading()
+
+                    const gitToken = document.getElementById("token").value;
+
+                    const octokit = new Octokit({ auth: gitToken });
+                    // const info = octokit.request(`GET /user`);
+                    // console.log(info)
+
+                    const repo = repoName;
+                    const fileName = origLabel
+                    
+                    //GET user's github username
+                    octokit.request(
+                        `GET /user`
+                    ).then((response) => {
+                        console.log(20, response)
+                        //call fork repo to check if the user has the repo forked
+                        //if repo is not found then fork it
+                        forkRepo(response.data.login)
+                        // getFileSha(response.data.login)
+                    }).catch((e) => {
+                        console.log(23, e.message);
+                        removeLoading()
+                        alert('Bad Credentials... Please Enter A Valid Personal Access Token.')
+                    })
+
+                    //fork repo function
+                    async function forkRepo(owner){
+                        octokit.request(
+                            `GET /repos/{owner}/{repo}`, {
+                                headers: {
+                                    'User-Agent': 'terms',
+                                    'accept': 'application/json'
+                                },
+                                owner: owner,
+                                repo: repo
+                            }).then((res) => {
+                            console.log(47, 'success', owner, repo, newTermJsonld); // repo exists!
+                            //call function to get the master branch sha
+                            getSha(owner)
+                        }).catch((e) => {
+                            console.log(50, e.message);
+                            if (e.message === "Not Found") { // repo not present, so fork the repo
+                                // fork the repo
+                                octokit.request(
+                                    `POST /repos/{owner}/{repo}/forks`, {
+                                        headers: {
+                                            'Authorization': 'token ' + gitToken,
+                                        },
+                                        owner: 'NIDM-Terms',
+                                        repo: repo
+                                    }).then((response) => {
+                                    console.log(71, 'successfully forked: ', response.status);
+                                    if (response.status === 200 || response.status=== 201) {
+                                        //call function to get the master branch sha
+                                        getSha(owner)
+                                    } else if (response.status === 202) {
+                                        setTimeout(getSha, 3000, owner);
+                                    }
+                                    console.log(77, "post fork: ", response);
+                                }).catch((e) => {
+                                    console.log(79, e.message);
+                                    reportAnIssue('NIDM Terms UI: an issue with forking NIDM-Terms repo', e);
+                                });
+                            }
+                        });
+
+                        //function to get sha hash of master branch
+                        async function getSha(user){
+                            octokit.request(`GET /repos/{owner}/{repo}/branches/{branch}`, {
+                                owner: user,
+                                repo: repo,
+                                branch: 'master'
+                            }).then((r) => {
+                                console.log(43, 'sha is: ', r.data.commit.sha)
+                                console.log(44,r) 
+                                //call function to create a branch
+                                createNewBranch(r.data.commit.sha, user)
+                            })
+                            .catch((e) => {
+                                console.log(55, e.message);
+                                reportAnIssue('NIDM Terms UI: an issue with getting master branch hash', e);
+                            })
+                        };
+                    }
+
+                    //function to create a new branch with the term name
+                    async function createNewBranch(sha,user){
+                        const branchName = fileName.replace(/[-_\s.]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
+                        // console.log(23,fileName)
+                        console.log(24,branchName)
+                        // const branchName = fileName.replace(/[-_\s.]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
+                        // use camelCase for the name of the branch
+                        // var branchName = fileName.toLowerCase().trim().split(/[.\-_\s]/g).reduce((fileName, word) => fileName + word[0].toUpperCase() + word.slice(1));
+                        octokit.request(`POST /repos/{owner}/{repo}/git/refs`, {
+                            owner: user,
+                            repo: repo,
+                            ref: 'refs/heads/'+community+'_'+branchName,
+                            sha: sha
+                        }).then((response) => {
+                            console.log(72, 'successfully created a new branch: ', response.status);
+                            //call function to comit file to the new branch
+                            // createFileInRepo(newTermJsonld, 'terms/'+community+'/'+fileName+'.jsonld', user);
+                            getIndivSha(user)
+                        }).catch((e) => {
+                            console.log(67, e.message);
+                            reportAnIssue('NIDM Terms UI: an issue with creating a new branch', e);
+                        });
+                    }
+
+                    // get the sha of the individual file in order to edit it
+                    async function getIndivSha(owner){
+                        const branchName = fileName.replace(/[-_\s.]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
+                        octokit.request('GET /repos/{owner}/{repo}/contents/terms/{commName}/{term}.jsonld', {
+                            owner: owner,
+                            repo: repo,
+                            commName: community,
+                            term: branchName
+                        }).then((res) => {
+                            // console.log(322,res)
+                            // console.log(422,res.data.sha)
+                            editFile(owner, res.data.sha)
+                        })
+                    };
+
+                    // make changes to the desired file on the branch
+                    async function editFile(owner, sha){
+                        const content = btoa(JSON.stringify(newTermJsonld, undefined, 2)); // for use in browser
+                        const branchName = fileName.replace(/[-_\s.]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
+                        var pathToFile = 'terms/'+community+'/'+fileName+'.jsonld'
+                        console.log(63, content);
+                        octokit.request(
+                            `PUT /repos/{owner}/{repo}/contents/{path}`, {
+                                headers: {
+                                    'Authorization': 'token ' + gitToken,
+                                },
+                                owner: owner,
+                                repo: repo,
+                                path: pathToFile,
+                                message: community+' Term Edited: '+fileName,
+                                content: content,
+                                sha: sha,
+                                branch: community+'_'+branchName
+                            }).then((response) => {
+                            console.log(91, "statusCode for createFile: ", response.status);
+                            if (response.status === 200 || response.status=== 201) {
+                                // call function to raise a pull request
+                                createPullRequest(pathToFile, owner);
+                            }
+                        }).catch((e) => {
+                            console.log(93, e.message);
+                            reportAnIssue('NIDM Terms UI: an issue with commiting a new term', e);
+                        });
+                    }
+
+                    //function to raise a pull request
+                    async function createPullRequest(pathToFile, user) {
+                        const branchName = fileName.replace(/[-_\s.]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
+                        var st = '';
+                        console.log(96, 'in createPR');
+                        octokit.request(
+                            `POST /repos/{owner}/{repo}/pulls`, {
+                                headers: {
+                                    'Authorization': 'token ' + gitToken,
+                                },
+                                owner: 'NIDM-Terms',
+                                repo: repo,
+                                title: community+' Term Edited: '+fileName,
+                                body: 'Edited Terms:' + pathToFile,
+                                head: user + ':'+community+'_' + branchName,
+                                base: 'master'
+                            }).then(resp => {
+                            console.log(108, "StatusCode for Pull Request: ", resp.status);
+                            var st = '1';
+                            //call confimation function
+                            submission(st)
+                        }).catch(e => {
+                            console.log(110, 'error in raising PR: ', e);
+                            reportAnIssue('NIDM Terms UI: an issue with sending a pull request',e);
+                        })
+
+                    } 
+
+                    //function to display confirmation to the pull request
+                    async function submission(state){
+                        if(state == '1'){
+                            removeLoading()
+                            $('#editContainer').html("")
+
+                            var html = '<br><br><br>';
+
+                            html += '<h2 id="stepTitles">Submission Complete <hr style="margin-top: 5px;"></h2>'
+
+                            html += '<div class="headerBrdr"><center>Thank you for adding a new term to NIDM-Terms. ';
+                            html += 'Your term has been submitted for further discussion.<br><br></center></div>';
+
+                            html += '<div class="headerBrdr">';
+
+                            // html += '<form><center>';
+                            // html += '<button onClick="window.location.reload();" id = "newTerm" class= "subBtn" type = "button"> Back to Browse Terms </button>';
+                            // html += '</center></form>';
+                                
+                            html += '<form><center>';
+                            html += '<a href= "https://github.com/NIDM-Terms/terms/pulls" target = "_blank"> <button id = "viewPR" class= "subBtn" type = "button" > View Pull Request </button></a>';
+                            html += '</center></form>';
+
+                            html += '<br><br>';
+                            html += '</div>';
+
+                            $('#editContainer').append(html)
+                        }
+                    }
+
+                    //function to display an issue with the code and how to report it
+                    async function reportAnIssue(issue, e){
+                        removeLoading()
+                        $('#editContainer').html("")
+
+                        var html = '<br><br><br>';
+
+                        html += '<h2 id="stepTitles">Issue with Submission <hr style="margin-top: 5px;"></h2>'
+
+                        html += '<div class="headerBrdr"><center>Oops! Something went wrong while adding the new term.<br><br></center></div>';
+
+                        html += '<div class="headerBrdr">';
+
+                        html += '<form><center>';
+                        html += '<button id = "report" class= "subBtn" type = "button" > Report </button>';
+                        html += '</center></form>';
+
+                        html += '<br><br>';
+                        html += '</div>';
+
+                        $('#editContainer').append(html);
+
+                        document.getElementById("report").addEventListener("click", function(){ createGithubIssue(issue); })
+
+                    }
+
+                    async function createGithubIssue(issue, e){
+                        octokit.request(`POST /repos/{owner}/{repo}/issues`, {
+                        owner: 'NIDM-Terms',
+                        repo: 'terms',
+                        title: issue,
+                        body: 'An issue occurred while submitting a new term: '+JSON.stringify(newTermJsonld) +  '\n' + e 
+                        }).then(l => {
+                            console.log('issue was posted')
+                            issueConfirm()
+                        }).catch(e => {
+                            console.log(59, 'error in posting an issue: ', e);
+                        });
+                    }
+
+                    async function issueConfirm(){
+                        $('#editContainer').html("")
+
+                        var html = '<br><br><br>';
+                        
+                        html += '<h2 id="stepTitles">Issue Reported <hr style="margin-top: 5px;"></h2>'
+
+                        html += '<div class="headerBrdr"><center>Thank you for reporting! ';
+                        html += 'A GitHub issue in the NIDM-Terms repository reporting the problem was created on your behalf.<br><br></center></div>';
+
+                        html += '<div class="headerBrdr">';
+
+                        html += '<form><center>';
+                        html += '<a href= "https://github.com/NIDM-Terms/terms/issues" target = "_blank"> <button id = "viewPR" class= "subBtn" type = "button" > View GitHub Issue </button></a>';
+                        html += '</center></form>';
+
+                        html += '<br>';
+                        html += '</div>';
+
+                        $('#editContainer').append(html);
+                    }
+
+                }
             }
         });
 

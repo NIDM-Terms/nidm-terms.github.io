@@ -33,18 +33,17 @@
 
         <header>
             <div class="about">
-                <form action = "https://github.com/NIDM-Terms/terms" target="_blank">
-                    <button class= "github">Github <i class="fa fa-github" style="font-size:17px"></i>
-                    </button>
+                <form target="_blank">
+                    <button class= "github" id="github">Github <i class="fa fa-github" style="font-size:17px"></i></button>
                 </form>
-                <form action = "https://scicrunch.org/nidm-terms/about/project" target="_blank">
-                    <button class= "website">NIDM Website</button>
+                <form target="_blank">
+                    <button class= "website" id = "website"></button>
                 </form>
-                <form action = "http://nidm.nidash.org/" target="_blank">
-                    <button class = "nidmSpecs"> NIDM Specs</button>
+                <form target="_blank">
+                    <button class = "specs" id = "specs"></button>
                 </form>
-                <form action ="https://github.com/incf-nidash/PyNIDM" target= "_blank" >
-                    <button class= "pyNidm"> PyNIDM</a>
+                <form target= "_blank" >
+                    <button class= "pyNidm" id = "pyNidm"></a>
                 </form>
                 <form action ="https://incf-nidash.github.io/nidmterms-ui/#/annotate" target= "_blank" >
                     <button class= "annoTool"> CSV Annotation Tool</a>
@@ -53,12 +52,31 @@
     
             <div class="logo-items">
                 <div class= "logo">
-                    <img src="img/nidm-terms_576163.png" width= "70" height="70">
+                    <img width= "70" height="70" id = "image">
                 </div>
                 <div class="inner">
-                    <h>NIDM-Terms</h>
+                    <h id="pageTitle"></h>
                 </div>
             </div>
+    
+            <script>
+                //link the buttons to the specified pages and insert information (button labels, titles, etc.) specific to the project
+                document.getElementById("github").addEventListener('click', function(){location.href=githubLink})
+    
+                document.getElementById("website").addEventListener('click', function(){location.href=websiteLink})
+                $("#website").text(websiteLinkName)
+    
+                document.getElementById("specs").addEventListener('click', function(){location.href=specLink})
+                $("#specs").text(specLinkName)
+    
+                document.getElementById("pyNidm").addEventListener('click', function(){location.href=pyNIDMLink})
+                $("#pyNidm").text(pyNIDMLinkName)
+    
+                $("#pageTitle").text(pageTitle)
+    
+                //add the logo image to the page
+                document.getElementById('image').src=("img/"+logoFileName)
+            </script>
         </header>
     
         <div>
@@ -108,12 +126,13 @@
 
                 <h2 id="stepTitles">GitHub Access Token <hr style="margin-top: 5px;"></h2>
 
-                <div class="headerBrdr"><center>
-                    The NIDM-Terms effort is focused on developing and adopting a set of community driven controlled vocabulary 
-                    for neuroimaging. NIDM-Terms infrastructure consists of a GitHub repository containing JSON-LD formatted 
-                    files for each term. Newly added communities will be sent as a pull request to our GitHub repository.
-                    Therefore, in order to suggest a new community, a GitHub API Token must be provided.
-                </center></div>
+                <div class="headerBrdr" id="headerBrdr"><center></center></div>
+
+                <script>
+                    //insert information (button labels, titles, etc.) specific to the project
+                    $("#headerBrdr").text(headerText)
+                </script>
+
                 <br>
                 <div class="keyInfo"><center>
                     For more information on GitHub personal access tokens click <a href= "https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token" target="_blank"> here</a>.
@@ -1005,7 +1024,12 @@
     <footer>
         <div id="footer">
             <hr id= "bottomLine">
-            <p><center>This project was supported by the National Institutes of Mental Health (NIMH) grant 1RF1MH120021</center></p>
+            <p id="footerText"><center></center></p>
+
+            <script>
+                //add a message to the footer
+                $("#footerText").text(footerText)
+            </script>
         <div>
     </footer>
 
@@ -1059,7 +1083,7 @@
             transition: 0.1s;
         }
 
-        .nidmSpecs{
+        .specs{
             float: right;
             margin-right: -20px;
             color: #646464;
@@ -1069,7 +1093,7 @@
             font-weight: lighter;
         }
 
-        .nidmSpecs:hover{
+        .specs:hover{
             color: #32e17c;
             transition: 0.1s;
         }
