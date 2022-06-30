@@ -1386,6 +1386,7 @@
         var availableProperties = []; // List to contain all properties that the user can edit or add to the term
         var respOptList = ['minValue', 'maxValue', 'valueType', 'unitCode', 'choices', 'allowableValues'] // List of properties under responseOptions
         var changesDict = {} //Dictionary to contain edited properties
+        var searchEditList = [] //List to contain indices of terms in the search display that are checked
         // var changesList = [] //List to contain edited properties
         // var otherProperties = []; // List to contain properties not shown that the user can add to the term
         // var displayedProperties = []; // List to contain properties shown on the Edit Page
@@ -2049,6 +2050,8 @@
 
                 //sort editList so terms appear alphabetically
                 editList.sort(function (a,b) { return a - b; })
+                //remove duplicates from editList
+                editList = editList.filter((v,i) => editList.indexOf(v) == i)
 
                 document.getElementById("mainContainer").style.display = "none"
                 document.getElementById("editContainer").style.display = "block"
@@ -3291,7 +3294,7 @@
                             html += '<h2 id="stepTitles">Submission Complete <hr style="margin-top: 5px;"></h2>'
 
                             html += '<div class="headerBrdr"><center>Thank you for adding a new term to NIDM-Terms. ';
-                            html += 'Your term has been submitted for further discussion.<br><br></center></div>';
+                            html += 'Your edits have been submitted for further discussion.<br><br></center></div>';
 
                             html += '<div class="headerBrdr">';
 
@@ -3300,7 +3303,7 @@
                             // html += '</center></form>';
                                 
                             html += '<form><center>';
-                            html += '<a href= "https://github.com/NIDM-Terms/terms/pulls" target = "_blank"> <button id = "viewPR" class= "subBtn" type = "button" > View Pull Request </button></a>';
+                            html += '<a href= "https://github.com/NIDM-Terms/terms/pulls" target = "_blank"> <button id = "viewPR" class= "subBtn" type = "button" > View Pull Request(s) </button></a>';
                             html += '</center></form>';
 
                             html += '<br><br>';
@@ -3319,7 +3322,7 @@
 
                         html += '<h2 id="stepTitles">Issue with Submission <hr style="margin-top: 5px;"></h2>'
 
-                        html += '<div class="headerBrdr"><center>Oops! Something went wrong while adding the new term.<br><br></center></div>';
+                        html += '<div class="headerBrdr"><center>Oops! Something went wrong while adding the new edits.<br><br></center></div>';
 
                         html += '<div class="headerBrdr">';
 
@@ -3341,7 +3344,7 @@
                         owner: 'NIDM-Terms',
                         repo: 'terms',
                         title: issue,
-                        body: 'An issue occurred while submitting a new term: '+JSON.stringify(newTermJsonld) +  '\n' + e 
+                        body: 'An issue occurred while submitting the edits: '+JSON.stringify(newTermJsonld) +  '\n' + e 
                         }).then(l => {
                             console.log('issue was posted')
                             issueConfirm()
