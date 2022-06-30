@@ -3,28 +3,9 @@
 
 <script>
     //////////////////////////////////////////////////////////////////////////////////////////
-    // IN ORDER TO HOST YOUR OWN COMMUNITY, EDIT THE VARIABLES BELOW
-    var githubLink = "https://github.com/NIDM-Terms/terms" //Link to GitHub terms repository
-
-    var websiteLink = "https://scicrunch.org/nidm-terms/about/project" //Link to project website
-    var websiteLinkName = "NIDM Website" //Hypertext displayed for websiteLink
-
-    var specLink = "http://nidm.nidash.org/" //Link to project specifications
-    var specLinkName = "NIDM Specs" //Hypertext displayed for specLink
-
-    var pyNIDMLink = "https://github.com/incf-nidash/PyNIDM" //Link to GitHub PyNIDM repository
-    var pyNIDMLinkName = "PyNIDM" //Hypertext displayed for pyNIDMLink
-
-    var pageTitle = "NIDM-Terms" //Text displayed beside the logo at the top of the page
-    
-    // TO INSERT YOUR OWN LOGO, PLEASE UPLOAD AN IMAGE TO THE 'img' FOLDER AND UPDATE logoFileName
-    var logoFileName = "nidm-terms_576163.png" //name of the file containing the logo inside the 'img' folder
-
+    // IN ORDER TO HOST YOUR COMMUNITY IN YOUR OWN SPACE, EDIT THE VARIABLES BELOW
     var contextLink = "https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld" //Link to context file
-
-    var communityLink = 'https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json' //Link to list of available communities
-    
-    var footerText = "This project was supported by the National Institutes of Mental Health (NIMH) grant 1RF1MH120021"
+    var communityLink = 'https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json' //Link to list of available communities JSON dictionary found in the UI repository
     //////////////////////////////////////////////////////////////////////////////////////////
 </script>
 
@@ -77,6 +58,9 @@
                 </form>
                 <form target= "_blank" >
                     <button class= "pyNidm" id = "pyNidm"></a>
+                </form>
+                <form action ="https://incf-nidash.github.io/nidmterms-ui/#/annotate" target= "_blank" >
+                  <button class= "annoTool"> CSV Annotation Tool</a>
                 </form>
             </div>
     
@@ -388,6 +372,21 @@
             color: #32e17c;
             transition: 0.1s;
         }
+		
+		.annoTool{
+		     float: right;
+		     margin-right: -20px;
+		     color: #646464;
+		     font-size: 13px;
+		     width: 150px;
+		     height:50px;
+		     font-weight: lighter;
+		}
+
+		.annoTool:hover{
+		     color: #32e17c;
+		     transition: 0.1s;
+		}
 
         .inner{
             margin-top:-60px;

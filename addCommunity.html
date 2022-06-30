@@ -3,39 +3,12 @@
 
 <script>
     //////////////////////////////////////////////////////////////////////////////////////////
-    // IN ORDER TO HOST YOUR OWN COMMUNITY, EDIT THE VARIABLES BELOW
-    var githubLink = "https://github.com/NIDM-Terms/terms" //Link to GitHub terms repository
-
-    var websiteLink = "https://scicrunch.org/nidm-terms/about/project" //Link to project website
-    var websiteLinkName = "NIDM Website" //Hypertext displayed for websiteLink
-
-    var specLink = "http://nidm.nidash.org/" //Link to project specifications
-    var specLinkName = "NIDM Specs" //Hypertext displayed for specLink
-
-    var pyNIDMLink = "https://github.com/incf-nidash/PyNIDM" //Link to GitHub PyNIDM repository
-    var pyNIDMLinkName = "PyNIDM" //Hypertext displayed for pyNIDMLink
-
-    var pageTitle = "NIDM-Terms" //Text displayed beside the logo at the top of the page
-    
-    // TO INSERT YOUR OWN LOGO, PLEASE UPLOAD AN IMAGE TO THE 'img' FOLDER AND UPDATE logoFileName
-    var logoFileName = "nidm-terms_576163.png" //name of the file containing the logo inside the 'img' folder
-
-    //Text displayed above the API Token input bar explaining the purpose of requiring users to enter their API Tokens
-    var headerText = `The NIDM-Terms effort is focused on developing and adopting a set of community driven controlled vocabulary 
-                    for neuroimaging. NIDM-Terms infrastructure consists of a GitHub repository containing JSON-LD formatted 
-                    files for each term. Newly added communities will be sent as a pull request to our GitHub repository.
-                    Therefore, in order to suggest a new community, a GitHub API Token must be provided.`
-
-    var universalTags = ["BIDS","NIDM"] //List of community tags associated with every community that is submitted through the addCommunity page
-
-    var contextLink = 'https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld' //Link to context file
-
-    var repoName = 'terms'; //Name of repository containing terms
-    var repo2Name = 'nidm-terms.github.io'; //Name of repository for this UI
-
-    var communityLink = 'https://raw.githubusercontent.com/nqueder/nidm-terms.github.io/master/availableCommunities.json' //Link to list of available communities
-    
-    var footerText = "This project was supported by the National Institutes of Mental Health (NIMH) grant 1RF1MH120021"
+    // IN ORDER TO HOST YOUR COMMUNITY IN YOUR OWN SPACE, EDIT THE VARIABLES BELOW
+    var contextLink = "https://raw.githubusercontent.com/NIDM-Terms/terms/master/context/cde_context.jsonld" //Link to context file
+    var communityLink = 'https://raw.githubusercontent.com/NIDM-Terms/nidm-terms.github.io/master/availableCommunities.json' //Link to list of available communities JSON dictionary found in the UI repository
+    var orgRepo = 'NIDM-Terms' //If you cloned the repository (which contains one repository for the terms and another repository for the UI) to your organization, this is the name of the organization's GitHub repository. If you cloned the repository to your personal GitHub account, this is the name of your personal GitHub repository.
+    var termsRepo = 'terms'; //Name of GitHub repository that contains terms - this variable can be changed if you decide to change the name of terms repository
+    var siteRepo = 'nidm-terms.github.io'; //Name of GitHub repository for this UI
     //////////////////////////////////////////////////////////////////////////////////////////
 </script>
 
@@ -71,6 +44,9 @@
                 </form>
                 <form target= "_blank" >
                     <button class= "pyNidm" id = "pyNidm"></a>
+                </form>
+                <form action ="https://incf-nidash.github.io/nidmterms-ui/#/annotate" target= "_blank" >
+                    <button class= "annoTool"> CSV Annotation Tool</a>
                 </form>
             </div>
     
@@ -450,7 +426,7 @@
                         var responseOption = {};
 
                         // variable to associate with every term
-                        var associatedWith = universalTags
+                        var associatedWith = ["BIDS","NIDM"];
 
 
                         $(document).ready(function(event) { 
@@ -565,8 +541,8 @@
                             // const info = octokit.request(`GET /user`);
                             // console.log(info)
 
-                            const repo = repoName;
-                            const repo2 = repo2Name;
+                            const repo = termsRepo;
+                            const repo2 = siteRepo;
                             const fileName = document.getElementById("label").value;
 
                             addCommunity()
@@ -587,7 +563,7 @@
                                     var termInfo = {}
 
                                     termInfo['label'] = comName + "_Terms";
-                                    termInfo['URL'] = "https://raw.githubusercontent.com/NIDM-Terms/terms/master/terms/"+comName+"_Terms.jsonld";
+                                    termInfo['URL'] = "https://raw.githubusercontent.com/"+orgRepo+"/"+termsRepo+"/master/terms/"+comName+"_Terms.jsonld";
                                     termInfo['Description'] = comDes;
                                     termInfo['association'] = [comName]
 
@@ -619,7 +595,7 @@
                                         octokit.request(
                                             `GET /repos/{owner}/{repo}`, {
                                                 headers: {
-                                                    'User-Agent': 'terms',
+                                                    'User-Agent': termsRepo,
                                                     'accept': 'application/json'
                                                 },
                                                 owner: owner,
@@ -637,7 +613,7 @@
                                                         headers: {
                                                             'Authorization': 'token ' + gitToken,
                                                         },
-                                                        owner: 'NIDM-Terms',
+                                                        owner: orgRepo,
                                                         repo: repo2
                                                     }).then((response) => {
                                                     console.log(71, 'successfully forked: ', response.status);
@@ -650,7 +626,7 @@
                                                     console.log(77, "post fork: ", response);
                                                 }).catch((e) => {
                                                     console.log(79, e.message);
-                                                    reportAnIssue('NIDM Terms UI (Add New Community): an issue with forking NIDM-Terms/nidm-terms.githib.io repo', e);
+                                                    reportAnIssue('NIDM Terms UI (Add New Community): an issue with forking '+orgRepo+'/'+siteRepo+' repo', e);
                                                 })
 
                                             }
@@ -668,7 +644,7 @@
                                             })
                                             .catch((e) => {
                                                 console.log(55, e.message);
-                                                reportAnIssue('NIDM Terms UI (Add New Community): an issue with getting master branch hash of NIDM-Term/nidm-terms.githib.io', e);
+                                                reportAnIssue('NIDM Terms UI (Add New Community): an issue with getting master branch hash of '+orgRepo+'/'+siteRepo, e);
                                             })
                                         };
                                     }
@@ -683,11 +659,11 @@
                                             sha: sha
                                         }).then((response) => {
                                             console.log(72, 'successfully created a new branch: ', response.status);
-                                            //call function to comit file to the new branch
+                                            //call function to commit file to the new branch
                                             getFileSha(user);
                                         }).catch((e) => {
                                             console.log(67, e.message);
-                                            reportAnIssue('NIDM Terms UI (Add New Community): an issue with creating a new branch NIDM-Term/nidm-terms.githib.io', e);
+                                            reportAnIssue('NIDM Terms UI (Add New Community): an issue with creating a new branch '+orgRepo+'/'+siteRepo, e);
                                         });
                                     }
 
@@ -704,7 +680,7 @@
                                             })
                                             .catch((e) => {
                                                 console.log(55, e.message);
-                                                reportAnIssue('NIDM Terms UI (Add New Community): an issue with getting master branch hash of NIDM-Term/nidm-terms.githib.io', e);
+                                                reportAnIssue('NIDM Terms UI (Add New Community): an issue with getting master branch hash of '+orgRepo+'/'+siteRepo, e);
                                             })
                                         };
 
@@ -734,7 +710,7 @@
                                             }
                                         }).catch((e) => {
                                             console.log(93, e.message);
-                                            reportAnIssue('NIDM Terms UI (Add New Community): an issue with commiting a new community to nidm-terms.githib.io', e);
+                                            reportAnIssue('NIDM Terms UI (Add New Community): an issue with commiting a new community to '+orgRepo+'/'+siteRepo, e);
                                         });
                                     }
 
@@ -746,7 +722,7 @@
                                                 headers: {
                                                     'Authorization': 'token ' + gitToken,
                                                 },
-                                                owner: 'NIDM-Terms',
+                                                owner: orgRepo,
                                                 repo: repo2,
                                                 title: 'New Community Added: availableCommunities.json',
                                                 body: 'Added new community to availableCommunities.json',
@@ -757,7 +733,7 @@
                                             
                                         }).catch(e => {
                                             console.log(110, 'error in raising PR: ', e);
-                                            reportAnIssue('NIDM Terms UI (Add New Community): an issue with sending a pull request to nidm-terms.githib.io', e);
+                                            reportAnIssue('NIDM Terms UI (Add New Community): an issue with sending a pull request to '+orgRepo+'/'+siteRepo, e);
                                         })
 
                                     } 
@@ -786,7 +762,7 @@
                                         octokit.request(
                                             `GET /repos/{owner}/{repo}`, {
                                                 headers: {
-                                                    'User-Agent': 'terms',
+                                                    'User-Agent': termsRepo,
                                                     'accept': 'application/json'
                                                 },
                                                 owner: owner,
@@ -804,7 +780,7 @@
                                                         headers: {
                                                             'Authorization': 'token ' + gitToken,
                                                         },
-                                                        owner: 'NIDM-Terms',
+                                                        owner: orgRepo,
                                                         repo: repo
                                                     }).then((response) => {
                                                     console.log(71, 'successfully forked: ', response.status);
@@ -817,7 +793,7 @@
                                                     console.log(77, "post fork: ", response);
                                                 }).catch((e) => {
                                                     console.log(79, e.message);
-                                                    reportAnIssue('NIDM Terms UI (Add New Community): an issue with forking NIDM-Terms repo', e);
+                                                    reportAnIssue('NIDM Terms UI (Add New Community): an issue with forking '+orgRepo+' repo', e);
                                                 })
 
                                             }
@@ -839,7 +815,7 @@
                                             })
                                             .catch((e) => {
                                                 console.log(55, e.message);
-                                                reportAnIssue('NIDM Terms UI (Add New Community): an issue with getting master branch hash of NIDM-Term/terms', e);
+                                                reportAnIssue('NIDM Terms UI (Add New Community): an issue with getting master branch hash of '+orgRepo+'/'+termsRepo, e);
                                             })
                                         };
 
@@ -857,11 +833,11 @@
                                             sha: sha
                                         }).then((response) => {
                                             console.log(72, 'successfully created a new branch: ', response.status);
-                                            //call function to comit file to the new branch
+                                            //call function to commit file to the new branch
                                             createFileInRepo(newTermJsonld, 'terms/'+newComDir+'/'+fileName+'.jsonld', user);
                                         }).catch((e) => {
                                             console.log(67, e.message);
-                                            reportAnIssue('NIDM Terms UI (Add New Community): an issue with creating a new branch NIDM-Term/terms', e);
+                                            reportAnIssue('NIDM Terms UI (Add New Community): an issue with creating a new branch '+orgRepo+'/'+termsRepo, e);
                                         });
                                     }
 
@@ -905,7 +881,7 @@
                                                 headers: {
                                                     'Authorization': 'token ' + gitToken,
                                                 },
-                                                owner: 'NIDM-Terms',
+                                                owner: orgRepo,
                                                 repo: repo,
                                                 title: 'New Community Added: ' + fileName,
                                                 body: 'Edited or Added Terms:' + pathToFile,
@@ -936,7 +912,7 @@
 
                                         html += '<h2 id="stepTitles">Submission Complete <hr style="margin-top: 5px;"></h2>'
 
-                                        html += '<div class="headerBrdr"><center>Thank you for adding a new neuroimaging community to NIDM-Terms. ';
+                                        html += '<div class="headerBrdr"><center>Thank you for adding a new neuroimaging community to '+orgRepo+'. ';
                                         html += 'Your community has been added and your first term has been submitted for further discussion. ';
                                         html += 'Please allow 24 hours for the new community and your first term to be added. ';
                                         html += 'Once the community is added, you can add more terms using "Suggest Terms".<br><br></center></div>';
@@ -948,13 +924,15 @@
                                         html += '</center></form>';
                                             
                                         html += '<form><center>';
-                                        html += '<a href= "https://github.com/NIDM-Terms/terms/pulls" target = "_blank"> <button id = "viewPR" class= "subBtn" type = "button" > View Pull Request </button></a>';
+                                        html += '<a target = "_blank"> <button id = "viewPR" class= "subBtn" type = "button" > View Pull Request </button></a>';
                                         html += '</center></form>';
 
                                         html += '<br><br>';
                                         html += '</div>';
 
                                         $('#rmv').append(html)
+
+                                        document.getElementById("viewPR").addEventListener('click', function(){location.href="https://github.com/"+orgRepo+"/"+termsRepo+"/pulls"})
                                     }
                                 }
 
@@ -986,8 +964,8 @@
 
                                 async function createGithubIssue(issue, e){
                                     octokit.request(`POST /repos/{owner}/{repo}/issues`, {
-                                    owner: 'NIDM-Terms',
-                                    repo: 'terms',
+                                    owner: orgRepo,
+                                    repo: termsRepo,
                                     title: issue,
                                     body: 'An issue occurred while submitting a new term: '+JSON.stringify(newTermJsonld) + '\n' + e
                                     }).then(l => {
@@ -1006,18 +984,20 @@
                                     html += '<h2 id="stepTitles">Issue Reported <hr style="margin-top: 5px;"></h2>'
 
                                     html += '<div class="headerBrdr"><center>Thank you for reporting! ';
-                                    html += 'A GitHub issue in the NIDM-Terms repository reporting the problem was created on your behalf.<br><br></center></div>';
+                                    html += 'A GitHub issue in the '+orgRepo+' repository reporting the problem was created on your behalf.<br><br></center></div>';
 
                                     html += '<div class="headerBrdr">';
 
                                     html += '<form><center>';
-                                    html += '<a href= "https://github.com/NIDM-Terms/terms/issues" target = "_blank"> <button id = "viewPR" class= "subBtn" type = "button" > View GitHub Issue </button></a>';
+                                    html += '<a target = "_blank"> <button id = "viewPR" class= "subBtn" type = "button" > View GitHub Issue </button></a>';
                                     html += '</center></form>';
 
                                     html += '<br>';
                                     html += '</div>';
 
                                     $('#rmv').append(html);
+
+                                    document.getElementById("viewIssue").addEventListener('click', function(){location.href="https://github.com/"+orgRepo+"/"+termsRepo+"/issues"})
                                 }
 
 
@@ -1129,6 +1109,21 @@
         }
 
         .pyNidm:hover{
+            color: #32e17c;
+            transition: 0.1s;
+        }
+
+        .annoTool{
+            float: right;
+            margin-right: -20px;
+            color: #646464;
+            font-size: 13px;
+            width: 150px;
+            height:50px;
+            font-weight: lighter;
+        }
+
+        .annoTool:hover{
             color: #32e17c;
             transition: 0.1s;
         }
