@@ -569,8 +569,7 @@
                             //Open in a new tab
                             x = window.open(githubQueryLink)
                         } catch (e) {
-                            alert("NIDM Terms UI: an issue with sending a pull request", e);
-                            console.log(110, 'error in raising PR: ', e);
+                            console.log(572, 'error in raising PR: ', e);
                             removeLoading();
                             reportAnIssue('NIDM Terms UI: an issue with sending a pull request',encodedFileText);
                         }
