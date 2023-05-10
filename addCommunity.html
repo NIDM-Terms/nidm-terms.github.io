@@ -124,30 +124,12 @@
 
             <divid id = "rmv">
 
-                <h2 id="stepTitles">GitHub Access Token <hr style="margin-top: 5px;"></h2>
-
                 <div class="headerBrdr" id="headerBrdr"><center></center></div>
 
                 <script>
                     //insert information (button labels, titles, etc.) specific to the project
                     $("#headerBrdr").text(headerText)
                 </script>
-
-                <br>
-                <div class="keyInfo"><center>
-                    For more information on GitHub personal access tokens click <a href= "https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token" target="_blank"> here</a>.
-                    </center></div>
-
-                <br><br><br>
-
-
-                <form><input id = "token" type="password"  placeholder="Enter GitHub Personal Access Token" required></form>
-
-                <form action="https://github.com/settings/tokens" target= "_blank">
-                    <input class= "btn4" type = "submit" value="Generate GitHub Token">
-                </form>
-    
-                <br><br><br><br>
 
                 <h2 id="stepTitles">New Community<hr style="margin-top: 5px; margin-bottom: 50px;"></h2>
 
@@ -280,7 +262,7 @@
                     </div>
 
 
-                    
+
 
                     <br><br><br><br>
 
@@ -320,7 +302,7 @@
                     ///////////////////////////////////////////////////////////////////////////
                     function nextStep(){
                     
-                        //if label and description don't have values call the validation fonction
+                        //if label and description don't have values call the validation function
                         if (document.getElementById('CommunityName').value.length == 0){
 
                             document.getElementById('CommunityName').style.borderColor = 'red'
@@ -522,502 +504,129 @@
                     function sendPR (newTermJsonld){
 
                         var state = '';
+                        var x = null;
+                        var st = '';
+                        //Encode string to URI format
+                        const encodedFileText = encodeURIComponent(JSON.stringify(newTermJsonld))
 
-                        if(document.getElementById("token").value.length == 0){
-                            document.getElementById("token").style.borderWidth = '1px';
-                            document.getElementById("token").style.borderColor = 'red';
-                            document.getElementById("token").style.backgroundColor = '#FFF1F1';
-                            $('#token').focus();
-                        } 
-                        else {
-                            addLoading()
-
+                        try {
+                            addLoading();
                             const newComName = document.getElementById("CommunityName").value;
-                            const newComDir  = newComName + '_Terms'
-                        
-                            const gitToken = document.getElementById("token").value;
-
-                            const octokit = new Octokit({ auth: gitToken });
-                            // const info = octokit.request(`GET /user`);
-                            // console.log(info)
-
-                            const repo = termsRepo;
-                            const repo2 = siteRepo;
-                            const fileName = document.getElementById("label").value;
-
-                            addCommunity()
-
-                            //fetch the availableCommunities.json file located in nidm-terms.github.io 
-                            // load the dictionary and edit it by adding the new community
-                            function addCommunity(){
-
-                                var comName = document.getElementById('CommunityName').value;
-                                var comDes = document.getElementById('CommunityDes').value;
-
-                                fetch(communityLink)
-                                .then(function(res){
-                                    return res.json(); 
-                                })
-                                .then(function(dict){
-
-                                    var termInfo = {}
-
-                                    termInfo['label'] = comName + "_Terms";
-                                    termInfo['URL'] = "https://raw.githubusercontent.com/"+orgRepo+"/"+termsRepo+"/master/terms/"+comName+"_Terms.jsonld";
-                                    termInfo['Description'] = comDes;
-                                    termInfo['association'] = [comName]
-
-                                    dict[comName + " Terms"] = termInfo;
-
-                                    console.log(11, dict)
-                                    return dict
-                                })
-                                .then(function(dict){
-                                    
-                                    //GET user's github username
-                                    octokit.request(
-                                        `GET /user`
-                                    ).then((response) => {
-                                        console.log(20, response)
-                                        //call fork repo to check if the user has the repo forked
-                                        //if repo is not found then fork it
-                                        forkRepo(response.data.login)
-                                    }).catch((e) => {
-                                        console.log(23, e.message);
-                                        if(e.message == 'Bad credentials'){
-                                            removeLoading()
-                                            alert('Bad credentials: please Enter a valid Github Token')
-                                        }
-                                    })
-
-                                    // //fork terms repo function
-                                    async function forkRepo(owner){
-                                        octokit.request(
-                                            `GET /repos/{owner}/{repo}`, {
-                                                headers: {
-                                                    'User-Agent': termsRepo,
-                                                    'accept': 'application/json'
-                                                },
-                                                owner: owner,
-                                                repo: repo2
-                                            }).then((res) => {
-                                            console.log(47, 'success', owner, repo, newTermJsonld); // repo exists!
-                                            //call function to get the master branch sha
-                                            getSha(owner)
-                                        }).catch((e) => {
-                                            console.log(50, e.message);
-                                            if (e.message === "Not Found") { // repo not present, so fork the repo
-                                                // fork NIDM-Terms/terms repo to add the community and the new term
-                                                octokit.request(
-                                                    `POST /repos/{owner}/{repo}/forks`, {
-                                                        headers: {
-                                                            'Authorization': 'token ' + gitToken,
-                                                        },
-                                                        owner: orgRepo,
-                                                        repo: repo2
-                                                    }).then((response) => {
-                                                    console.log(71, 'successfully forked: ', response.status);
-                                                    if (response.status === 200 || response.status=== 201) {
-                                                        //call function to get the master branch sha
-                                                        getSha(owner)
-                                                    } else if (response.status === 202) {
-                                                        setTimeout(getSha, 3000, owner);
-                                                    }
-                                                    console.log(77, "post fork: ", response);
-                                                }).catch((e) => {
-                                                    console.log(79, e.message);
-                                                    reportAnIssue('NIDM Terms UI (Add New Community): an issue with forking '+orgRepo+'/'+siteRepo+' repo', e);
-                                                })
-
-                                            }
-                                        });
-
-                                        //function to get sha hash of master branch
-                                        async function getSha(user){
-                                            octokit.request(`GET /repos/{owner}/{repo}/branches/{branch}`, {
-                                                owner: user,
-                                                repo: repo2,
-                                                branch: 'master'
-                                            }).then((r) => {
-                                                //call function to create a branch
-                                                createNewBranch(r.data.commit.sha, user)
-                                            })
-                                            .catch((e) => {
-                                                console.log(55, e.message);
-                                                reportAnIssue('NIDM Terms UI (Add New Community): an issue with getting master branch hash of '+orgRepo+'/'+siteRepo, e);
-                                            })
-                                        };
-                                    }
-
-
-                                    //function to create a new branch with the term name
-                                    async function createNewBranch(sha,user){
-                                        octokit.request(`POST /repos/{owner}/{repo}/git/refs`, {
-                                            owner: user,
-                                            repo: repo2,
-                                            ref: 'refs/heads/'+newComDir+'_availableCommunities.json',
-                                            sha: sha
-                                        }).then((response) => {
-                                            console.log(72, 'successfully created a new branch: ', response.status);
-                                            //call function to commit file to the new branch
-                                            getFileSha(user);
-                                        }).catch((e) => {
-                                            console.log(67, e.message);
-                                            reportAnIssue('NIDM Terms UI (Add New Community): an issue with creating a new branch '+orgRepo+'/'+siteRepo, e);
-                                        });
-                                    }
-
-                                    //function to get sha hash of the availableCommunities.json file
-                                    async function getFileSha(user){
-                                            octokit.request(`GET /repos/{owner}/{repo}/contents/{path}`, {
-                                                owner: user,
-                                                repo: repo2,
-                                                path: 'availableCommunities.json'
-                                            }).then((r) => {
-                                                console.log(232, r.data.sha)
-                                                //call function to create a branch
-                                                UpdateFileInRepo(r.data.sha, user)
-                                            })
-                                            .catch((e) => {
-                                                console.log(55, e.message);
-                                                reportAnIssue('NIDM Terms UI (Add New Community): an issue with getting master branch hash of '+orgRepo+'/'+siteRepo, e);
-                                            })
-                                        };
-
-
-                                    //Update availableCommunity.json in nidm-terms.github.io
-                                    async function UpdateFileInRepo(fileSha, user) {
-                                        console.log(57, user);
-                                        const content = btoa(JSON.stringify(dict, undefined, 2)); // for use in browser
-                                        console.log(63, content);
-                                        octokit.request(
-                                            `PUT /repos/{owner}/{repo}/contents/{path}`, {
-                                                headers: {
-                                                    'Authorization': 'token ' + gitToken,
-                                                },
-                                                owner: user,
-                                                repo: repo2,
-                                                sha: fileSha,
-                                                path: 'availableCommunities.json',
-                                                message: 'New Community Added: availableCommunities.json',
-                                                content: content,
-                                                branch: newComDir+'_availableCommunities.json'
-                                            }).then((response) => {
-                                            console.log(91, "statusCode for createFile: ", response.status);
-                                            if (response.status === 200 || response.status=== 201) {
-                                                //call function to raise a pull request
-                                                createPullRequest( user);
-                                            }
-                                        }).catch((e) => {
-                                            console.log(93, e.message);
-                                            reportAnIssue('NIDM Terms UI (Add New Community): an issue with commiting a new community to '+orgRepo+'/'+siteRepo, e);
-                                        });
-                                    }
-
-                                    //function to raise a pull request
-                                    async function createPullRequest(user) {
-                                        console.log(96, 'in createPR');
-                                        octokit.request(
-                                            `POST /repos/{owner}/{repo}/pulls`, {
-                                                headers: {
-                                                    'Authorization': 'token ' + gitToken,
-                                                },
-                                                owner: orgRepo,
-                                                repo: repo2,
-                                                title: 'New Community Added: availableCommunities.json',
-                                                body: 'Added new community to availableCommunities.json',
-                                                head: user + ':'+newComDir+'_availableCommunities.json',
-                                                base: 'master'
-                                            }).then(resp => {
-                                            console.log(108, "StatusCode for Pull Request: ", resp.status);
-                                            
-                                        }).catch(e => {
-                                            console.log(110, 'error in raising PR: ', e);
-                                            reportAnIssue('NIDM Terms UI (Add New Community): an issue with sending a pull request to '+orgRepo+'/'+siteRepo, e);
-                                        })
-
-                                    } 
-
-                                })
-                                .then(function sendTerm(){
-
-                                    // //GET user's github username
-                                    octokit.request(
-                                        `GET /user`
-                                    ).then((response) => {
-                                        console.log(20, response)
-                                        //call fork repo to check if the user has the repo forked
-                                        //if repo is not found then fork it
-                                        forkRepo(response.data.login)
-                                    }).catch((e) => {
-                                        console.log(23, e.message);
-                                        if(e.message == 'Bad credentials'){
-                                            removeLoading()
-                                            alert('Bad credentials: please Enter a valid Github Token')
-                                        }
-                                    })
-
-                                    // //fork terms repo function
-                                    async function forkRepo(owner){
-                                        octokit.request(
-                                            `GET /repos/{owner}/{repo}`, {
-                                                headers: {
-                                                    'User-Agent': termsRepo,
-                                                    'accept': 'application/json'
-                                                },
-                                                owner: owner,
-                                                repo: repo
-                                            }).then((res) => {
-                                            console.log(47, 'success', owner, repo, newTermJsonld); // repo exists!
-                                            //call function to get the master branch sha
-                                            getSha(owner)
-                                        }).catch((e) => {
-                                            console.log(50, e.message);
-                                            if (e.message === "Not Found") { // repo not present, so fork the repo
-                                                // fork NIDM-Terms/terms repo to add the community and the new term
-                                                octokit.request(
-                                                    `POST /repos/{owner}/{repo}/forks`, {
-                                                        headers: {
-                                                            'Authorization': 'token ' + gitToken,
-                                                        },
-                                                        owner: orgRepo,
-                                                        repo: repo
-                                                    }).then((response) => {
-                                                    console.log(71, 'successfully forked: ', response.status);
-                                                    if (response.status === 200 || response.status=== 201) {
-                                                        //call function to get the master branch sha
-                                                        getSha(owner)
-                                                    } else if (response.status === 202) {
-                                                        setTimeout(getSha, 3000, owner);
-                                                    }
-                                                    console.log(77, "post fork: ", response);
-                                                }).catch((e) => {
-                                                    console.log(79, e.message);
-                                                    reportAnIssue('NIDM Terms UI (Add New Community): an issue with forking '+orgRepo+' repo', e);
-                                                })
-
-                                            }
-                                        });
-
-
-                                        
-
-
-                                        //function to get sha hash of master branch
-                                        async function getSha(user){
-                                            octokit.request(`GET /repos/{owner}/{repo}/branches/{branch}`, {
-                                                owner: user,
-                                                repo: repo,
-                                                branch: 'master'
-                                            }).then((r) => {
-                                                //call function to create a branch
-                                                createNewBranch(r.data.commit.sha, user)
-                                            })
-                                            .catch((e) => {
-                                                console.log(55, e.message);
-                                                reportAnIssue('NIDM Terms UI (Add New Community): an issue with getting master branch hash of '+orgRepo+'/'+termsRepo, e);
-                                            })
-                                        };
-
-                                        
-
-                                    }
-
-
-                                    //function to create a new branch with the term name
-                                    async function createNewBranch(sha,user){
-                                        octokit.request(`POST /repos/{owner}/{repo}/git/refs`, {
-                                            owner: user,
-                                            repo: repo,
-                                            ref: 'refs/heads/'+newComDir+'_'+fileName,
-                                            sha: sha
-                                        }).then((response) => {
-                                            console.log(72, 'successfully created a new branch: ', response.status);
-                                            //call function to commit file to the new branch
-                                            createFileInRepo(newTermJsonld, 'terms/'+newComDir+'/'+fileName+'.jsonld', user);
-                                        }).catch((e) => {
-                                            console.log(67, e.message);
-                                            reportAnIssue('NIDM Terms UI (Add New Community): an issue with creating a new branch '+orgRepo+'/'+termsRepo, e);
-                                        });
-                                    }
-
-
-
-                                    //function to commit to the new branch
-                                    async function createFileInRepo(jsonTermObj, pathToFile, user) {
-                                        console.log(57, jsonTermObj, pathToFile, user);
-                                        // let content = Buffer.from(JSON.stringify(jsonTermObj, undefined, 2)).toString('base64');
-                                        const content = btoa(JSON.stringify(jsonTermObj, undefined, 2)); // for use in browser
-                                        console.log(63, content);
-                                        octokit.request(
-                                            `PUT /repos/{owner}/{repo}/contents/{path}`, {
-                                                headers: {
-                                                    'Authorization': 'token ' + gitToken,
-                                                },
-                                                owner: user,
-                                                repo: repo,
-                                                path: pathToFile,
-                                                message: 'New Community Added: '+fileName,
-                                                content: content,
-                                                branch: newComDir+'_'+fileName
-                                            }).then((response) => {
-                                            console.log(91, "statusCode for createFile: ", response.status);
-                                            if (response.status === 200 || response.status=== 201) {
-                                                //call function to raise a pull request
-                                                createPullRequest(pathToFile, user);
-                                            }
-                                        }).catch((e) => {
-                                            console.log(93, e.message);
-                                            reportAnIssue('NIDM Terms UI (Add New Community): an issue with commiting a new term', e);
-                                        });
-                                    }
-
-                                    //function to raise a pull request
-                                    async function createPullRequest(pathToFile, user) {
-                                        var st = '';
-                                        console.log(96, 'in createPR');
-                                        octokit.request(
-                                            `POST /repos/{owner}/{repo}/pulls`, {
-                                                headers: {
-                                                    'Authorization': 'token ' + gitToken,
-                                                },
-                                                owner: orgRepo,
-                                                repo: repo,
-                                                title: 'New Community Added: ' + fileName,
-                                                body: 'Edited or Added Terms:' + pathToFile,
-                                                head: user + ':'+newComDir+'_' + fileName,
-                                                base: 'master'
-                                            }).then(resp => {
-                                            console.log(108, "StatusCode for Pull Request: ", resp.status);
-                                            var st = '1';
-                                            //call confimation function
-                                            submission(st)
-                                        }).catch(e => {
-                                            console.log(110, 'error in raising PR: ', e);
-                                            reportAnIssue('NIDM Terms UI (Add New Community): an issue with sending a pull request', e);
-                                        })
-
-                                    } 
-
-
-                                })
-
-
-                                //function to display confirmation to the pull request
-                                async function submission(state){
-                                    if(state == '1' ){
-                                        $('#rmv').html("")
-
-                                        var html = '<br><br><br>';
-
-                                        html += '<h2 id="stepTitles">Submission Complete <hr style="margin-top: 5px;"></h2>'
-
-                                        html += '<div class="headerBrdr"><center>Thank you for adding a new neuroimaging community to '+orgRepo+'. ';
-                                        html += 'Your community has been added and your first term has been submitted for further discussion. ';
-                                        html += 'Please allow 24 hours for the new community and your first term to be added. ';
-                                        html += 'Once the community is added, you can add more terms using "Suggest Terms".<br><br></center></div>';
-
-                                        html += '<div class="headerBrdr">';
-
-                                        html += '<form><center>';
-                                        html += '<button onClick="window.location.reload();" id = "newTerm" class= "subBtn" type = "button"> Add another community </button>';
-                                        html += '</center></form>';
-                                            
-                                        html += '<form><center>';
-                                        html += '<a target = "_blank"> <button id = "viewPR" class= "subBtn" type = "button" > View Pull Request </button></a>';
-                                        html += '</center></form>';
-
-                                        html += '<br><br>';
-                                        html += '</div>';
-
-                                        $('#rmv').append(html)
-
-                                        document.getElementById("viewPR").addEventListener('click', function(){location.href="https://github.com/"+orgRepo+"/"+termsRepo+"/pulls"})
-                                    }
-                                }
-
-                                //function to display an issue with the code and how to report it
-                                async function reportAnIssue(issue,e){
-
-                                    $('#rmv').html("")
-
-                                    var html = '<br><br><br>';
-
-                                    html += '<h2 id="stepTitles">Issue with Submission <hr style="margin-top: 5px;"></h2>'
-
-                                    html += '<div class="headerBrdr"><center>Oops! Something went wrong while adding the new neuroimaging community.<br><br></center></div>';
-
-                                    html += '<div class="headerBrdr">';
-
-                                    html += '<form><center>';
-                                    html += '<button id = "report" class= "subBtn" type = "button" > Report </button>';
-                                    html += '</center></form>';
-
-                                    html += '<br><br>';
-                                    html += '</div>';
-
-                                    $('#rmv').append(html);
-
-                                    document.getElementById("report").addEventListener("click", function(){ createGithubIssue(issue); })
-    
-                                }
-
-                                async function createGithubIssue(issue, e){
-                                    octokit.request(`POST /repos/{owner}/{repo}/issues`, {
-                                    owner: orgRepo,
-                                    repo: termsRepo,
-                                    title: issue,
-                                    body: 'An issue occurred while submitting a new term: '+JSON.stringify(newTermJsonld) + '\n' + e
-                                    }).then(l => {
-                                        console.log('issue was posted')
-                                        issueConfirm()
-                                    }).catch(e => {
-                                        console.log(59, 'error in posting an issue: ', e);
-                                    });
-                                }
-
-                                async function issueConfirm(){
-                                    $('#rmv').html("")
-
-                                    var html = '<br><br><br>';
-                                    
-                                    html += '<h2 id="stepTitles">Issue Reported <hr style="margin-top: 5px;"></h2>'
-
-                                    html += '<div class="headerBrdr"><center>Thank you for reporting! ';
-                                    html += 'A GitHub issue in the '+orgRepo+' repository reporting the problem was created on your behalf.<br><br></center></div>';
-
-                                    html += '<div class="headerBrdr">';
-
-                                    html += '<form><center>';
-                                    html += '<a target = "_blank"> <button id = "viewPR" class= "subBtn" type = "button" > View GitHub Issue </button></a>';
-                                    html += '</center></form>';
-
-                                    html += '<br>';
-                                    html += '</div>';
-
-                                    $('#rmv').append(html);
-
-                                    document.getElementById("viewIssue").addEventListener('click', function(){location.href="https://github.com/"+orgRepo+"/"+termsRepo+"/issues"})
-                                }
-
-
-
-
+                            const newComDir = newComName + '_Terms'
+                            const fileName = `${document.getElementById("label").value}.jsonld`;
+
+                            //Generate a github link with query parameter
+                            const githubQueryLink = `https://github.com/NIDM-Terms/terms/new/master/terms/${newComDir}/?value=${encodedFileText}&filename=${fileName}`
+                            var st = '1';
+                            //call confirmation function
+                            submission(st)
+                            //Open in a new tab
+                            x = window.open(githubQueryLink)
+                        } catch (e) {
+                            console.log(555, 'error in raising PR: ', e);
+                            removeLoading();
+                            reportAnIssue('NIDM Terms UI (Add New Community): an issue with sending a pull request', encodedFileText);
+                        }
+
+                        //function to display confirmation to the pull request
+                        async function submission(state){
+                            if(state == '1' ){
+                                $('#rmv').html("")
+
+                                var html = '<br><br><br>';
+
+                                html += '<h2 id="stepTitles">Submission Complete <hr style="margin-top: 5px;"></h2>'
+
+                                html += '<div class="headerBrdr"><center>Thank you for adding a new neuroimaging community to '+orgRepo+'. ';
+                                html += 'Your community has been added and your first term has been submitted for further discussion. ';
+                                html += 'Please allow 24 hours for the new community and your first term to be added. ';
+                                html += 'Once the community is added, you can add more terms using "Suggest Terms".<br><br></center></div>';
+
+                                html += '<div class="headerBrdr">';
+
+                                html += '<form><center>';
+                                html += '<button onClick="window.location.reload();" id = "newTerm" class= "subBtn" type = "button"> Add another community </button>';
+                                html += '</center></form>';
+
+                                html += '<form><center>';
+                                html += '<a target = "_blank"> <button id = "viewPR" class= "subBtn" type = "button" > View Pull Request </button></a>';
+                                html += '</center></form>';
+
+                                html += '<br><br>';
+                                html += '</div>';
+
+                                $('#rmv').append(html)
+
+                                document.getElementById("viewPR").addEventListener('click', function(){location.href="https://github.com/"+orgRepo+"/"+termsRepo+"/pulls"})
                             }
-                            
-                                                
+                        }
 
-                            
+                        //function to display an issue with the code and how to report it
+                        async function reportAnIssue(issueTitle, issueBody){
+
+                            $('#rmv').html("")
+
+                            var html = '<br><br><br>';
+
+                            html += '<h2 id="stepTitles">Issue with Submission <hr style="margin-top: 5px;"></h2>'
+
+                            html += '<div class="headerBrdr"><center>Oops! Something went wrong while adding the new neuroimaging community.<br><br></center></div>';
+
+                            html += '<div class="headerBrdr">';
+
+                            html += '<form><center>';
+                            html += '<button id = "report" class= "subBtn" type = "button" > Report </button>';
+                            html += '</center></form>';
+
+                            html += '<br><br>';
+                            html += '</div>';
+
+                            $('#rmv').append(html);
+
+                            document.getElementById("report").addEventListener("click", function(){ createGithubIssue(issueTitle, issueBody); })
 
                         }
+
+                        async function createGithubIssue(issueTitle, issueBody){
+                            try {
+                                const encodedNewIssueTitle = encodeURIComponent(issueTitle);
+                                var issueLink = `https://github.com/NIDM-Terms/terms/issues/new?title=${encodedNewIssueTitle}&body=${issueBody}`
+                                window.open(issueLink);
+                                console.log('issue was posted');
+                                issueConfirm();
+                            }
+                            catch(e) {
+                                console.log('error in posting an issue: ', e);
+                            };
+                        }
+
+                        async function issueConfirm(){
+                            $('#rmv').html("")
+
+                            var html = '<br><br><br>';
+
+                            html += '<h2 id="stepTitles">Issue Reported <hr style="margin-top: 5px;"></h2>'
+
+                            html += '<div class="headerBrdr"><center>Thank you for reporting! ';
+                            html += 'A GitHub issue in the '+orgRepo+' repository reporting the problem was created on your behalf.<br><br></center></div>';
+
+                            html += '<div class="headerBrdr">';
+
+                            html += '<form><center>';
+                            html += '<a target = "_blank"> <button id = "viewPR" class= "subBtn" type = "button" > View GitHub Issue </button></a>';
+                            html += '</center></form>';
+
+                            html += '<br>';
+                            html += '</div>';
+
+                            $('#rmv').append(html);
+
+                            document.getElementById("viewIssue").addEventListener('click', function(){location.href="https://github.com/"+orgRepo+"/"+termsRepo+"/issues"})
+                        }
                     }
-
-
                 </script>
-                
 
         </div></center>
-
 
     </body>
 
